@@ -13,18 +13,16 @@ class Core {
         this.renderer = new WebGLRenderer();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
-        
-        this.Init();
+    }
+
+    Init(): void {
+        this.activeRoom.Init();
         let animate = () => {
             requestAnimationFrame(animate);
             this.Update();
             this.Draw();
         };
         animate();
-    }
-
-    Init(): void {
-        this.activeRoom.Init();
     }
 
     Update(): void {
@@ -42,4 +40,10 @@ class Core {
     }
 }
 
+function Start(defaultSceneName: string, defaultRoom: Room): void{
+    let core = new Core(defaultSceneName, defaultRoom);
+    core.Init();
+}
+
+export { Start };
 export { Core };

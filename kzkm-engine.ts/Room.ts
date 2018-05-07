@@ -1,5 +1,5 @@
 import { Unit } from "./Unit";
-import { Scene, Camera, PerspectiveCamera } from "three";
+import { Scene, Camera, PerspectiveCamera, Mesh } from "three";
 
 class Room {
     units: Unit[];
@@ -13,6 +13,7 @@ class Room {
     }
 
     Update(): void {
+        this.Remove();
         this.units.forEach(u => {
             u.Update();
         });
@@ -30,12 +31,18 @@ class Room {
         });
     }
 
+    AddMesh(u: Unit, m: Mesh): void {
+        this.scene.add(m);
+        u.meshes.push(m);
+    }
+
     AddUnit(u: Unit): void {
         this.units.push(u);
     }
 
     Remove(): void {
         this.units.filter(u => !u.isAlive).forEach(u => {
+            u.meshes.forEach(m => {this.scene.remove(m)});
             u.Fin();
         });
         this.units = this.units.filter(u => u.isAlive);
