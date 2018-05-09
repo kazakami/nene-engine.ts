@@ -1,6 +1,6 @@
 import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
-import { BoxGeometry, MeshBasicMaterial, Mesh, OBJLoader, LoadingManager, Scene, MTLLoader, PointLight, AmbientLight, Color, TextureLoader, Colors, Group } from "three";
+import { BoxGeometry, MeshBasicMaterial, Mesh, OBJLoader, LoadingManager, Scene, MTLLoader, PointLight, AmbientLight, Color, TextureLoader, Colors, Group, DirectionalLight } from "three";
 import { Room } from "./kzkm-engine.ts/Room";
 import { Unit } from "./kzkm-engine.ts/Unit";
 import { Start } from "./kzkm-engine.ts/Core";
@@ -16,7 +16,8 @@ class InitScene extends Room {
         this.AddUnit(new Chara(this));
         this.AddUnit(new ObjTest(this));
         this.camera.position.z = 10;
-        let light = new AmbientLight(new Color(20, 20, 20), 0.4);
+        let light = new DirectionalLight("white", 1);
+        light.position.set(50, 100, 50);
         this.scene.add(light);
     }
 }
@@ -35,7 +36,7 @@ class ObjTest extends Unit {
                 mtl.preload();
                 //mtl.materials.map = texture;
                 loader.setMaterials(mtl);
-                loader.setPath("resources/")
+                loader.setPath("resources/");
                 loader.load("ente progress_export.obj",
                 grp => {
                     this.group = grp;
@@ -47,7 +48,8 @@ class ObjTest extends Unit {
     }
     Update(): void {
         super.Update();
-        this.group.rotation.x += 0.05;
+        this.group.rotation.y += 0.05;
+        this.group.position.y = -5;
         //if (this.frame == 100) this.isAlive = false;
     }
     Draw(): void {
