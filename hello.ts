@@ -1,5 +1,6 @@
 import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
-import { BoxGeometry, MeshBasicMaterial, Mesh, OBJLoader, LoadingManager, Scene } from "three";
+import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
+import { BoxGeometry, MeshBasicMaterial, Mesh, OBJLoader, LoadingManager, Scene, MTLLoader, PointLight, AmbientLight, Color, TextureLoader, Colors, Group } from "three";
 import { Room } from "./kzkm-engine.ts/Room";
 import { Unit } from "./kzkm-engine.ts/Unit";
 import { Start } from "./kzkm-engine.ts/Core";
@@ -15,34 +16,39 @@ class InitScene extends Room {
         this.AddUnit(new Chara(this));
         this.AddUnit(new ObjTest(this));
         this.camera.position.z = 10;
+        let light = new AmbientLight(new Color(20, 20, 20), 0.4);
+        this.scene.add(light);
     }
 }
 
 class ObjTest extends Unit {
+    group: Group;
     Init(): void {
         let manager = new LoadingManager();
         let loader = new OBJLoader(manager);
-        let material = new MeshBasicMaterial({color: 0x99aaff});
-        loader.load("resources/ente progress_export.obj",
-            grp => {
-                grp.traverse(obj => {
-                    if (obj instanceof Mesh) {
-                        obj.material = material;
-                    }
-                });
-                this.room.AddObject(this, grp);
-            },
-            pe => {
-                console.log(pe.loaded + "/" + pe.total);
-            },
-            ee => {
-                console.log("error: " + ee.filename);
+        let mtlLoader = new MTLLoader(manager);
+        let textureLoader = new TextureLoader(manager);
+        //let texture = textureLoader.load("resources/texture.enteprogress_export.png");
+        mtlLoader.setPath("resources/");
+        mtlLoader.load("ente progress_export.mtl",
+            mtl => {
+                mtl.preload();
+                //mtl.materials.map = texture;
+                loader.setMaterials(mtl);
+                loader.setPath("resources/")
+                loader.load("ente progress_export.obj",
+                grp => {
+                    this.group = grp;
+                    this.room.AddObject(this, grp);
+                }  
+                );
             }
         );
     }
     Update(): void {
         super.Update();
-        if (this.frame == 100) this.isAlive = false;
+        this.group.rotation.x += 0.05;
+        //if (this.frame == 100) this.isAlive = false;
     }
     Draw(): void {
 
@@ -61,7 +67,7 @@ class Chara extends Unit {
         this.cube.rotation.x += 0.1;
         this.cube.rotation.y += 0.1;
         if (this.frame == 50) {
-            console.log("add");
+            //console.log("add");
             this.room.AddUnit(new Chara(this.room));
         }
         if (this.frame == 200) this.isAlive = false;
@@ -70,7 +76,7 @@ class Chara extends Unit {
         //console.log("uuuuu");
     }
     Init(): void {
-        console.log("init!!");
+        //console.log("init!!");
         this.geometry = new BoxGeometry(1, 1, 1);
         this.material = new MeshBasicMaterial({color: 0xffffff});
         this.cube = new Mesh(this.geometry, this.material);
@@ -80,7 +86,7 @@ class Chara extends Unit {
         this.room.AddObject(this, this.cube);
     }
     Fin(): void {
-        console.log("Fin!!");
+        //console.log("Fin!!");
         this.geometry.dispose();
         this.material.dispose();
     }
