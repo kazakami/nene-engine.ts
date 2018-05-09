@@ -1,5 +1,5 @@
 import { Unit } from "./Unit";
-import { Scene, Camera, PerspectiveCamera, Mesh } from "three";
+import { Scene, Camera, PerspectiveCamera, Mesh, Object3D } from "three";
 
 class Room {
     units: Unit[];
@@ -32,10 +32,10 @@ class Room {
         });
     }
 
-    AddMesh(u: Unit, m: Mesh): void {
-        //Sceneにメッシュを追加し、Unitに紐づける
-        this.scene.add(m);
-        u.meshes.push(m);
+    AddMesh(u: Unit, o: Object3D): void {
+        //SceneにObject3Dを追加し、Unitに紐づける
+        this.scene.add(o);
+        u.objects.push(o);
     }
 
     AddUnit(u: Unit): void {
@@ -45,9 +45,9 @@ class Room {
     }
 
     Remove(): void {
-        //有効でなくなったUnitに紐づけられてるメッシュを削除し、Fin()を呼び出す
+        //有効でなくなったUnitに紐づけられてるObject3Dを削除し、Fin()を呼び出す
         this.units.filter(u => !u.isAlive).forEach(u => {
-            u.meshes.forEach(m => {this.scene.remove(m)});
+            u.objects.forEach(o => {this.scene.remove(o)});
             u.Fin();
         });
         //Unitのリストから有効でなくなったものを取り除く

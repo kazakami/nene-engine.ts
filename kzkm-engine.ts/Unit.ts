@@ -1,17 +1,17 @@
 import { Room } from "./Room";
-import { Mesh } from "three";
+import { Object3D } from "three";
 
 abstract class Unit {
     isAlive: boolean;
     priority: number;
     room: Room;
     frame: number;
-    meshes: Mesh[];
+    objects: Object3D[];
     constructor(room){
         this.isAlive = true;
         this.room = room;
         this.frame = 0;
-        this.meshes = [];
+        this.objects = [];
     }
     Update(): void{
         this.frame++;
