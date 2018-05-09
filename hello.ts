@@ -30,7 +30,7 @@ class ObjTest extends Unit {
                         obj.material = material;
                     }
                 });
-                this.room.scene.add(grp)
+                this.room.AddObject(this, grp);
             },
             pe => {
                 console.log(pe.loaded + "/" + pe.total);
@@ -42,6 +42,7 @@ class ObjTest extends Unit {
     }
     Update(): void {
         super.Update();
+        if (this.frame == 100) this.isAlive = false;
     }
     Draw(): void {
 
@@ -76,7 +77,7 @@ class Chara extends Unit {
         this.cube.position.x = Math.random() * 8 - 4;
         this.cube.position.y = Math.random() * 8 - 4;
         this.cube.position.z = Math.random() * 8 - 4;
-        this.room.AddMesh(this, this.cube);
+        this.room.AddObject(this, this.cube);
     }
     Fin(): void {
         console.log("Fin!!");

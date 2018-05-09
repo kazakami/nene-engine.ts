@@ -32,7 +32,7 @@ class Room {
         });
     }
 
-    AddMesh(u: Unit, o: Object3D): void {
+    AddObject(u: Unit, o: Object3D): void {
         //SceneにObject3Dを追加し、Unitに紐づける
         this.scene.add(o);
         u.objects.push(o);
