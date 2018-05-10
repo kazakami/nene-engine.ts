@@ -25,17 +25,20 @@ class Core {
     }
 
     LoadObjMtl(obj_filename: string, mtl_filename: string, name: string): void {
-        if (mtl_filename.lastIndexOf("/") !== -1)
-            this.mtlLoader.setPath(mtl_filename.substr(0, mtl_filename.lastIndexOf("/")) + "/");
+        //ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
         if (mtl_filename.indexOf("/") !== -1)
+        {
+            this.mtlLoader.setPath(mtl_filename.substr(0, mtl_filename.lastIndexOf("/")) + "/");
             mtl_filename = mtl_filename.slice(mtl_filename.indexOf("/") + 1);
+        }
         this.mtlLoader.load(mtl_filename,
             mtl => {
                 mtl.preload();
-                if (obj_filename.lastIndexOf("/") !== -1)
+                //上と同様にディレクトリ内を指していたらディレクトリパスとファイル名に分ける
+                if (obj_filename.indexOf("/") !== -1) {
                     this.objLoader.setPath(obj_filename.substr(0, obj_filename.lastIndexOf("/")) + "/");
-                if (obj_filename.indexOf("/") !== -1)
                     obj_filename = obj_filename.slice(obj_filename.indexOf("/") + 1);
+                }
                 this.objLoader.setMaterials(mtl);
                 this.objLoader.load(obj_filename,
                     grp => {
