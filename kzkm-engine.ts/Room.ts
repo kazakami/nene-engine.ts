@@ -1,18 +1,23 @@
 import { Unit } from "./Unit";
 import { Scene, Camera, PerspectiveCamera, Mesh, Object3D } from "three";
+import { Core } from "./Core";
 
 class Room {
+    core: Core;
     units: Unit[];
     scene: Scene;
     camera: Camera;
+    frame: number;
 
     constructor() {
         this.scene = new Scene();
         this.camera = new PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
         this.units = [];
+        this.frame = 0;
     }
 
     Update(): void {
+        this.frame++;
         //有効でなくなったUnitの削除処理を行ってからUpdate()を実行する
         this.Remove();
         this.units.forEach(u => {

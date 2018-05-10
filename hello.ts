@@ -14,11 +14,17 @@ class InitScene extends Room {
     {
         super.Init();
         this.AddUnit(new Chara(this));
-        this.AddUnit(new ObjTest(this));
+        //this.AddUnit(new ObjTest(this));
         this.camera.position.z = 10;
         let light = new DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
+        this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
+    }
+    Update(): void {
+        super.Update();
+        if (this.frame == 100)
+            this.AddUnit(new ObjTest(this));
     }
 }
 
@@ -26,28 +32,10 @@ class ObjTest extends Unit {
     group: Group;
     group2: Group;
     Init(): void {
-        let manager = new LoadingManager();
-        let loader = new OBJLoader(manager);
-        let mtlLoader = new MTLLoader(manager);
-        let textureLoader = new TextureLoader(manager);
-        //let texture = textureLoader.load("resources/texture.enteprogress_export.png");
-        mtlLoader.setPath("resources/");
-        mtlLoader.load("ente progress_export.mtl",
-            mtl => {
-                mtl.preload();
-                //mtl.materials.map = texture;
-                loader.setMaterials(mtl);
-                loader.setPath("resources/");
-                loader.load("ente progress_export.obj",
-                grp => {
-                    this.group = grp.clone(true);
-                    this.group2 = grp.clone(true);
-                    this.room.AddObject(this, this.group);
-                    this.room.AddObject(this, this.group2);
-                }  
-                );
-            }
-        );
+        this.group = this.room.core.GetObject("ente");
+        this.group2 = this.room.core.GetObject("ente");
+        this.room.AddObject(this, this.group);
+        this.room.AddObject(this, this.group2);
     }
     Update(): void {
         super.Update();
