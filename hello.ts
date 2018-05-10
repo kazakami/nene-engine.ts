@@ -6,25 +6,33 @@ import { Unit } from "./kzkm-engine.ts/Unit";
 import { Start } from "./kzkm-engine.ts/Core";
 
 
-class InitScene extends Room {
-    constructor() {
-        super();
+class LoadScene extends Room {
+    Init(): void {
+        super.Init();
+        this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
     }
-    Init(): void
-    {
+    Update(): void {
+        if (this.core.IsObjectAvailable("ente")) {
+            this.core.AddRoom("game", new GameRoom());
+            this.core.ChangeRoom("game");
+        } else {
+            console.log("loading model");
+        }
+    }
+}
+
+class GameRoom extends Room {
+    Init(): void {
         super.Init();
         this.AddUnit(new Chara(this));
-        //this.AddUnit(new ObjTest(this));
+        this.AddUnit(new ObjTest(this));
         this.camera.position.z = 10;
         let light = new DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
-        this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
     }
     Update(): void {
         super.Update();
-        if (this.frame == 100)
-            this.AddUnit(new ObjTest(this));
     }
 }
 
@@ -89,4 +97,4 @@ class Chara extends Unit {
 
 
 
-Start("init", new InitScene());
+Start("init", new LoadScene());

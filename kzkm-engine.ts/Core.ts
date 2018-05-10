@@ -50,18 +50,18 @@ class Core {
     }
 
     GetObject(name: string): Object3D {
-        console.log("get");
+        //console.log("get");
         return this.objects[name][1].clone(true);
     }
 
     IsObjectAvailable(name: string): boolean {
-        console.log("is alive");
+        //console.log("is alive");
         if (this.objects[name]) {
-            console.log("exit");
-            return false;
-        } else {
-            console.log("not exit");
+            //console.log("exit");
             return this.objects[name][0];
+        } else {
+            //console.log("not exit");
+            return false;
         }
     }
 
@@ -87,15 +87,22 @@ class Core {
         this.renderer.render(this.activeRoom.scene, this.activeRoom.camera);
     }
 
-    ChangeScene(roomName: string): void {
+    ChangeRoom(roomName: string): void {
+        //console.log("change");
         this.activeRoom = this.rooms[roomName];
+    }
+
+    AddRoom(roomName: string, room: Room): void {
+        this.rooms[roomName] = room;
+        room.core = this;
+        room.Init();
     }
 }
 
-function Start(defaultSceneName: string, defaultRoom: Room): void{
+function Start(defaultRoomName: string, defaultRoom: Room): void {
     let core = new Core();
     defaultRoom.core = core;
-    core.Init(defaultSceneName, defaultRoom);
+    core.Init(defaultRoomName, defaultRoom);
 }
 
 export { Start };
