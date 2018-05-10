@@ -24,6 +24,7 @@ class InitScene extends Room {
 
 class ObjTest extends Unit {
     group: Group;
+    group2: Group;
     Init(): void {
         let manager = new LoadingManager();
         let loader = new OBJLoader(manager);
@@ -39,8 +40,10 @@ class ObjTest extends Unit {
                 loader.setPath("resources/");
                 loader.load("ente progress_export.obj",
                 grp => {
-                    this.group = grp;
-                    this.room.AddObject(this, grp);
+                    this.group = grp.clone(true);
+                    this.group2 = grp.clone(true);
+                    this.room.AddObject(this, this.group);
+                    this.room.AddObject(this, this.group2);
                 }  
                 );
             }
@@ -48,8 +51,10 @@ class ObjTest extends Unit {
     }
     Update(): void {
         super.Update();
-        this.group.rotation.y += 0.05;
+        this.group.rotation.y += 0.02;
         this.group.position.y = -5;
+        this.group2.rotation.y -= 0.02;
+        this.group2.position.y = -8;
         //if (this.frame == 100) this.isAlive = false;
     }
     Draw(): void {
