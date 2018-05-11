@@ -1,5 +1,3 @@
-import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
-import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
 import { BoxGeometry, MeshBasicMaterial, Mesh, Group, DirectionalLight } from "three";
 import { Room } from "./kzkm-engine.ts/Room";
 import { Unit } from "./kzkm-engine.ts/Unit";
