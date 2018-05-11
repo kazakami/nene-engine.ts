@@ -82,13 +82,11 @@ class Core {
     }
 
     Draw(): void {
-        //console.log("hhhh");
         this.activeRoom.Draw();
         this.renderer.render(this.activeRoom.scene, this.activeRoom.camera);
     }
 
     ChangeRoom(roomName: string): void {
-        //console.log("change");
         this.activeRoom = this.rooms[roomName];
     }
 

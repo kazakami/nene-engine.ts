@@ -13,6 +13,7 @@ class LoadScene extends Room {
     }
     Update(): void {
         if (this.core.IsObjectAvailable("ente")) {
+            //オブジェクトenteが読み込まれればルーム遷移
             this.core.AddRoom("game", new GameRoom());
             this.core.ChangeRoom("game");
         } else {
@@ -70,16 +71,13 @@ class Chara extends Unit {
         this.cube.rotation.x += 0.1;
         this.cube.rotation.y += 0.1;
         if (this.frame == 50) {
-            //console.log("add");
             this.room.AddUnit(new Chara());
         }
         if (this.frame == 200) this.isAlive = false;
     }
     Draw(): void {
-        //console.log("uuuuu");
     }
     Init(): void {
-        //console.log("init!!");
         this.geometry = new BoxGeometry(1, 1, 1);
         this.material = new MeshBasicMaterial({color: 0xffffff});
         this.cube = new Mesh(this.geometry, this.material);
@@ -89,12 +87,11 @@ class Chara extends Unit {
         this.AddObject(this.cube);
     }
     Fin(): void {
-        //console.log("Fin!!");
         this.geometry.dispose();
         this.material.dispose();
     }
 }
 
 
-
+//ゲームの開始
 Start("init", new LoadScene());
