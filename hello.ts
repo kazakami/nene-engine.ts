@@ -24,8 +24,8 @@ class LoadScene extends Room {
 class GameRoom extends Room {
     Init(): void {
         super.Init();
-        this.AddUnit(new Chara(this));
-        this.AddUnit(new ObjTest(this));
+        this.AddUnit(new Chara());
+        this.AddUnit(new ObjTest());
         this.camera.position.z = 10;
         let light = new DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
@@ -71,7 +71,7 @@ class Chara extends Unit {
         this.cube.rotation.y += 0.1;
         if (this.frame == 50) {
             //console.log("add");
-            this.room.AddUnit(new Chara(this.room));
+            this.room.AddUnit(new Chara());
         }
         if (this.frame == 200) this.isAlive = false;
     }

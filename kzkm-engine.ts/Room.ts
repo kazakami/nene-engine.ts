@@ -39,6 +39,7 @@ class Room {
 
     AddUnit(u: Unit): void {
         //Initを実行してからリストに追加
+        u.room = this;
         u.Init();
         this.units.push(u);
     }

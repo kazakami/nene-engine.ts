@@ -7,9 +7,9 @@ abstract class Unit {
     room: Room;
     frame: number;
     objects: Object3D[];
-    constructor(room){
+    constructor(){
         this.isAlive = true;
-        this.room = room;
+        this.room = null;
         this.frame = 0;
         this.objects = [];
     }
