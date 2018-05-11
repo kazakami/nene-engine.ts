@@ -1,12 +1,12 @@
 import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
-import { BoxGeometry, MeshBasicMaterial, Mesh, OBJLoader, LoadingManager, Scene, MTLLoader, PointLight, AmbientLight, Color, TextureLoader, Colors, Group, DirectionalLight } from "three";
+import { BoxGeometry, MeshBasicMaterial, Mesh, Group, DirectionalLight } from "three";
 import { Room } from "./kzkm-engine.ts/Room";
 import { Unit } from "./kzkm-engine.ts/Unit";
 import { Start } from "./kzkm-engine.ts/Core";
 
 
-class LoadScene extends Room {
+class LoadRoom extends Room {
     Init(): void {
         super.Init();
         this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
@@ -94,4 +94,4 @@ class Chara extends Unit {
 
 
 //ゲームの開始
-Start("init", new LoadScene());
+Start("init", new LoadRoom());
