@@ -19,6 +19,11 @@ abstract class Unit {
     abstract Draw(): void;
     abstract Init(): void;
     abstract Fin(): void;
+    //SceneにObject3Dを追加し、Unitに紐づける
+    AddObject(o: Object3D): void {
+        this.objects.push(o);
+        this.room.scene.add(o);
+    }
 }
 
 export { Unit };

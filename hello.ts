@@ -42,8 +42,8 @@ class ObjTest extends Unit {
     Init(): void {
         this.group = this.room.core.GetObject("ente");
         this.group2 = this.room.core.GetObject("ente");
-        this.room.AddObject(this, this.group);
-        this.room.AddObject(this, this.group2);
+        this.AddObject(this.group);
+        this.AddObject(this.group2);
     }
     Update(): void {
         super.Update();
@@ -86,7 +86,7 @@ class Chara extends Unit {
         this.cube.position.x = Math.random() * 8 - 4;
         this.cube.position.y = Math.random() * 8 - 4;
         this.cube.position.z = Math.random() * 8 - 4;
-        this.room.AddObject(this, this.cube);
+        this.AddObject(this.cube);
     }
     Fin(): void {
         //console.log("Fin!!");
