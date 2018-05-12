@@ -11,6 +11,9 @@ class Core {
     loadingManager: LoadingManager;
     objLoader: OBJLoader;
     mtlLoader: MTLLoader;
+    canvas: HTMLCanvasElement;
+    mouseX: number;
+    mouseY: number;
 
     constructor() {
         this.rooms = {};
@@ -21,7 +24,19 @@ class Core {
         this.loadingManager = new LoadingManager();
         this.objLoader = new OBJLoader(this.loadingManager);
         this.mtlLoader = new MTLLoader(this.loadingManager);
-        document.body.appendChild(this.renderer.domElement);
+        this.canvas = this.renderer.domElement
+        document.body.appendChild(this.canvas);
+        this.canvas.addEventListener("mousemove", this.OnCanvasMouseMove, false);
+        this.canvas.addEventListener("click", this.OnCanvasClick);
+    }
+
+    OnCanvasMouseMove(e: MouseEvent): void {
+        this.mouseX = e.offsetX;
+        this.mouseY = e.offsetY;
+    }
+
+    OnCanvasClick(e: Event): void {
+        console.log("(" + this.mouseX + ", " + this.mouseY + ")");
     }
 
     LoadObjMtl(obj_filename: string, mtl_filename: string, name: string): void {
