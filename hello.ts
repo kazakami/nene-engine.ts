@@ -1,4 +1,4 @@
-import { BoxGeometry, MeshBasicMaterial, Mesh, Group, DirectionalLight } from "three";
+import { BoxGeometry, MeshBasicMaterial, Mesh, Group, DirectionalLight, SpriteMaterial, Sprite } from "three";
 import { Room } from "./kzkm-engine.ts/Room";
 import { Unit } from "./kzkm-engine.ts/Unit";
 import { Start } from "./kzkm-engine.ts/Core";
@@ -29,6 +29,11 @@ class GameRoom extends Room {
         let light = new DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
+        let mat = new SpriteMaterial({color: 0xFF0000});
+        let sprt = new Sprite(mat);
+        sprt.scale.set(500, 500, 1);
+        sprt.position.set(500, 500, -1);
+        this.scene2d.add(sprt);
     }
     Update(): void {
         super.Update();

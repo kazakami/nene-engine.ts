@@ -19,6 +19,7 @@ class Core {
         this.rooms = {};
         this.activeRoom = null;
         this.renderer = new WebGLRenderer();
+        this.renderer.autoClear = false;
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.objects = {};
         this.loadingManager = new LoadingManager();
@@ -98,7 +99,9 @@ class Core {
 
     Draw(): void {
         this.activeRoom.Draw();
+        this.renderer.clear();
         this.renderer.render(this.activeRoom.scene, this.activeRoom.camera);
+        this.renderer.render(this.activeRoom.scene2d, this.activeRoom.camera2d);
     }
 
     ChangeRoom(roomName: string): void {

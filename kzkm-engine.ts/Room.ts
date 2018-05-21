@@ -1,5 +1,5 @@
 import { Unit } from "./Unit";
-import { Scene, Camera, PerspectiveCamera, Mesh, Object3D } from "three";
+import { Scene, Camera, PerspectiveCamera, Mesh, Object3D, OrthographicCamera } from "three";
 import { Core } from "./Core";
 
 class Room {
@@ -7,11 +7,15 @@ class Room {
     units: Unit[];
     scene: Scene;
     camera: Camera;
+    scene2d: Scene;
+    camera2d: Camera;
     frame: number;
 
     constructor() {
         this.scene = new Scene();
         this.camera = new PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        this.scene2d = new Scene();
+        this.camera2d = new OrthographicCamera(0, window.innerWidth, 0, window.innerHeight, 0.0001, 10000);
         this.units = [];
         this.frame = 0;
     }
