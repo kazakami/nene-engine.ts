@@ -1,26 +1,27 @@
 import { BoxGeometry, MeshBasicMaterial, Mesh, Group, DirectionalLight, SpriteMaterial, Sprite } from "three";
 import { Room } from "./kzkm-engine.ts/Room";
 import { Unit } from "./kzkm-engine.ts/Unit";
-import { Start } from "./kzkm-engine.ts/Core";
+import { Start, core } from "./kzkm-engine.ts/Core";
 
 
 class LoadRoom extends Room {
     Init(): void {
         super.Init();
-        this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
+        core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
     }
     Update(): void {
-        if (this.core.IsObjectAvailable("ente")) {
+        if (core.IsObjectAvailable("ente")) {
             //オブジェクトenteが読み込まれればルーム遷移
-            this.core.AddRoom("game", new GameRoom());
-            this.core.ChangeRoom("game");
+            core.AddRoom("game", new GameRoom());
+            core.ChangeRoom("game");
         } else {
-            console.log("loading model");
+            console.log("now loading model");
         }
     }
 }
 
 class GameRoom extends Room {
+    sprt: Sprite;
     Init(): void {
         super.Init();
         this.AddUnit(new Chara());
@@ -30,13 +31,16 @@ class GameRoom extends Room {
         light.position.set(50, 100, 50);
         this.scene.add(light);
         let mat = new SpriteMaterial({color: 0xFF0000});
-        let sprt = new Sprite(mat);
-        sprt.scale.set(500, 500, 1);
-        sprt.position.set(500, 500, -1);
-        this.scene2d.add(sprt);
+        this.sprt = new Sprite(mat);
+        this.sprt.scale.set(100, 100, 1);
+        //this.sprt.position.set(500, 500, -1);
+        this.scene2d.add(this.sprt);
     }
     Update(): void {
         super.Update();
+        this.sprt.position.set(core.mouseX, core.mouseY, -1);
+        //if (this.frame % 100 == 0) console.log(this.core);
+        //console.log(this.core.mouseX + ", " + this.core.mouseY);
     }
 }
 
@@ -44,8 +48,8 @@ class ObjTest extends Unit {
     group: Group;
     group2: Group;
     Init(): void {
-        this.group = this.room.core.GetObject("ente");
-        this.group2 = this.room.core.GetObject("ente");
+        this.group = core.GetObject("ente");
+        this.group2 = core.GetObject("ente");
         this.AddObject(this.group);
         this.AddObject(this.group2);
     }

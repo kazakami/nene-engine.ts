@@ -29,15 +29,17 @@ class Core {
         document.body.appendChild(this.canvas);
         this.canvas.addEventListener("mousemove", this.OnCanvasMouseMove, false);
         this.canvas.addEventListener("click", this.OnCanvasClick);
+        this.mouseX = 0;
+        this.mouseY = 0;
     }
 
     OnCanvasMouseMove(e: MouseEvent): void {
-        this.mouseX = e.offsetX;
-        this.mouseY = e.offsetY;
+        core.mouseX = e.offsetX;
+        core.mouseY = e.offsetY;
     }
 
     OnCanvasClick(e: Event): void {
-        console.log("(" + this.mouseX + ", " + this.mouseY + ")");
+        console.log("(" + core.mouseX + ", " + core.mouseY + ")");
     }
 
     LoadObjMtl(obj_filename: string, mtl_filename: string, name: string): void {
@@ -66,17 +68,13 @@ class Core {
     }
 
     GetObject(name: string): Object3D {
-        //console.log("get");
         return this.objects[name][1].clone(true);
     }
 
     IsObjectAvailable(name: string): boolean {
-        //console.log("is alive");
         if (this.objects[name]) {
-            //console.log("exit");
             return this.objects[name][0];
         } else {
-            //console.log("not exit");
             return false;
         }
     }
@@ -110,16 +108,17 @@ class Core {
 
     AddRoom(roomName: string, room: Room): void {
         this.rooms[roomName] = room;
-        room.core = this;
         room.Init();
     }
 }
 
+let core: Core = null;
+
 function Start(defaultRoomName: string, defaultRoom: Room): void {
-    let core = new Core();
-    defaultRoom.core = core;
+    core = new Core();
     core.Init(defaultRoomName, defaultRoom);
 }
 
+export { core }
 export { Start };
 export { Core };

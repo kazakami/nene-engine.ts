@@ -3,7 +3,6 @@ import { Scene, Camera, PerspectiveCamera, Mesh, Object3D, OrthographicCamera } 
 import { Core } from "./Core";
 
 class Room {
-    core: Core;
     units: Unit[];
     scene: Scene;
     camera: Camera;
