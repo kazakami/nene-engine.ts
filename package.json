@@ -1,7 +1,7 @@
 {
   "name": "kzkm-engine.ts",
   "version": "0.0.1",
-  "description": "",
+  "description": "kzkm-engine",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
@@ -16,7 +16,7 @@
     "ts-loader": "^4.2.0",
     "tslint": "^5.10.0",
     "typescript": "^2.8.1",
-    "webpack": "^4.6.0",
-    "webpack-cli": "^2.1.4"
+    "webpack": "^4.12.1",
+    "webpack-cli": "^3.0.8"
   }
 }
