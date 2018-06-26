@@ -19,6 +19,7 @@ class LoadRoom extends Room {
     }
 }
 
+// tslint:disable-next-line:max-classes-per-file
 class GameRoom extends Room {
     public sprt: Sprite;
     public Init(): void {
@@ -29,7 +30,7 @@ class GameRoom extends Room {
         const light = new DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
-        const mat = new SpriteMaterial({color: 0xFF0000});
+        const mat = new SpriteMaterial({ color: 0xFF0000 });
         this.sprt = new Sprite(mat);
         this.sprt.scale.set(100, 100, 1);
         // this.sprt.position.set(500, 500, -1);
@@ -43,6 +44,7 @@ class GameRoom extends Room {
     }
 }
 
+// tslint:disable-next-line:max-classes-per-file
 class ObjTest extends Unit {
     public group: Group;
     public group2: Group;
@@ -61,11 +63,14 @@ class ObjTest extends Unit {
         // if (this.frame == 100) this.isAlive = false;
     }
     public Draw(): void {
+        return;
     }
     public Fin(): void {
+        return;
     }
 }
 
+// tslint:disable-next-line:max-classes-per-file
 class Chara extends Unit {
     public geometry: BoxGeometry;
     public material: MeshBasicMaterial;
@@ -82,10 +87,11 @@ class Chara extends Unit {
         }
     }
     public Draw(): void {
+        return;
     }
     public Init(): void {
         this.geometry = new BoxGeometry(1, 1, 1);
-        this.material = new MeshBasicMaterial({color: 0xffffff});
+        this.material = new MeshBasicMaterial({ color: 0xffffff });
         this.cube = new Mesh(this.geometry, this.material);
         this.cube.position.x = Math.random() * 8 - 4;
         this.cube.position.y = Math.random() * 8 - 4;
