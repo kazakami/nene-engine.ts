@@ -1,7 +1,9 @@
-import { BoxGeometry, MeshBasicMaterial, Mesh } from "three";
+import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
+import { BoxGeometry, MeshBasicMaterial, Mesh, OBJLoader, LoadingManager, Scene } from "three";
 import { Room } from "./kzkm-engine.ts/Room";
 import { Unit } from "./kzkm-engine.ts/Unit";
 import { Start } from "./kzkm-engine.ts/Core";
+
 
 class InitScene extends Room {
     constructor() {
@@ -11,7 +13,41 @@ class InitScene extends Room {
     {
         super.Init();
         this.AddUnit(new Chara(this));
+        this.AddUnit(new ObjTest(this));
         this.camera.position.z = 10;
+    }
+}
+
+class ObjTest extends Unit {
+    Init(): void {
+        let manager = new LoadingManager();
+        let loader = new OBJLoader(manager);
+        let material = new MeshBasicMaterial({color: 0x99aaff});
+        loader.load("resources/ente progress_export.obj",
+            grp => {
+                grp.traverse(obj => {
+                    if (obj instanceof Mesh) {
+                        obj.material = material;
+                    }
+                });
+                this.room.scene.add(grp)
+            },
+            pe => {
+                console.log(pe.loaded + "/" + pe.total);
+            },
+            ee => {
+                console.log("error: " + ee.filename);
+            }
+        );
+    }
+    Update(): void {
+        super.Update();
+    }
+    Draw(): void {
+
+    }
+    Fin(): void {
+
     }
 }
 
