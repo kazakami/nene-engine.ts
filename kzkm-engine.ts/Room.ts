@@ -37,6 +37,7 @@ class Room {
     }
 
     AddUnit(u: Unit): void {
+        u.Init();
         this.units.push(u);
     }
 
