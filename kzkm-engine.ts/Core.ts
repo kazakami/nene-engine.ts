@@ -1,19 +1,20 @@
-import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
+import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
 import { Room } from "./Room";
-import { WebGLRenderer, OBJLoader, MTLLoader, Object3D, LoadingManager } from "three";
+
+import { LoadingManager, MTLLoader, Object3D, OBJLoader, WebGLRenderer } from "three";
 
 class Core {
-    rooms: { [key: string]: Room };
-    activeRoom: Room;
-    renderer: WebGLRenderer;
-    objects: { [key: string]: [boolean,Object3D] };
-    loadingManager: LoadingManager;
-    objLoader: OBJLoader;
-    mtlLoader: MTLLoader;
-    canvas: HTMLCanvasElement;
-    mouseX: number;
-    mouseY: number;
+    public rooms: { [key: string]: Room };
+    public activeRoom: Room;
+    public renderer: WebGLRenderer;
+    public objects: { [key: string]: [boolean, Object3D] };
+    public loadingManager: LoadingManager;
+    public objLoader: OBJLoader;
+    public mtlLoader: MTLLoader;
+    public canvas: HTMLCanvasElement;
+    public mouseX: number;
+    public mouseY: number;
 
     constructor() {
         this.rooms = {};
@@ -25,7 +26,7 @@ class Core {
         this.loadingManager = new LoadingManager();
         this.objLoader = new OBJLoader(this.loadingManager);
         this.mtlLoader = new MTLLoader(this.loadingManager);
-        this.canvas = this.renderer.domElement
+        this.canvas = this.renderer.domElement;
         document.body.appendChild(this.canvas);
         this.canvas.addEventListener("mousemove", this.OnCanvasMouseMove, false);
         this.canvas.addEventListener("click", this.OnCanvasClick);
@@ -33,45 +34,42 @@ class Core {
         this.mouseY = 0;
     }
 
-    OnCanvasMouseMove(e: MouseEvent): void {
+    public OnCanvasMouseMove(e: MouseEvent): void {
         core.mouseX = e.offsetX;
         core.mouseY = e.offsetY;
     }
 
-    OnCanvasClick(e: Event): void {
-        console.log("(" + core.mouseX + ", " + core.mouseY + ")");
+    public OnCanvasClick(e: Event): void {
+        // console.log("(" + core.mouseX + ", " + core.mouseY + ")");
     }
 
-    LoadObjMtl(obj_filename: string, mtl_filename: string, name: string): void {
-        //ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
-        if (mtl_filename.indexOf("/") !== -1)
-        {
-            this.mtlLoader.setPath(mtl_filename.substr(0, mtl_filename.lastIndexOf("/")) + "/");
-            mtl_filename = mtl_filename.slice(mtl_filename.indexOf("/") + 1);
+    public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): void {
+        // ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
+        if (mtlFilename.indexOf("/") !== -1) {
+            this.mtlLoader.setPath(mtlFilename.substr(0, mtlFilename.lastIndexOf("/")) + "/");
+            mtlFilename = mtlFilename.slice(mtlFilename.indexOf("/") + 1);
         }
-        this.mtlLoader.load(mtl_filename,
-            mtl => {
+        this.mtlLoader.load(mtlFilename,
+            (mtl) => {
                 mtl.preload();
-                //上と同様にディレクトリ内を指していたらディレクトリパスとファイル名に分ける
-                if (obj_filename.indexOf("/") !== -1) {
-                    this.objLoader.setPath(obj_filename.substr(0, obj_filename.lastIndexOf("/")) + "/");
-                    obj_filename = obj_filename.slice(obj_filename.indexOf("/") + 1);
+                // 上と同様にディレクトリ内を指していたらディレクトリパスとファイル名に分ける
+                if (objFilename.indexOf("/") !== -1) {
+                    this.objLoader.setPath(objFilename.substr(0, objFilename.lastIndexOf("/")) + "/");
+                    objFilename = objFilename.slice(objFilename.indexOf("/") + 1);
                 }
                 this.objLoader.setMaterials(mtl);
-                this.objLoader.load(obj_filename,
-                    grp => {
+                this.objLoader.load(objFilename,
+                    (grp) => {
                         this.objects[name] = [true, grp];
-                    }
-                );
-            }
-        );
+                    });
+            });
     }
 
-    GetObject(name: string): Object3D {
+    public GetObject(name: string): Object3D {
         return this.objects[name][1].clone(true);
     }
 
-    IsObjectAvailable(name: string): boolean {
+    public IsObjectAvailable(name: string): boolean {
         if (this.objects[name]) {
             return this.objects[name][0];
         } else {
@@ -79,11 +77,11 @@ class Core {
         }
     }
 
-    Init(roomName: string, room: Room): void {
+    public Init(roomName: string, room: Room): void {
         this.rooms[roomName] = room;
         this.activeRoom = room;
         this.activeRoom.Init();
-        let animate = () => {
+        const animate = () => {
             requestAnimationFrame(animate);
             this.Update();
             this.Draw();
@@ -91,22 +89,22 @@ class Core {
         animate();
     }
 
-    Update(): void {
+    public Update(): void {
         this.activeRoom.Update();
     }
 
-    Draw(): void {
+    public Draw(): void {
         this.activeRoom.Draw();
         this.renderer.clear();
         this.renderer.render(this.activeRoom.scene, this.activeRoom.camera);
         this.renderer.render(this.activeRoom.scene2d, this.activeRoom.camera2d);
     }
 
-    ChangeRoom(roomName: string): void {
+    public ChangeRoom(roomName: string): void {
         this.activeRoom = this.rooms[roomName];
     }
 
-    AddRoom(roomName: string, room: Room): void {
+    public AddRoom(roomName: string, room: Room): void {
         this.rooms[roomName] = room;
         room.Init();
     }
@@ -119,6 +117,6 @@ function Start(defaultRoomName: string, defaultRoom: Room): void {
     core.Init(defaultRoomName, defaultRoom);
 }
 
-export { core }
+export { core };
 export { Start };
 export { Core };
