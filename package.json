@@ -4,7 +4,7 @@
   "description": "kzkm-engine",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --verbose",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
