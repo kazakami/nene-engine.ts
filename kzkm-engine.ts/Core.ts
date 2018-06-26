@@ -4,6 +4,8 @@ import { Room } from "./Room";
 
 import { LoadingManager, MTLLoader, Object3D, OBJLoader, WebGLRenderer } from "three";
 
+// import { hello } from "./../lib/hoge";
+
 class Core {
     public rooms: { [key: string]: Room };
     public activeRoom: Room;
@@ -17,6 +19,8 @@ class Core {
     public mouseY: number;
 
     constructor() {
+        // const h = new Hoge();
+        // hello("fuga");
         this.rooms = {};
         this.activeRoom = null;
         this.renderer = new WebGLRenderer();
