@@ -10,9 +10,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/ammo": "github:ringodotnl/-types-ammo",
     "@types/three": "^0.91.8",
-    "ammo.js": "github:kripken/ammo.js",
     "imports-loader": "^0.8.0",
     "three": "^0.91.0",
     "ts-loader": "^4.2.0",
