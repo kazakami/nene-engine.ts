@@ -1,7 +1,5 @@
+import { Camera, OrthographicCamera, PerspectiveCamera, Scene } from "three";
 import { Unit } from "./Unit";
-
-import { Camera, Mesh, Object3D, OrthographicCamera, PerspectiveCamera, Scene } from "three";
-import { Core } from "./Core";
 
 class Room {
     public units: Unit[];
