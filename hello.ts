@@ -1,7 +1,8 @@
-import { BoxGeometry, DirectionalLight, Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial } from "three";
+import { BoxGeometry, DirectionalLight, Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial, SphereGeometry, MeshLambertMaterial, PlaneGeometry, MeshPhongMaterial } from "three";
 import { core, Start } from "./kzkm-engine.ts/Core";
 import { Room } from "./kzkm-engine.ts/Room";
 import { Unit } from "./kzkm-engine.ts/Unit";
+import * as Cannon from "cannon";
 
 class LoadRoom extends Room {
     public Init(): void {
@@ -21,12 +22,21 @@ class LoadRoom extends Room {
 
 // tslint:disable-next-line:max-classes-per-file
 class GameRoom extends Room {
+    public world: Cannon.World;
+    public groundMat: Cannon.Material;
+    public phyPlane: Cannon.Body;
+    public sphereMat: Cannon.Material;
+    public phySphere: Cannon.Body;
+    public viewSphere: Mesh;
+    public viewPlane: Mesh;
     public sprt: Sprite;
     public Init(): void {
         super.Init();
         this.AddUnit(new Chara());
         this.AddUnit(new ObjTest());
         this.camera.position.z = 10;
+        this.camera.position.y = 10;
+        this.camera.lookAt(0, 0, 0);
         const light = new DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
@@ -35,10 +45,61 @@ class GameRoom extends Room {
         this.sprt.scale.set(100, 100, 1);
         // this.sprt.position.set(500, 500, -1);
         this.scene2d.add(this.sprt);
+        this.world = new Cannon.World();
+        this.world.gravity.set(0, -9.82, 0);
+        this.world.broadphase = new Cannon.NaiveBroadphase();
+        this.world.solver.iterations = 5;
+        this.groundMat = new Cannon.Material("groundMat");
+        this.phyPlane = new Cannon.Body({
+            mass: 0,
+            material: this.groundMat
+        });
+        this.phyPlane.addShape(new Cannon.Plane());
+        this.phyPlane.quaternion.setFromAxisAngle(new Cannon.Vec3(1, 0, 0), -Math.PI / 2);
+        this.world.addBody(this.phyPlane);
+        this.sphereMat = new Cannon.Material("sphereMat");
+        this.phySphere = new Cannon.Body({
+            mass: 1,
+            material: this.sphereMat
+        });
+        this.phySphere.addShape(new Cannon.Sphere(1));
+        this.phySphere.position.set(0, 10, 0);
+        this.phySphere.angularVelocity.set(0, 0, 0);
+        this.phySphere.angularDamping = 0.1;
+        this.world.addBody(this.phySphere);
+        this.viewSphere = new Mesh(
+            new SphereGeometry(1, 50, 50),
+            new MeshLambertMaterial(
+                {
+                    color: 0xffffff
+                }
+            )
+        );
+        this.scene.add(this.viewSphere);
+        this.viewPlane = new Mesh(
+            new PlaneGeometry(300, 300),
+            new MeshPhongMaterial(
+                {
+                    color: 0x333333
+                }
+            )
+        );
+        this.viewPlane.rotation.x = -Math.PI / 2;
+        this.viewPlane.rotation.y = 0;
+        this.scene.add(this.viewPlane);
     }
     public Update(): void {
         super.Update();
         this.sprt.position.set(core.mouseX, core.mouseY, -1);
+        this.world.step(1/ 60);
+        this.viewSphere.position.x = this.phySphere.position.x;
+        this.viewSphere.position.y = this.phySphere.position.y;
+        this.viewSphere.position.z = this.phySphere.position.z;
+
+        this.viewSphere.quaternion.w = this.phySphere.quaternion.w;
+        this.viewSphere.quaternion.x = this.phySphere.quaternion.x;
+        this.viewSphere.quaternion.y = this.phySphere.quaternion.y;
+        this.viewSphere.quaternion.z = this.phySphere.quaternion.z;
         // if (this.frame % 100 == 0) console.log(this.core);
         // console.log(this.core.mouseX + ", " + this.core.mouseY);
     }
