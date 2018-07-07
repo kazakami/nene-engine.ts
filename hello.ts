@@ -1,8 +1,8 @@
-import { BoxGeometry, DirectionalLight, Group, Mesh, MeshBasicMaterial, Sprite, SpriteMaterial, SphereGeometry, MeshLambertMaterial, PlaneGeometry, MeshPhongMaterial } from "three";
+import * as Cannon from "cannon";
+import * as THREE from "three";
 import { core, Start } from "./kzkm-engine.ts/Core";
 import { Room } from "./kzkm-engine.ts/Room";
 import { Unit } from "./kzkm-engine.ts/Unit";
-import * as Cannon from "cannon";
 
 class LoadRoom extends Room {
     public Init(): void {
@@ -27,9 +27,9 @@ class GameRoom extends Room {
     public phyPlane: Cannon.Body;
     public sphereMat: Cannon.Material;
     public phySphere: Cannon.Body;
-    public viewSphere: Mesh;
-    public viewPlane: Mesh;
-    public sprt: Sprite;
+    public viewSphere: THREE.Mesh;
+    public viewPlane: THREE.Mesh;
+    public sprt: THREE.Sprite;
     public Init(): void {
         super.Init();
         this.AddUnit(new Chara());
@@ -37,11 +37,11 @@ class GameRoom extends Room {
         this.camera.position.z = 10;
         this.camera.position.y = 10;
         this.camera.lookAt(0, 0, 0);
-        const light = new DirectionalLight("white", 1);
+        const light = new THREE.DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
-        const mat = new SpriteMaterial({ color: 0xFF0000 });
-        this.sprt = new Sprite(mat);
+        const mat = new THREE.SpriteMaterial({ color: 0xFF0000 });
+        this.sprt = new THREE.Sprite(mat);
         this.sprt.scale.set(100, 100, 1);
         // this.sprt.position.set(500, 500, -1);
         this.scene2d.add(this.sprt);
@@ -52,7 +52,7 @@ class GameRoom extends Room {
         this.groundMat = new Cannon.Material("groundMat");
         this.phyPlane = new Cannon.Body({
             mass: 0,
-            material: this.groundMat
+            material: this.groundMat,
         });
         this.phyPlane.addShape(new Cannon.Plane());
         this.phyPlane.quaternion.setFromAxisAngle(new Cannon.Vec3(1, 0, 0), -Math.PI / 2);
@@ -60,30 +60,26 @@ class GameRoom extends Room {
         this.sphereMat = new Cannon.Material("sphereMat");
         this.phySphere = new Cannon.Body({
             mass: 1,
-            material: this.sphereMat
+            material: this.sphereMat,
         });
         this.phySphere.addShape(new Cannon.Sphere(1));
         this.phySphere.position.set(0, 10, 0);
         this.phySphere.angularVelocity.set(0, 0, 0);
         this.phySphere.angularDamping = 0.1;
         this.world.addBody(this.phySphere);
-        this.viewSphere = new Mesh(
-            new SphereGeometry(1, 50, 50),
-            new MeshLambertMaterial(
+        this.viewSphere = new THREE.Mesh(
+            new THREE.SphereGeometry(1, 50, 50),
+            new THREE.MeshLambertMaterial(
                 {
-                    color: 0xffffff
-                }
-            )
-        );
+                    color: 0xffffff,
+                }));
         this.scene.add(this.viewSphere);
-        this.viewPlane = new Mesh(
-            new PlaneGeometry(300, 300),
-            new MeshPhongMaterial(
+        this.viewPlane = new THREE.Mesh(
+            new THREE.PlaneGeometry(300, 300),
+            new THREE.MeshPhongMaterial(
                 {
-                    color: 0x333333
-                }
-            )
-        );
+                    color: 0x333333,
+                }));
         this.viewPlane.rotation.x = -Math.PI / 2;
         this.viewPlane.rotation.y = 0;
         this.scene.add(this.viewPlane);
@@ -91,7 +87,7 @@ class GameRoom extends Room {
     public Update(): void {
         super.Update();
         this.sprt.position.set(core.mouseX, core.mouseY, -1);
-        this.world.step(1/ 60);
+        this.world.step(1 / 60);
         this.viewSphere.position.x = this.phySphere.position.x;
         this.viewSphere.position.y = this.phySphere.position.y;
         this.viewSphere.position.z = this.phySphere.position.z;
@@ -107,8 +103,8 @@ class GameRoom extends Room {
 
 // tslint:disable-next-line:max-classes-per-file
 class ObjTest extends Unit {
-    public group: Group;
-    public group2: Group;
+    public group: THREE.Group;
+    public group2: THREE.Group;
     public Init(): void {
         this.group = core.GetObject("ente");
         this.group2 = core.GetObject("ente");
@@ -133,9 +129,9 @@ class ObjTest extends Unit {
 
 // tslint:disable-next-line:max-classes-per-file
 class Chara extends Unit {
-    public geometry: BoxGeometry;
-    public material: MeshBasicMaterial;
-    public cube: Mesh;
+    public geometry: THREE.BoxGeometry;
+    public material: THREE.MeshBasicMaterial;
+    public cube: THREE.Mesh;
     public Update(): void {
         super.Update();
         this.cube.rotation.x += 0.1;
@@ -151,9 +147,9 @@ class Chara extends Unit {
         return;
     }
     public Init(): void {
-        this.geometry = new BoxGeometry(1, 1, 1);
-        this.material = new MeshBasicMaterial({ color: 0xffffff });
-        this.cube = new Mesh(this.geometry, this.material);
+        this.geometry = new THREE.BoxGeometry(1, 1, 1);
+        this.material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        this.cube = new THREE.Mesh(this.geometry, this.material);
         this.cube.position.x = Math.random() * 8 - 4;
         this.cube.position.y = Math.random() * 8 - 4;
         this.cube.position.z = Math.random() * 8 - 4;
