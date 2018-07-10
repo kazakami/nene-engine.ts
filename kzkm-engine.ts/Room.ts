@@ -1,8 +1,8 @@
 import { Camera, OrthographicCamera, PerspectiveCamera, Scene } from "three";
-import { Unit } from "./Unit";
+import * as THREE from "./Unit";
 
 class Room {
-    public units: Unit[];
+    public units: THREE.Unit[];
     public scene: Scene;
     public camera: Camera;
     public scene2d: Scene;
@@ -39,7 +39,7 @@ class Room {
         });
     }
 
-    public AddUnit(u: Unit): void {
+    public AddUnit(u: THREE.Unit): void {
         // Initを実行してからリストに追加
         u.room = this;
         u.Init();

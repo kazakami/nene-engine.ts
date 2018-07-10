@@ -1,35 +1,30 @@
 import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
+import * as THREE from "three";
 import { Room } from "./Room";
-
-import { LoadingManager, MTLLoader, Object3D, OBJLoader, WebGLRenderer } from "three";
-
-// import { hello } from "./../lib/hoge";
 
 class Core {
     public rooms: { [key: string]: Room };
     public activeRoom: Room;
-    public renderer: WebGLRenderer;
-    public objects: { [key: string]: [boolean, Object3D] };
-    public loadingManager: LoadingManager;
-    public objLoader: OBJLoader;
-    public mtlLoader: MTLLoader;
+    public renderer: THREE.WebGLRenderer;
+    public objects: { [key: string]: [boolean, THREE.Object3D] };
+    public loadingManager: THREE.LoadingManager;
+    public objLoader: THREE.OBJLoader;
+    public mtlLoader: THREE.MTLLoader;
     public canvas: HTMLCanvasElement;
     public mouseX: number;
     public mouseY: number;
 
     constructor() {
-        // const h = new Hoge();
-        // hello("fuga");
         this.rooms = {};
         this.activeRoom = null;
-        this.renderer = new WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer();
         this.renderer.autoClear = false;
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.objects = {};
-        this.loadingManager = new LoadingManager();
-        this.objLoader = new OBJLoader(this.loadingManager);
-        this.mtlLoader = new MTLLoader(this.loadingManager);
+        this.loadingManager = new THREE.LoadingManager();
+        this.objLoader = new THREE.OBJLoader(this.loadingManager);
+        this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
         this.canvas = this.renderer.domElement;
         document.body.appendChild(this.canvas);
         this.canvas.addEventListener("mousemove", this.OnCanvasMouseMove, false);
@@ -69,7 +64,7 @@ class Core {
             });
     }
 
-    public GetObject(name: string): Object3D {
+    public GetObject(name: string): THREE.Object3D {
         return this.objects[name][1].clone(true);
     }
 
