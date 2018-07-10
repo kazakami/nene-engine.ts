@@ -59,7 +59,10 @@ class Room {
         // 有効でなくなったUnitに紐づけられてるObject3Dを削除し、PhysicObjectも削除し、Fin()を呼び出す
         this.units.filter((u) => !u.isAlive).forEach((u) => {
             u.objects.forEach((o) => { this.scene.remove(o); });
-            u.physicObjects.forEach((p) => { this.scene.remove(p.viewBody); });
+            u.physicObjects.forEach((p) => {
+                this.scene.remove(p.viewBody);
+                this.physicWorld.remove(p.PhyBody);
+            });
             u.Fin();
         });
         // Unitのリストから有効でなくなったものを取り除く
