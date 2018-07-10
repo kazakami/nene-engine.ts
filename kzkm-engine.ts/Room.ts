@@ -1,23 +1,23 @@
 import * as Cannon from "cannon";
-import { Camera, OrthographicCamera, PerspectiveCamera, Scene } from "three";
+import * as THREE from "three";
 import { Unit } from "./Unit";
 
 class Room {
     public units: Unit[];
-    public scene: Scene;
-    public camera: Camera;
-    public scene2d: Scene;
-    public camera2d: Camera;
+    public scene: THREE.Scene;
+    public camera: THREE.Camera;
+    public scene2d: THREE.Scene;
+    public camera2d: THREE.Camera;
 
     public physicWorld: Cannon.World;
 
     public frame: number;
 
     constructor() {
-        this.scene = new Scene();
-        this.camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.scene2d = new Scene();
-        this.camera2d = new OrthographicCamera(0, window.innerWidth, 0, window.innerHeight, 0.0001, 10000);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        this.scene2d = new THREE.Scene();
+        this.camera2d = new THREE.OrthographicCamera(0, window.innerWidth, 0, window.innerHeight, 0.0001, 10000);
         this.units = [];
         this.frame = 0;
         this.physicWorld = new Cannon.World();
