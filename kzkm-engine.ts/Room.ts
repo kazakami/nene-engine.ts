@@ -1,12 +1,16 @@
+import * as Cannon from "cannon";
 import { Camera, OrthographicCamera, PerspectiveCamera, Scene } from "three";
-import * as THREE from "./Unit";
+import { Unit } from "./Unit";
 
 class Room {
-    public units: THREE.Unit[];
+    public units: Unit[];
     public scene: Scene;
     public camera: Camera;
     public scene2d: Scene;
     public camera2d: Camera;
+
+    public physicWorld: Cannon.World;
+
     public frame: number;
 
     constructor() {
@@ -16,6 +20,10 @@ class Room {
         this.camera2d = new OrthographicCamera(0, window.innerWidth, 0, window.innerHeight, 0.0001, 10000);
         this.units = [];
         this.frame = 0;
+        this.physicWorld = new Cannon.World();
+        this.physicWorld.gravity.set(0, -9.82, 0);
+        this.physicWorld.broadphase = new Cannon.NaiveBroadphase();
+        this.physicWorld.solver.iterations = 5;
     }
 
     public Update(): void {
@@ -39,7 +47,7 @@ class Room {
         });
     }
 
-    public AddUnit(u: THREE.Unit): void {
+    public AddUnit(u: Unit): void {
         // Initを実行してからリストに追加
         u.room = this;
         u.Init();
@@ -47,9 +55,10 @@ class Room {
     }
 
     public Remove(): void {
-        // 有効でなくなったUnitに紐づけられてるObject3Dを削除し、Fin()を呼び出す
+        // 有効でなくなったUnitに紐づけられてるObject3Dを削除し、PhysicObjectも削除し、Fin()を呼び出す
         this.units.filter((u) => !u.isAlive).forEach((u) => {
             u.objects.forEach((o) => { this.scene.remove(o); });
+            u.physicObjects.forEach((p) => { this.scene.remove(p.viewBody); });
             u.Fin();
         });
         // Unitのリストから有効でなくなったものを取り除く

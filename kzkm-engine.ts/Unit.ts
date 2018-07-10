@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { PhysicObject } from "./PhysicObject";
 import { Room } from "./Room";
 
 abstract class Unit {
@@ -7,6 +8,7 @@ abstract class Unit {
     public room: Room;
     public frame: number;
     public objects: THREE.Object3D[];
+    public physicObjects: PhysicObject[];
     constructor() {
         this.isAlive = true;
         this.room = null;
@@ -15,14 +17,21 @@ abstract class Unit {
     }
     public Update(): void {
         this.frame++;
+        this.physicObjects.forEach((p) => { p.Update(); });
     }
     public abstract Draw(): void;
     public abstract Init(): void;
     public abstract Fin(): void;
-    // SceneにObject3Dを追加し、Unitに紐づける
+    // sceneにObject3Dを追加し、Unitに紐づける
     public AddObject(o: THREE.Object3D): void {
         this.objects.push(o);
         this.room.scene.add(o);
+    }
+    // sceneにviewBodyを追加し、physicWorldにphysicBodyを追加し、オブジェクトをUnitに紐付ける
+    public AddPhysicObject(p: PhysicObject): void {
+        this.physicObjects.push(p);
+        this.room.physicWorld.addBody(p.PhyBody);
+        this.room.scene.add(p.viewBody);
     }
 }
 
