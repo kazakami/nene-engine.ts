@@ -34,7 +34,7 @@ class PhysicSphere extends PhysicObject {
     }
 }
 
-class PhsicPlane extends PhysicObject {
+class PhysicPlane extends PhysicObject {
     constructor(mass: number) {
         super();
         const geo = new THREE.PlaneGeometry(300, 300);
@@ -51,4 +51,4 @@ class PhsicPlane extends PhysicObject {
     }
 }
 
-export {PhysicObject, PhysicSphere, PhsicPlane};
+export {PhysicObject, PhysicSphere, PhysicPlane};
