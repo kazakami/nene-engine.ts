@@ -38,7 +38,7 @@ class PhysicPlane extends PhysicObject {
     constructor(mass: number) {
         super();
         const geo = new THREE.PlaneGeometry(300, 300);
-        const mat = new THREE.MeshPhongMaterial({color: 0x333333});
+        const mat = new THREE.MeshLambertMaterial({color: 0x333333});
         this.viewBody = new THREE.Mesh(geo, mat);
         const phyMat = new Cannon.Material("plane");
         this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
@@ -51,4 +51,21 @@ class PhysicPlane extends PhysicObject {
     }
 }
 
-export {PhysicObject, PhysicSphere, PhysicPlane};
+class PhysicBox extends PhysicObject {
+    constructor(mass: number, x: number, y: number, z: number) {
+        super();
+        const geo = new THREE.BoxGeometry(x, y, z);
+        const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
+        this.viewBody = new THREE.Mesh(geo, mat);
+        const phyMat = new Cannon.Material("box");
+        this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
+        this.PhyBody.addShape(new Cannon.Box(new Cannon.Vec3(x, y, z)));
+        geo.dispose();
+        mat.dispose();
+    }
+    public Update(): void {
+        this.Sync();
+    }
+}
+
+export {PhysicObject, PhysicSphere, PhysicPlane, PhysicBox};
