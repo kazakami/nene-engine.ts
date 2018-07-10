@@ -112,11 +112,17 @@ class Physic extends Unit {
     }
     public Init(): void {
         const plane = new PhysicPlane(0);
-        const sphere = new PhysicSphere(1, 1);
+        const sphere1 = new PhysicSphere(1, 1);
+        const sphere2 = new PhysicSphere(1, 1);
+        const sphere3 = new PhysicSphere(1, 1);
         plane.PhyBody.quaternion.setFromAxisAngle(new Cannon.Vec3(1, 0, 0), -Math.PI / 2);
-        sphere.PhyBody.position.set(0, 10, 0);
+        sphere1.PhyBody.position.set(0, 10, 0);
+        sphere2.PhyBody.position.set(1, 8, 0);
+        sphere3.PhyBody.position.set(0, 6, 1);
         this.AddPhysicObject(plane);
-        this.AddPhysicObject(sphere);
+        this.AddPhysicObject(sphere1);
+        this.AddPhysicObject(sphere2);
+        this.AddPhysicObject(sphere3);
     }
     public Fin(): void {
         return;
