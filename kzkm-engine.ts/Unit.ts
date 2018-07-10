@@ -14,6 +14,7 @@ abstract class Unit {
         this.room = null;
         this.frame = 0;
         this.objects = [];
+        this.physicObjects = [];
     }
     public Update(): void {
         this.frame++;
