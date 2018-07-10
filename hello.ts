@@ -10,6 +10,7 @@ class LoadRoom extends Room {
         core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
     }
     public Update(): void {
+        super.Update();
         if (core.IsObjectAvailable("ente")) {
             // オブジェクトenteが読み込まれればルーム遷移
             core.AddRoom("game", new GameRoom());
