@@ -59,7 +59,7 @@ class PhysicBox extends PhysicObject {
         this.viewBody = new THREE.Mesh(geo, mat);
         const phyMat = new Cannon.Material("box");
         this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
-        this.PhyBody.addShape(new Cannon.Box(new Cannon.Vec3(x, y, z)));
+        this.PhyBody.addShape(new Cannon.Box(new Cannon.Vec3(x / 2, y / 2, z / 2)));
         geo.dispose();
         mat.dispose();
     }
