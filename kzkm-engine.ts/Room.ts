@@ -33,6 +33,7 @@ class Room {
         this.units.forEach((u) => {
             u.Update();
         });
+        this.physicWorld.step(1 / 60);
     }
 
     public Draw(): void {
