@@ -22,7 +22,6 @@ class LoadRoom extends Room {
     }
 }
 
-// tslint:disable-next-line:max-classes-per-file
 class GameRoom extends Room {
     public sprt: THREE.Sprite;
     public Init(): void {
@@ -39,7 +38,6 @@ class GameRoom extends Room {
         const mat = new THREE.SpriteMaterial({ color: 0xFF0000 });
         this.sprt = new THREE.Sprite(mat);
         this.sprt.scale.set(100, 100, 1);
-        // this.sprt.position.set(500, 500, -1);
         this.scene2d.add(this.sprt);
     }
     public Update(): void {
@@ -50,7 +48,6 @@ class GameRoom extends Room {
     }
 }
 
-// tslint:disable-next-line:max-classes-per-file
 class ObjTest extends Unit {
     public group: THREE.Group;
     public group2: THREE.Group;
@@ -76,7 +73,6 @@ class ObjTest extends Unit {
     }
 }
 
-// tslint:disable-next-line:max-classes-per-file
 class Chara extends Unit {
     public geometry: THREE.BoxGeometry;
     public material: THREE.MeshBasicMaterial;
