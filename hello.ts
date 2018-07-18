@@ -1,9 +1,9 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
-import { core, Start } from "./kzkm-engine.ts/Core";
-import { PhysicBox, PhysicObject, PhysicPlane, PhysicSphere } from "./kzkm-engine.ts/PhysicObject";
-import { Room } from "./kzkm-engine.ts/Room";
-import { Unit } from "./kzkm-engine.ts/Unit";
+import { core, Start } from "./kzkm-engine.ts/src/Core";
+import { PhysicBox, PhysicObject, PhysicPlane, PhysicSphere } from "./kzkm-engine.ts/src/PhysicObject";
+import { Room } from "./kzkm-engine.ts/src/Room";
+import { Unit } from "./kzkm-engine.ts/src/Unit";
 
 class LoadRoom extends Room {
     public Init(): void {
