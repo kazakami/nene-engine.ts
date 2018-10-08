@@ -55,6 +55,11 @@ class Room {
         this.units.push(u);
     }
 
+    public LoadFromFile(filename: string): void {
+        const loader = new THREE.FileLoader();
+        loader.load("resources/PhysicObjects.json", (res) => { console.log(JSON.parse(res)); });
+    }
+
     public Remove(): void {
         // 有効でなくなったUnitに紐づけられてるObject3Dを削除し、PhysicObjectも削除し、Fin()を呼び出す
         this.units.filter((u) => !u.isAlive).forEach((u) => {
