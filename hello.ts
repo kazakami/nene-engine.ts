@@ -79,13 +79,8 @@ class Physic extends Unit {
     }
 }
 
-<<<<<<< HEAD
 // const loader = new THREE.FileLoader();
 // loader.load("index.html", (res) => { console.log(JSON.parse(res)); });
-=======
-const loader = new THREE.FileLoader();
-loader.load("resources/PhysicObjects.json", (res) => { console.log(res); });
->>>>>>> 46c4b0890db2e55329a803ecb98a895d7db15c8c
 
 // ゲームの開始
 Start("init", new LoadRoom());
