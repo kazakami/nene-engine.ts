@@ -57,7 +57,7 @@ class Room {
 
     public LoadFromFile(filename: string): void {
         const loader = new THREE.FileLoader();
-        loader.load("resources/PhysicObjects.json", (res) => { console.log(JSON.parse(res)); });
+        loader.load(filename, (res) => { console.log(JSON.parse(res)); });
     }
 
     public Remove(): void {

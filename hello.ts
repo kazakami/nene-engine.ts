@@ -26,6 +26,7 @@ class GameRoom extends Room {
     public sprt: THREE.Sprite;
     public Init(): void {
         super.Init();
+        this.LoadFromFile("resources/PhysicObjects.json");
         this.AddUnit(new Physic());
         this.camera.position.z = 10;
         this.camera.position.y = 10;
