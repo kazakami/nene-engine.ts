@@ -57,7 +57,20 @@ class Room {
 
     public LoadFromFile(filename: string): void {
         const loader = new THREE.FileLoader();
-        loader.load(filename, (res) => { console.log(JSON.parse(res)); });
+        loader.load(filename, (res) => {
+            const objs = JSON.parse(res);
+            objs.forEach((obj) => {
+                console.log(obj);
+                if ("name" in obj) {
+                    console.log(obj.name);
+                }
+                if ("phys" in obj) {
+                    obj.phys.forEach((physic) => {
+                        console.log(physic);
+                    });
+                }
+            });
+        });
     }
 
     public Remove(): void {
