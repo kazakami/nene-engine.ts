@@ -59,14 +59,27 @@ class Room {
         const loader = new THREE.FileLoader();
         loader.load(filename, (res) => {
             const objs = JSON.parse(res);
+            // 各unit
             objs.forEach((obj) => {
-                console.log(obj);
                 if ("name" in obj) {
                     console.log(obj.name);
                 }
                 if ("phys" in obj) {
+                    // 各物理オブジェクト
                     obj.phys.forEach((physic) => {
-                        console.log(physic);
+                        if ("name" in physic) {
+                            console.log(physic.name);
+                        }
+                        switch (physic.type) {
+                            case "sphere":
+                                console.log("sp");
+                                break;
+                            case "box":
+                                console.log("box");
+                                break;
+                            default:
+                                break;
+                        }
                     });
                 }
             });
