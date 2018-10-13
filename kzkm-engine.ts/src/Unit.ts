@@ -36,4 +36,16 @@ abstract class Unit {
     }
 }
 
-export { Unit };
+class PhysicUnit extends Unit {
+    public Init() {
+        return;
+    }
+    public Draw() {
+        return;
+    }
+    public Fin() {
+        return;
+    }
+}
+
+export { Unit, PhysicUnit };
