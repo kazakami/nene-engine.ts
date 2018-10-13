@@ -43,6 +43,9 @@ class PhysicUnit extends Unit {
     public Draw() {
         return;
     }
+    public Update() {
+        super.Update();
+    }
     public Fin() {
         return;
     }
