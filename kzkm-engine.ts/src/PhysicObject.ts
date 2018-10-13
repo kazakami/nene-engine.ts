@@ -52,14 +52,14 @@ class PhysicPlane extends PhysicObject {
 }
 
 class PhysicBox extends PhysicObject {
-    constructor(mass: number, x: number, y: number, z: number) {
+    constructor(mass: number, width: number, height: number, depth: number) {
         super();
-        const geo = new THREE.BoxGeometry(x, y, z);
+        const geo = new THREE.BoxGeometry(width, height, depth);
         const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
         this.viewBody = new THREE.Mesh(geo, mat);
         const phyMat = new Cannon.Material("box");
         this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
-        this.PhyBody.addShape(new Cannon.Box(new Cannon.Vec3(x / 2, y / 2, z / 2)));
+        this.PhyBody.addShape(new Cannon.Box(new Cannon.Vec3(width / 2, height / 2, depth / 2)));
         geo.dispose();
         mat.dispose();
     }
