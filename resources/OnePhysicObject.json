@@ -1,5 +1,5 @@
 [
     {"phys": [
-        {"type": "box", "x": "1", "y": "4", "z": "1", "mass": "2", "width": "1", "height": "1", "depth": "1"}
+        {"type": "sphere", "x": "1", "y": "4", "z": "1", "mass": "2", "radius": "1"}
     ]}
 ]
