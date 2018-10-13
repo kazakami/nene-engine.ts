@@ -18,7 +18,7 @@ abstract class PhysicObject {
 }
 
 class PhysicSphere extends PhysicObject {
-    constructor(radius: number, mass: number) {
+    constructor(mass: number, radius: number) {
         super();
         const geo = new THREE.SphereBufferGeometry(radius, 50, 50);
         const mat = new THREE.MeshPhongMaterial({color: 0xffffff});
