@@ -1,6 +1,7 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
-import { Unit } from "./Unit";
+import { PhysicBox, PhysicPlane, PhysicSphere } from "./PhysicObject";
+import { PhysicUnit, Unit } from "./Unit";
 
 class Room {
     public units: Unit[];
@@ -61,6 +62,7 @@ class Room {
             const objs = JSON.parse(res);
             // 各unit
             objs.forEach((obj) => {
+                const u: Unit = new PhysicUnit();
                 if ("name" in obj) {
                     console.log(obj.name);
                 }
@@ -71,12 +73,30 @@ class Room {
                             console.log(physic.name);
                         }
                         switch (physic.type) {
-                            case "sphere":
+                            case "sphere": {
                                 console.log("sp");
+                                const x: number = physic.x;
+                                const y: number = physic.y;
+                                const z: number = physic.z;
+                                const mass: number = physic.mass;
+                                const radius: number = physic.radius;
+                                const sphere = new PhysicSphere(mass, radius);
+                                sphere.PhyBody.position.set(x, y, z);
                                 break;
-                            case "box":
+                            }
+                            case "box": {
                                 console.log("box");
+                                const x: number = physic.x;
+                                const y: number = physic.y;
+                                const z: number = physic.z;
+                                const mass: number = physic.mass;
+                                const width: number = physic.width;
+                                const height: number = physic.height;
+                                const depth: number = physic.depth;
+                                const box = new PhysicBox(mass, width, height, depth);
+                                box.PhyBody.position.set(x, y, z);
                                 break;
+                            }
                             default:
                                 break;
                         }
