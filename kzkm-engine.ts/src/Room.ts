@@ -100,6 +100,18 @@ class Room {
                                 u.AddPhysicObject(box);
                                 break;
                             }
+                            case "plane": {
+                                console.log("plane");
+                                const axisx: number = physic.axisx;
+                                const axisy: number = physic.axisy;
+                                const axisz: number = physic.axisz;
+                                const mass: number = physic.number;
+                                const angle: number = physic.angle;
+                                const plane = new PhysicPlane(mass);
+                                plane.PhyBody.quaternion.setFromAxisAngle(new Cannon.Vec3(axisx, axisy, axisz), angle);
+                                u.AddPhysicObject(plane);
+                                break;
+                            }
                             default:
                                 break;
                         }
