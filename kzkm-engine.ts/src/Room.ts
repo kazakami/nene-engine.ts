@@ -35,11 +35,6 @@ class Room {
             u.Update();
         });
         this.physicWorld.step(1 / 60);
-        if (this.physicWorld.bodies.length !== 0) {
-            console.log(this.physicWorld.gravity.y);
-            console.log(this.physicWorld.bodies[0].position.y);
-            console.log(this.physicWorld.bodies[0].mass);
-        }
     }
 
     public Draw(): void {
