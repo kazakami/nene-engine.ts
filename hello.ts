@@ -1,4 +1,3 @@
-import * as Cannon from "cannon";
 import * as THREE from "three";
 import { core, Start } from "./kzkm-engine.ts/src/Core";
 import { Room } from "./kzkm-engine.ts/src/Room";
