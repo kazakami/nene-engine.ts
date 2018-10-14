@@ -35,6 +35,11 @@ class Room {
             u.Update();
         });
         this.physicWorld.step(1 / 60);
+        if (this.physicWorld.bodies.length !== 0) {
+            console.log(this.physicWorld.gravity.y);
+            console.log(this.physicWorld.bodies[0].position.y);
+            console.log(this.physicWorld.bodies[0].mass);
+        }
     }
 
     public Draw(): void {
@@ -63,6 +68,7 @@ class Room {
             // 各unit
             objs.forEach((obj) => {
                 const u: Unit = new PhysicUnit();
+                this.AddUnit(u);
                 if ("name" in obj) {
                     console.log(obj.name);
                 }
@@ -82,6 +88,7 @@ class Room {
                                 const radius: number = physic.radius;
                                 const sphere = new PhysicSphere(mass, radius);
                                 sphere.PhyBody.position.set(x, y, z);
+                                u.AddPhysicObject(sphere);
                                 break;
                             }
                             case "box": {
@@ -95,6 +102,7 @@ class Room {
                                 const depth: number = physic.depth;
                                 const box = new PhysicBox(mass, width, height, depth);
                                 box.PhyBody.position.set(x, y, z);
+                                u.AddPhysicObject(box);
                                 break;
                             }
                             default:
