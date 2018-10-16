@@ -20,4 +20,4 @@ function UndefCoalescing<T>(input: T, defaultValue: T): T {
     }
 }
 
-export { FileLoad };
+export { FileLoad, UndefCoalescing };
