@@ -12,4 +12,12 @@ function FileLoad(url: string, callback: (str: string) => void): void {
     return;
 }
 
+function UndefCoalescing<T>(input: T, defaultValue: T): T {
+    if (typeof input === "undefined") {
+        return defaultValue;
+    } else {
+        return input;
+    }
+}
+
 export { FileLoad };
