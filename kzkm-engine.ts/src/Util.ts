@@ -20,4 +20,31 @@ function UndefCoalescing<T>(input: T, defaultValue: T): T {
     }
 }
 
+class PhysicObjectAttribute {
+    public name?: string;
+    public type: "plane" | "sphere" | "box";
+    public x: number;
+    public y: number;
+    public z: number;
+    public mass: number;
+    public axisx?: number;
+    public axisy?: number;
+    public axisz?: number;
+    public angle?: number;
+}
+
+class PhysicObjectSphereAttribute extends PhysicObjectAttribute {
+    public radius: number;
+}
+
+class PhysicObjectBoxAttribute extends PhysicObjectAttribute {
+    public width: number;
+    public height: number;
+    public depth: number;
+}
+
+class PhysicObjectPlaneAttribute extends PhysicObjectAttribute {
+}
+
 export { FileLoad, UndefCoalescing };
+export {PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute };
