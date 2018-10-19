@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { core, Start } from "./kzkm-engine.ts/src/Core";
+import { PhysicObject } from "./kzkm-engine.ts/src/PhysicObject";
 import { Room } from "./kzkm-engine.ts/src/Room";
+import { Unit } from "./kzkm-engine.ts/src/Unit";
 
 class LoadRoom extends Room {
     public Init(): void {
@@ -23,7 +25,7 @@ class GameRoom extends Room {
     public sprt: THREE.Sprite;
     public Init(): void {
         super.Init();
-        this.LoadFromFile("resources/PhysicObjects.json");
+        // this.LoadFromFile("resources/PhysicObjects.json");
         this.camera.position.z = 10;
         this.camera.position.y = 10;
         this.camera.lookAt(0, 0, 0);
@@ -38,6 +40,16 @@ class GameRoom extends Room {
     public Update(): void {
         super.Update();
         this.sprt.position.set(core.mouseX, core.mouseY, -1);
+    }
+}
+
+class Board extends Unit {
+    public floor: PhysicObject;
+    public Init(): void {
+        return;
+    }
+    public Fin(): void {
+        return;
     }
 }
 
