@@ -68,4 +68,4 @@ class PhysicBox extends PhysicObject {
     }
 }
 
-export {PhysicObject, PhysicSphere, PhysicPlane, PhysicBox};
+export { PhysicObject, PhysicSphere, PhysicPlane, PhysicBox };

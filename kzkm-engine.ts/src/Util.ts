@@ -47,4 +47,4 @@ class PhysicObjectPlaneAttribute extends PhysicObjectAttribute {
 }
 
 export { FileLoad, UndefCoalescing };
-export {PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute };
+export { PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute };
