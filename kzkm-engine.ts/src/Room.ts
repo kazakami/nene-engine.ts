@@ -59,6 +59,9 @@ class Room {
     public LoadFromFile(filename: string): void {
         const loader = new THREE.FileLoader();
         loader.load(filename, (res) => {
+            if (typeof res !== "string") {
+                throw new Error("file is binary.");
+            }
             const objs = JSON.parse(res);
             // 各unit
             objs.forEach((obj) => {
