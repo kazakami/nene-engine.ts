@@ -20,7 +20,7 @@ abstract class Unit {
         this.frame++;
         this.physicObjects.forEach((p) => { p.Update(); });
     }
-    public abstract Draw(): void;
+    public Draw(): void { return; }
     public abstract Init(): void;
     public abstract Fin(): void;
     // sceneにObject3Dを追加し、Unitに紐づける
@@ -38,9 +38,6 @@ abstract class Unit {
 
 class PhysicUnit extends Unit {
     public Init() {
-        return;
-    }
-    public Draw() {
         return;
     }
     public Update() {
