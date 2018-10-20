@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { core, Start } from "./kzkm-engine.ts/src/Core";
-import { PhysicObject } from "./kzkm-engine.ts/src/PhysicObject";
+import { PhysicBox, PhysicObject } from "./kzkm-engine.ts/src/PhysicObject";
 import { Room } from "./kzkm-engine.ts/src/Room";
 import { Unit } from "./kzkm-engine.ts/src/Unit";
 
@@ -26,6 +26,7 @@ class GameRoom extends Room {
     public Init(): void {
         super.Init();
         // this.LoadFromFile("resources/PhysicObjects.json");
+        this.AddUnit(new Board());
         this.camera.position.z = 10;
         this.camera.position.y = 10;
         this.camera.lookAt(0, 0, 0);
@@ -46,6 +47,8 @@ class GameRoom extends Room {
 class Board extends Unit {
     public floor: PhysicObject;
     public Init(): void {
+        this.floor = new PhysicBox(0, 20, 1, 20);
+        this.AddPhysicObject(this.floor);
         return;
     }
     public Fin(): void {
