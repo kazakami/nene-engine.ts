@@ -1,3 +1,4 @@
+import * as CANNON from "cannon";
 import * as THREE from "three";
 import { core, Start } from "./kzkm-engine.ts/src/Core";
 import { PhysicBox, PhysicObject } from "./kzkm-engine.ts/src/PhysicObject";
@@ -46,10 +47,24 @@ class GameRoom extends Room {
 
 class Board extends Unit {
     public floor: PhysicObject;
+    public normal: THREE.Vector3;
     public Init(): void {
         this.floor = new PhysicBox(0, 20, 1, 20);
         this.AddPhysicObject(this.floor);
+        this.normal = new THREE.Vector3(1, 1, 1).normalize();
         return;
+    }
+    public Update(): void {
+        super.Update();
+        const up = new THREE.Vector3(0, 1, 0);
+        const dir = new THREE.Vector3();
+        dir.crossVectors(up, this.normal).normalize();
+        const dot = up.dot(this.normal);
+        const rad = Math.acos(dot);
+        const q = new THREE.Quaternion();
+        q.setFromAxisAngle(dir, rad);
+        console.log(rad);
+        this.floor.PhyBody.quaternion.set(q.x, q.y, q.z, q.w);
     }
     public Fin(): void {
         return;
