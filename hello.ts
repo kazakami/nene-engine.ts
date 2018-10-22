@@ -1,7 +1,7 @@
 import * as CANNON from "cannon";
 import * as THREE from "three";
 import { core, Start } from "./kzkm-engine.ts/src/Core";
-import { PhysicBox, PhysicObject } from "./kzkm-engine.ts/src/PhysicObject";
+import { PhysicBox, PhysicObject, PhysicSphere } from "./kzkm-engine.ts/src/PhysicObject";
 import { Room } from "./kzkm-engine.ts/src/Room";
 import { Unit } from "./kzkm-engine.ts/src/Unit";
 
@@ -28,6 +28,7 @@ class GameRoom extends Room {
         super.Init();
         // this.LoadFromFile("resources/PhysicObjects.json");
         this.AddUnit(new Board());
+        this.AddUnit(new Ball());
         this.camera.position.z = 10;
         this.camera.position.y = 10;
         this.camera.lookAt(0, 0, 0);
@@ -45,6 +46,18 @@ class GameRoom extends Room {
     }
 }
 
+class Ball extends Unit {
+    public ball: PhysicSphere;
+    public Init(): void {
+        this.ball = new PhysicSphere(1, 1);
+        this.ball.PhyBody.position.set(0, 10, 0);
+        this.AddPhysicObject(this.ball);
+    }
+    public Fin(): void {
+        return;
+    }
+}
+
 class Board extends Unit {
     public floor: PhysicObject;
     public Init(): void {
@@ -55,7 +68,7 @@ class Board extends Unit {
     }
     public Update(): void {
         super.Update();
-        this.floor.OrientByNumer(core.mouseX - core.windowSizeX / 2, 100, core.mouseY - core.windowSizeY / 2);
+        this.floor.OrientByNumer(core.mouseX - core.windowSizeX / 2, core.mouseY - core.windowSizeY / 2, 500);
     }
     public Fin(): void {
         return;
