@@ -55,7 +55,7 @@ class Board extends Unit {
     }
     public Update(): void {
         super.Update();
-        this.floor.OrientByNumer(1, Math.sin(this.frame / 100), 0);
+        this.floor.OrientByNumer(core.mouseX - core.windowSizeX / 2, 100, core.mouseY - core.windowSizeY / 2);
     }
     public Fin(): void {
         return;
