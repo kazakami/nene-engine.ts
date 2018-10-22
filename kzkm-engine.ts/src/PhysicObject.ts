@@ -5,6 +5,17 @@ abstract class PhysicObject {
     public viewBody: THREE.Mesh;
     public PhyBody: Cannon.Body;
     public abstract Update(): void;
+    public Orient(eyes: THREE.Vector3, target: THREE.Vector3): void {
+        console.log(this.viewBody.up);
+        const orientMatrix = new THREE.Matrix4();
+        orientMatrix.lookAt(eyes, target, new THREE.Vector3(0, 1, 0));
+        const q = new THREE.Quaternion();
+        q.setFromRotationMatrix(orientMatrix);
+        this.PhyBody.quaternion.set(q.x, q.y, q.z, q.w);
+    }
+    public OrientByNumer(x: number, y: number, z: number): void {
+        this.Orient(new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, z));
+    }
     protected Sync(): void {
         this.viewBody.position.x = this.PhyBody.position.x;
         this.viewBody.position.y = this.PhyBody.position.y;
