@@ -6,7 +6,6 @@ abstract class PhysicObject {
     public PhyBody: Cannon.Body;
     public abstract Update(): void;
     public Orient(eyes: THREE.Vector3, target: THREE.Vector3): void {
-        console.log(this.viewBody.up);
         const orientMatrix = new THREE.Matrix4();
         orientMatrix.lookAt(eyes, target, new THREE.Vector3(0, 1, 0));
         const q = new THREE.Quaternion();
