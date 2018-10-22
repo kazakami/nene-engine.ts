@@ -1,6 +1,8 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
 
+const up = new THREE.Vector3(0, 1, 0);
+
 abstract class PhysicObject {
     public viewBody: THREE.Mesh;
     public PhyBody: Cannon.Body;
@@ -14,6 +16,16 @@ abstract class PhysicObject {
     }
     public OrientByNumer(x: number, y: number, z: number): void {
         this.Orient(new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, z));
+    }
+    public Rotate(x: number, y: number, z: number): void {
+        const normal = new THREE.Vector3(x, y, z).normalize();
+        const dir = new THREE.Vector3();
+        dir.crossVectors(up, normal).normalize();
+        const dot = up.dot(normal);
+        const rad = Math.acos(dot);
+        const q = new THREE.Quaternion();
+        q.setFromAxisAngle(dir, rad);
+        this.PhyBody.quaternion.set(q.x, q.y, q.z, q.w);
     }
     protected Sync(): void {
         this.viewBody.position.x = this.PhyBody.position.x;
