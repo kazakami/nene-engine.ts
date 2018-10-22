@@ -47,24 +47,15 @@ class GameRoom extends Room {
 
 class Board extends Unit {
     public floor: PhysicObject;
-    public normal: THREE.Vector3;
     public Init(): void {
         this.floor = new PhysicBox(0, 20, 1, 20);
         this.AddPhysicObject(this.floor);
-        this.normal = new THREE.Vector3(1, 1, 1).normalize();
+        // this.floor.OrientByNumer(1, 0, 0);
         return;
     }
     public Update(): void {
         super.Update();
-        const up = new THREE.Vector3(0, 1, 0);
-        const dir = new THREE.Vector3();
-        dir.crossVectors(up, this.normal).normalize();
-        const dot = up.dot(this.normal);
-        const rad = Math.acos(dot);
-        const q = new THREE.Quaternion();
-        q.setFromAxisAngle(dir, rad);
-        console.log(rad);
-        this.floor.PhyBody.quaternion.set(q.x, q.y, q.z, q.w);
+        this.floor.OrientByNumer(1, Math.sin(this.frame / 100), 0);
     }
     public Fin(): void {
         return;
