@@ -1,7 +1,6 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
-
-const up = new THREE.Vector3(0, 1, 0);
+import { OrientQuaternion } from "./Util";
 
 abstract class PhysicObject {
     public viewBody: THREE.Mesh;
@@ -18,14 +17,15 @@ abstract class PhysicObject {
         this.LookAt(new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, z));
     }
     public Orient(x: number, y: number, z: number): void {
-        const normal = new THREE.Vector3(x, y, z).normalize();
-        const dir = new THREE.Vector3();
-        dir.crossVectors(up, normal).normalize();
-        const dot = up.dot(normal);
-        const rad = Math.acos(dot);
-        const q = new THREE.Quaternion();
-        q.setFromAxisAngle(dir, rad);
+        const q = OrientQuaternion(x, y, z);
         this.PhyBody.quaternion.set(q.x, q.y, q.z, q.w);
+    }
+    public OrientAndRotate(x: number, y: number, z: number, angle: number): void {
+        const q1 = OrientQuaternion(x, y, z);
+        const q2 = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(x, y, z).normalize(), angle);
+        const q3 = new THREE.Quaternion().multiplyQuaternions(q2, q1);
+        this.PhyBody.quaternion.set(q3.x, q3.y, q3.z, q3.w);
+        return;
     }
     protected Sync(): void {
         this.viewBody.position.x = this.PhyBody.position.x;
