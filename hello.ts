@@ -68,7 +68,7 @@ class Board extends Unit {
     }
     public Update(): void {
         super.Update();
-        this.floor.Rotate(core.mouseX - core.windowSizeX / 2, 100, core.mouseY - core.windowSizeY / 2);
+        this.floor.Orient(core.mouseX - core.windowSizeX / 2, 100, core.mouseY - core.windowSizeY / 2);
     }
     public Fin(): void {
         return;

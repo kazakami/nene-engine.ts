@@ -7,17 +7,17 @@ abstract class PhysicObject {
     public viewBody: THREE.Mesh;
     public PhyBody: Cannon.Body;
     public abstract Update(): void;
-    public Orient(eyes: THREE.Vector3, target: THREE.Vector3): void {
+    public LookAt(eyes: THREE.Vector3, target: THREE.Vector3): void {
         const orientMatrix = new THREE.Matrix4();
         orientMatrix.lookAt(eyes, target, new THREE.Vector3(0, 1, 0));
         const q = new THREE.Quaternion();
         q.setFromRotationMatrix(orientMatrix);
         this.PhyBody.quaternion.set(q.x, q.y, q.z, q.w);
     }
-    public OrientByNumer(x: number, y: number, z: number): void {
-        this.Orient(new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, z));
+    public LookAtByNumer(x: number, y: number, z: number): void {
+        this.LookAt(new THREE.Vector3(0, 0, 0), new THREE.Vector3(x, y, z));
     }
-    public Rotate(x: number, y: number, z: number): void {
+    public Orient(x: number, y: number, z: number): void {
         const normal = new THREE.Vector3(x, y, z).normalize();
         const dir = new THREE.Vector3();
         dir.crossVectors(up, normal).normalize();
