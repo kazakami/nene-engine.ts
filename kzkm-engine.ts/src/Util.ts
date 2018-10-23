@@ -1,3 +1,18 @@
+import * as THREE from "three";
+
+const up = new THREE.Vector3(0, 1, 0);
+
+function OrientQuaternion(x: number, y: number, z: number): THREE.Quaternion {
+    const normal = new THREE.Vector3(x, y, z).normalize();
+    const dir = new THREE.Vector3();
+    dir.crossVectors(up, normal).normalize();
+    const dot = up.dot(normal);
+    const rad = Math.acos(dot);
+    const q = new THREE.Quaternion();
+    q.setFromAxisAngle(dir, rad);
+    return q;
+}
+
 function FileLoad(url: string, callback: (str: string) => void): void {
     const request = new XMLHttpRequest();
     request.open("GET", url, true);
@@ -46,5 +61,5 @@ class PhysicObjectBoxAttribute extends PhysicObjectAttribute {
 class PhysicObjectPlaneAttribute extends PhysicObjectAttribute {
 }
 
-export { FileLoad, UndefCoalescing };
+export { FileLoad, OrientQuaternion, UndefCoalescing };
 export { PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute };
