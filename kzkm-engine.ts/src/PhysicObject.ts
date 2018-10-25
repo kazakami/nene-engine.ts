@@ -90,4 +90,19 @@ class PhysicBox extends PhysicObject {
     }
 }
 
-export { PhysicObject, PhysicSphere, PhysicPlane, PhysicBox };
+class PhysicObjects extends PhysicObject {
+    constructor(mass: number, name: string = "") {
+        super();
+        this.viewBody = new THREE.Group();
+        const phyMat = new Cannon.Material(name);
+        this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
+    }
+    public Update(): void {
+        this.Sync();
+    }
+    public AddShape(): void {
+        return;
+    }
+}
+
+export { PhysicObject, PhysicSphere, PhysicPlane, PhysicBox, PhysicObjects };
