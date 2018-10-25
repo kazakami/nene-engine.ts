@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { OrientQuaternion } from "./Util";
 
 abstract class PhysicObject {
-    public viewBody: THREE.Mesh;
+    public viewBody: THREE.Object3D;
     public PhyBody: Cannon.Body;
     public abstract Update(): void;
     public LookAt(eyes: THREE.Vector3, target: THREE.Vector3): void {
