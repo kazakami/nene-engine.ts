@@ -1,7 +1,7 @@
 import * as CANNON from "cannon";
 import * as THREE from "three";
 import { core, Start } from "./kzkm-engine.ts/src/Core";
-import { PhysicBox, PhysicObject, PhysicSphere } from "./kzkm-engine.ts/src/PhysicObject";
+import { PhysicBox, PhysicObject, PhysicObjects, PhysicSphere } from "./kzkm-engine.ts/src/PhysicObject";
 import { Room } from "./kzkm-engine.ts/src/Room";
 import { Unit } from "./kzkm-engine.ts/src/Unit";
 
@@ -29,8 +29,8 @@ class GameRoom extends Room {
         // this.LoadFromFile("resources/PhysicObjects.json");
         this.AddUnit(new Board());
         this.AddUnit(new Ball());
-        this.camera.position.z = 10;
-        this.camera.position.y = 10;
+        this.camera.position.z = 15;
+        this.camera.position.y = 15;
         this.camera.lookAt(0, 0, 0);
         const light = new THREE.DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
@@ -59,9 +59,15 @@ class Ball extends Unit {
 }
 
 class Board extends Unit {
-    public floor: PhysicObject;
+    public floor: PhysicObjects;
     public Init(): void {
-        this.floor = new PhysicBox(0, 20, 1, 20);
+        // this.floor = new PhysicBox(0, 20, 1, 20);
+        this.floor = new PhysicObjects(0, "floor");
+        this.floor.AddBox(20, 1, 20, 0, 0, 0);
+        this.floor.AddBox(20, 5, 1, 0, 0, 10);
+        this.floor.AddBox(20, 5, 1, 0, 0, -10);
+        this.floor.AddBox(1, 5, 20, 10, 0, 0);
+        this.floor.AddBox(1, 5, 20, -10, 0, 0);
         this.AddPhysicObject(this.floor);
         // this.floor.OrientByNumer(1, 0, 0);
         return;
@@ -69,7 +75,7 @@ class Board extends Unit {
     public Update(): void {
         super.Update();
         this.floor.OrientAndRotate(core.mouseX - core.windowSizeX / 2, 100, core.mouseY - core.windowSizeY / 2
-            , this.frame / 100);
+            , this.frame / 100 * 0);
     }
     public Fin(): void {
         return;
