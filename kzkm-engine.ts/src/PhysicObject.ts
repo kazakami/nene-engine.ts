@@ -100,7 +100,16 @@ class PhysicObjects extends PhysicObject {
     public Update(): void {
         this.Sync();
     }
-    public AddShape(): void {
+    public AddBox(width: number, height: number, depth: number, x: number, y: number, z: number): void {
+        const geo = new THREE.BoxGeometry(width, height, depth);
+        const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(x, y, z);
+        this.viewBody.add(mesh);
+        geo.dispose();
+        mat.dispose();
+        this.PhyBody.addShape(new Cannon.Box(new Cannon.Vec3(width / 2, height / 2, depth / 2))
+        , new Cannon.Vec3(x, y, z));
         return;
     }
 }
