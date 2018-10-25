@@ -37,7 +37,7 @@ class GameRoom extends Room {
         this.scene.add(light);
         const mat = new THREE.SpriteMaterial({ color: 0xFF0000 });
         this.sprt = new THREE.Sprite(mat);
-        this.sprt.scale.set(100, 100, 1);
+        this.sprt.scale.set(10, 10, 1);
         this.scene2d.add(this.sprt);
     }
     public Update(): void {
