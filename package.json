@@ -1,6 +1,6 @@
 {
   "name": "kzkm-engine.ts",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "kzkm-engine",
   "main": "index.js",
   "scripts": {
