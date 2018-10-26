@@ -1,0 +1,14 @@
+[
+    {"name": "floor",
+    "phys": [
+        {"type": "plane", "mass": 0, "axisx": 1, "axisy": 0, "axisz": 0, "angle": -1.57079326}
+    ]},
+    {"name": "Unit1",
+    "phys": [
+        {"type": "sphere", "x": 0, "y": 10, "z": 0, "mass": 1, "radius": 1},
+        {"name": "hoge","type": "sphere", "x": 3, "y": 5, "z": 2, "mass": 1, "radius": 2}
+    ]},
+    {"phys": [
+        {"type": "box", "x": 0, "y": 6, "z": 1, "mass": 2, "width": 1, "height": 1, "depth": 1}
+    ]}
+]

@@ -14,13 +14,17 @@ class Core {
     public canvas: HTMLCanvasElement;
     public mouseX: number;
     public mouseY: number;
+    public windowSizeX: number;
+    public windowSizeY: number;
 
     constructor() {
         this.rooms = {};
         this.activeRoom = null;
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.autoClear = false;
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.windowSizeX = window.innerWidth;
+        this.windowSizeY = window.innerHeight;
+        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
         this.objects = {};
         this.loadingManager = new THREE.LoadingManager();
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
