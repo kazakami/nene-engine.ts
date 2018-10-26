@@ -63,11 +63,14 @@ class Board extends Unit {
     public Init(): void {
         // this.floor = new PhysicBox(0, 20, 1, 20);
         this.floor = new PhysicObjects(0, "floor");
-        this.floor.AddBox(20, 1, 20, 0, 0, 0);
-        this.floor.AddBox(20, 5, 1, 0, 0, 10);
-        this.floor.AddBox(20, 5, 1, 0, 0, -10);
-        this.floor.AddBox(1, 5, 20, 10, 0, 0);
-        this.floor.AddBox(1, 5, 20, -10, 0, 0);
+        /*
+        this.floor.AddBox(20, 1, 20, 0, 0, 0, true);
+        this.floor.AddBox(20, 5, 1, 0, 0, 10, true);
+        this.floor.AddBox(20, 5, 1, 0, 0, -10, true);
+        this.floor.AddBox(1, 5, 20, 10, 0, 0, true);
+        this.floor.AddBox(1, 5, 20, -10, 0, 0, true);
+        */
+        this.floor.AddShapeFromJSON("resources/FloorPhysic.json");
         this.AddPhysicObject(this.floor);
         // this.floor.OrientByNumer(1, 0, 0);
         return;
