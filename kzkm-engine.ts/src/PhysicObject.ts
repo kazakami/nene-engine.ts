@@ -2,9 +2,33 @@ import * as Cannon from "cannon";
 import * as THREE from "three";
 import { OrientQuaternion, UndefCoalescing } from "./Util";
 
+class CollideData {
+    public position: Cannon.Vec3;
+    public constructor(p: Cannon.Vec3) {
+        this.position = p;
+    }
+}
+
 abstract class PhysicObject {
     public viewBody: THREE.Object3D;
     public PhyBody: Cannon.Body;
+    public collideCallBack: (data: CollideData) => void;
+    public constructor(name: string, mass: number) {
+        this.collideCallBack = null;
+        const phyMat = new Cannon.Material(name);
+        this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
+        this.PhyBody.addEventListener("collide", (e) => {
+            if (this.collideCallBack !== null) {
+                const v: Cannon.Vec3 = e.contact.ri;
+                const p = this.PhyBody.position;
+                const c = new CollideData(new Cannon.Vec3(v.x + p.x, v.y + p.y, v.z + p.z));
+                this.collideCallBack(c);
+            }
+        });
+    }
+    public SetCollideCallback(callback: (CollideData) => void) {
+        this.collideCallBack = callback;
+    }
     public abstract Update(): void;
     public LookAt(eyes: THREE.Vector3, target: THREE.Vector3): void {
         const orientMatrix = new THREE.Matrix4();
@@ -41,12 +65,10 @@ abstract class PhysicObject {
 
 class PhysicSphere extends PhysicObject {
     constructor(mass: number, radius: number) {
-        super();
+        super("sphere", mass);
         const geo = new THREE.SphereBufferGeometry(radius, 50, 50);
         const mat = new THREE.MeshPhongMaterial({color: 0xffffff});
         this.viewBody = new THREE.Mesh(geo, mat);
-        const phyMat = new Cannon.Material("sphere");
-        this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
         this.PhyBody.addShape(new Cannon.Sphere(radius));
         geo.dispose();
         mat.dispose();
@@ -58,12 +80,10 @@ class PhysicSphere extends PhysicObject {
 
 class PhysicPlane extends PhysicObject {
     constructor(mass: number) {
-        super();
+        super("plane", mass);
         const geo = new THREE.PlaneGeometry(300, 300);
         const mat = new THREE.MeshLambertMaterial({color: 0x333333});
         this.viewBody = new THREE.Mesh(geo, mat);
-        const phyMat = new Cannon.Material("plane");
-        this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
         this.PhyBody.addShape(new Cannon.Plane());
         geo.dispose();
         mat.dispose();
@@ -75,12 +95,10 @@ class PhysicPlane extends PhysicObject {
 
 class PhysicBox extends PhysicObject {
     constructor(mass: number, width: number, height: number, depth: number) {
-        super();
+        super("box", mass);
         const geo = new THREE.BoxGeometry(width, height, depth);
         const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
         this.viewBody = new THREE.Mesh(geo, mat);
-        const phyMat = new Cannon.Material("box");
-        this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
         this.PhyBody.addShape(new Cannon.Box(new Cannon.Vec3(width / 2, height / 2, depth / 2)));
         geo.dispose();
         mat.dispose();
@@ -92,10 +110,8 @@ class PhysicBox extends PhysicObject {
 
 class PhysicObjects extends PhysicObject {
     constructor(mass: number, name: string = "") {
-        super();
+        super(name, mass);
         this.viewBody = new THREE.Group();
-        const phyMat = new Cannon.Material(name);
-        this.PhyBody = new Cannon.Body({mass: mass, material: phyMat});
     }
     public Update(): void {
         this.Sync();

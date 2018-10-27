@@ -52,10 +52,8 @@ class Ball extends Unit {
         this.ball = new PhysicSphere(1, 1);
         this.ball.PhyBody.position.set(0, 10, 0);
         this.AddPhysicObject(this.ball);
-        this.ball.PhyBody.addEventListener("collide", (e) => {
-            const v: CANNON.Vec3 = e.contact.ri;
-            const p = this.ball.PhyBody.position;
-            console.log(v.x + p.x, v.y + p.y, v.z + p.z);
+        this.ball.SetCollideCallback((c) => {
+            console.log(c.position);
         });
     }
     public Fin(): void {
