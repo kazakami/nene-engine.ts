@@ -1,5 +1,17 @@
 import * as THREE from "three";
 
+function Base64toBlob(base64: string, type: string): Blob {
+    const decodedData = atob(base64);
+    const buffer = new Uint8Array(decodedData.length);
+    // tslint:disable-next-line:prefer-for-of
+    for (let i = 0; i < decodedData.length; i++) {
+        buffer[i] = decodedData.charCodeAt(i);
+    }
+    return new Blob([buffer.buffer], {
+        type: type,
+    });
+}
+
 const up = new THREE.Vector3(0, 1, 0);
 
 function OrientQuaternion(x: number, y: number, z: number): THREE.Quaternion {
@@ -61,5 +73,5 @@ class PhysicObjectBoxAttribute extends PhysicObjectAttribute {
 class PhysicObjectPlaneAttribute extends PhysicObjectAttribute {
 }
 
-export { FileLoad, OrientQuaternion, UndefCoalescing };
-export { PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute };
+export { Base64toBlob, FileLoad, OrientQuaternion, UndefCoalescing,
+    PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute };
