@@ -52,6 +52,11 @@ class Ball extends Unit {
         this.ball = new PhysicSphere(1, 1);
         this.ball.PhyBody.position.set(0, 10, 0);
         this.AddPhysicObject(this.ball);
+        this.ball.PhyBody.addEventListener("collide", (e) => {
+            const v: CANNON.Vec3 = e.contact.ri;
+            const p = this.ball.PhyBody.position;
+            console.log(v.x + p.x, v.y + p.y, v.z + p.z);
+        });
     }
     public Fin(): void {
         return;
@@ -61,18 +66,10 @@ class Ball extends Unit {
 class Board extends Unit {
     public floor: PhysicObjects;
     public Init(): void {
-        // this.floor = new PhysicBox(0, 20, 1, 20);
         this.floor = new PhysicObjects(0, "floor");
-        /*
-        this.floor.AddBox(20, 1, 20, 0, 0, 0, true);
-        this.floor.AddBox(20, 5, 1, 0, 0, 10, true);
-        this.floor.AddBox(20, 5, 1, 0, 0, -10, true);
-        this.floor.AddBox(1, 5, 20, 10, 0, 0, true);
-        this.floor.AddBox(1, 5, 20, -10, 0, 0, true);
-        */
+        this.floor.PhyBody.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON("resources/FloorPhysic.json");
         this.AddPhysicObject(this.floor);
-        // this.floor.OrientByNumer(1, 0, 0);
         return;
     }
     public Update(): void {
