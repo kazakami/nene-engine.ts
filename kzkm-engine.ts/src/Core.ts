@@ -2,6 +2,7 @@ import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
 import * as THREE from "three";
 import { Room } from "./Room";
+import { Base64toBlob } from "./Util";
 
 class Core {
     public rooms: { [key: string]: Room };
@@ -16,11 +17,14 @@ class Core {
     public mouseY: number;
     public windowSizeX: number;
     public windowSizeY: number;
+    public link: HTMLAnchorElement;
 
     constructor() {
         this.rooms = {};
         this.activeRoom = null;
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({
+            preserveDrawingBuffer: true,
+        });
         this.renderer.autoClear = false;
         this.windowSizeX = window.innerWidth;
         this.windowSizeY = window.innerHeight;
@@ -33,6 +37,9 @@ class Core {
         document.body.appendChild(this.canvas);
         this.canvas.addEventListener("mousemove", this.OnCanvasMouseMove, false);
         this.canvas.addEventListener("click", this.OnCanvasClick);
+        this.link = document.createElement("a");
+        this.link.style.display = "none";
+        document.body.appendChild(this.link);
         this.mouseX = 0;
         this.mouseY = 0;
     }
@@ -44,6 +51,7 @@ class Core {
 
     public OnCanvasClick(e: Event): void {
         // console.log("(" + core.mouseX + ", " + core.mouseY + ")");
+        core.SaveImage();
     }
 
     public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): void {
@@ -110,6 +118,15 @@ class Core {
     public AddRoom(roomName: string, room: Room): void {
         this.rooms[roomName] = room;
         room.Init();
+    }
+
+    public SaveImage(): void {
+        const base64Image = this.canvas.toDataURL("image/png");
+        // console.log(base64Image.split(",")[1]);
+        const blob = Base64toBlob(base64Image.split(",")[1], "image/png");
+        this.link.href = URL.createObjectURL(blob);
+        this.link.download = "image.png";
+        this.link.click();
     }
 }
 
