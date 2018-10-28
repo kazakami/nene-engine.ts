@@ -47,11 +47,16 @@ class Core {
     public OnCanvasMouseMove(e: MouseEvent): void {
         core.mouseX = e.offsetX;
         core.mouseY = e.offsetY;
+        if (core.activeScene.onMouseMoveCallback !== null) {
+            core.activeScene.onMouseMoveCallback(e);
+        }
     }
 
     public OnCanvasClick(e: Event): void {
         // console.log("(" + core.mouseX + ", " + core.mouseY + ")");
-        core.SaveImage();
+        if (core.activeScene.onMouseClickCallback !== null) {
+            core.activeScene.onMouseClickCallback(e);
+        }
     }
 
     public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): void {

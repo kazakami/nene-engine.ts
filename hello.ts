@@ -39,6 +39,9 @@ class GameScene extends Scene {
         this.sprt = new THREE.Sprite(mat);
         this.sprt.scale.set(10, 10, 1);
         this.scene2d.add(this.sprt);
+        this.onMouseClickCallback = (e) => {
+            core.SaveImage();
+        };
     }
     public Update(): void {
         super.Update();

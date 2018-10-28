@@ -14,6 +14,9 @@ class Scene {
 
     public frame: number;
 
+    public onMouseMoveCallback: (e: MouseEvent) => void;
+    public onMouseClickCallback: (e: Event) => void;
+
     constructor() {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -25,6 +28,8 @@ class Scene {
         this.physicWorld.gravity.set(0, -9.82, 0);
         this.physicWorld.broadphase = new Cannon.NaiveBroadphase();
         this.physicWorld.solver.iterations = 5;
+        this.onMouseClickCallback = null;
+        this.onMouseMoveCallback = null;
     }
 
     public Update(): void {
