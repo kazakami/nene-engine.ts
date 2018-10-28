@@ -125,12 +125,12 @@ class Core {
         scene.Init();
     }
 
-    public SaveImage(): void {
+    public SaveImage(filename: string = "screenshot.png"): void {
         const base64Image = this.canvas.toDataURL("image/png");
         // console.log(base64Image.split(",")[1]);
         const blob = Base64toBlob(base64Image.split(",")[1], "image/png");
         this.link.href = URL.createObjectURL(blob);
-        this.link.download = "image.png";
+        this.link.download = filename;
         this.link.click();
     }
 }

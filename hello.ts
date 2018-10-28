@@ -40,7 +40,7 @@ class GameScene extends Scene {
         this.sprt.scale.set(10, 10, 1);
         this.scene2d.add(this.sprt);
         this.onMouseClickCallback = (e) => {
-            core.SaveImage();
+            core.SaveImage("ScreenShot.png");
         };
     }
     public Update(): void {
