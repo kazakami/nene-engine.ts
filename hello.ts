@@ -50,7 +50,7 @@ class Ball extends Unit {
     public ball: PhysicSphere;
     public Init(): void {
         this.ball = new PhysicSphere(1, 1);
-        this.ball.PhyBody.position.set(0, 10, 0);
+        this.ball.phyBody.position.set(0, 10, 0);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
             console.log(c.position);
@@ -65,7 +65,7 @@ class Board extends Unit {
     public floor: PhysicObjects;
     public Init(): void {
         this.floor = new PhysicObjects(0, "floor");
-        this.floor.PhyBody.position.set(0, -10, 0);
+        this.floor.phyBody.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON("resources/FloorPhysic.json");
         this.AddPhysicObject(this.floor);
         return;

@@ -85,7 +85,7 @@ class Scene {
                                 const mass: number = physic.mass;
                                 const radius: number = physic.radius;
                                 const sphere = new PhysicSphere(mass, radius);
-                                sphere.PhyBody.position.set(x, y, z);
+                                sphere.phyBody.position.set(x, y, z);
                                 u.AddPhysicObject(sphere);
                                 break;
                             }
@@ -99,7 +99,7 @@ class Scene {
                                 const height: number = physic.height;
                                 const depth: number = physic.depth;
                                 const box = new PhysicBox(mass, width, height, depth);
-                                box.PhyBody.position.set(x, y, z);
+                                box.phyBody.position.set(x, y, z);
                                 u.AddPhysicObject(box);
                                 break;
                             }
@@ -111,7 +111,7 @@ class Scene {
                                 const mass: number = physic.number;
                                 const angle: number = physic.angle;
                                 const plane = new PhysicPlane(mass);
-                                plane.PhyBody.quaternion.setFromAxisAngle(new Cannon.Vec3(axisx, axisy, axisz), angle);
+                                plane.phyBody.quaternion.setFromAxisAngle(new Cannon.Vec3(axisx, axisy, axisz), angle);
                                 u.AddPhysicObject(plane);
                                 break;
                             }
@@ -130,7 +130,7 @@ class Scene {
             u.objects.forEach((o) => { this.scene.remove(o); });
             u.physicObjects.forEach((p) => {
                 this.scene.remove(p.viewBody);
-                this.physicWorld.remove(p.PhyBody);
+                this.physicWorld.remove(p.phyBody);
             });
             u.Fin();
         });

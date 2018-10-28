@@ -31,7 +31,7 @@ abstract class Unit {
     // sceneにviewBodyを追加し、physicWorldにphysicBodyを追加し、オブジェクトをUnitに紐付ける
     public AddPhysicObject(p: PhysicObject): void {
         this.physicObjects.push(p);
-        this.scene.physicWorld.addBody(p.PhyBody);
+        this.scene.physicWorld.addBody(p.phyBody);
         this.scene.scene.add(p.viewBody);
     }
 }
