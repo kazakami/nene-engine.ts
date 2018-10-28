@@ -1,12 +1,12 @@
 import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
 import * as THREE from "three";
-import { Room } from "./Room";
+import { Scene } from "./Scene";
 import { Base64toBlob } from "./Util";
 
 class Core {
-    public rooms: { [key: string]: Room };
-    public activeRoom: Room;
+    public scenes: { [key: string]: Scene };
+    public activeScene: Scene;
     public renderer: THREE.WebGLRenderer;
     public objects: { [key: string]: [boolean, THREE.Object3D] };
     public loadingManager: THREE.LoadingManager;
@@ -20,8 +20,8 @@ class Core {
     public link: HTMLAnchorElement;
 
     constructor() {
-        this.rooms = {};
-        this.activeRoom = null;
+        this.scenes = {};
+        this.activeScene = null;
         this.renderer = new THREE.WebGLRenderer({
             preserveDrawingBuffer: true,
         });
@@ -88,10 +88,10 @@ class Core {
         }
     }
 
-    public Init(roomName: string, room: Room): void {
-        this.rooms[roomName] = room;
-        this.activeRoom = room;
-        this.activeRoom.Init();
+    public Init(sceneName: string, scene: Scene): void {
+        this.scenes[sceneName] = scene;
+        this.activeScene = scene;
+        this.activeScene.Init();
         const animate = () => {
             requestAnimationFrame(animate);
             this.Update();
@@ -101,23 +101,23 @@ class Core {
     }
 
     public Update(): void {
-        this.activeRoom.Update();
+        this.activeScene.Update();
     }
 
     public Draw(): void {
-        this.activeRoom.Draw();
+        this.activeScene.Draw();
         this.renderer.clear();
-        this.renderer.render(this.activeRoom.scene, this.activeRoom.camera);
-        this.renderer.render(this.activeRoom.scene2d, this.activeRoom.camera2d);
+        this.renderer.render(this.activeScene.scene, this.activeScene.camera);
+        this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
     }
 
-    public ChangeRoom(roomName: string): void {
-        this.activeRoom = this.rooms[roomName];
+    public ChangeScene(sceneName: string): void {
+        this.activeScene = this.scenes[sceneName];
     }
 
-    public AddRoom(roomName: string, room: Room): void {
-        this.rooms[roomName] = room;
-        room.Init();
+    public AddScene(sceneName: string, scene: Scene): void {
+        this.scenes[sceneName] = scene;
+        scene.Init();
     }
 
     public SaveImage(): void {
@@ -132,9 +132,9 @@ class Core {
 
 let core: Core = null;
 
-function Start(defaultRoomName: string, defaultRoom: Room): void {
+function Start(defaultSceneName: string, defaultScene: Scene): void {
     core = new Core();
-    core.Init(defaultRoomName, defaultRoom);
+    core.Init(defaultSceneName, defaultScene);
 }
 
 export { core };

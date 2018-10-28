@@ -1,17 +1,17 @@
 import * as THREE from "three";
 import { PhysicObject } from "./PhysicObject";
-import { Room } from "./Room";
+import { Scene } from "./Scene";
 
 abstract class Unit {
     public isAlive: boolean;
     public priority: number;
-    public room: Room;
+    public scene: Scene;
     public frame: number;
     public objects: THREE.Object3D[];
     public physicObjects: PhysicObject[];
     constructor() {
         this.isAlive = true;
-        this.room = null;
+        this.scene = null;
         this.frame = 0;
         this.objects = [];
         this.physicObjects = [];
@@ -26,13 +26,13 @@ abstract class Unit {
     // sceneにObject3Dを追加し、Unitに紐づける
     public AddObject(o: THREE.Object3D): void {
         this.objects.push(o);
-        this.room.scene.add(o);
+        this.scene.scene.add(o);
     }
     // sceneにviewBodyを追加し、physicWorldにphysicBodyを追加し、オブジェクトをUnitに紐付ける
     public AddPhysicObject(p: PhysicObject): void {
         this.physicObjects.push(p);
-        this.room.physicWorld.addBody(p.PhyBody);
-        this.room.scene.add(p.viewBody);
+        this.scene.physicWorld.addBody(p.PhyBody);
+        this.scene.scene.add(p.viewBody);
     }
 }
 

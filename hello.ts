@@ -2,10 +2,10 @@ import * as CANNON from "cannon";
 import * as THREE from "three";
 import { core, Start } from "./kzkm-engine.ts/src/Core";
 import { PhysicBox, PhysicObject, PhysicObjects, PhysicSphere } from "./kzkm-engine.ts/src/PhysicObject";
-import { Room } from "./kzkm-engine.ts/src/Room";
+import { Scene } from "./kzkm-engine.ts/src/Scene";
 import { Unit } from "./kzkm-engine.ts/src/Unit";
 
-class LoadRoom extends Room {
+class LoadScene extends Scene {
     public Init(): void {
         super.Init();
         core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
@@ -14,15 +14,15 @@ class LoadRoom extends Room {
         super.Update();
         if (core.IsObjectAvailable("ente")) {
             // オブジェクトenteが読み込まれればルーム遷移
-            core.AddRoom("game", new GameRoom());
-            core.ChangeRoom("game");
+            core.AddScene("game", new GameScene());
+            core.ChangeScene("game");
         } else {
             // console.log("now loading model");
         }
     }
 }
 
-class GameRoom extends Room {
+class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public Init(): void {
         super.Init();
@@ -81,4 +81,4 @@ class Board extends Unit {
 }
 
 // ゲームの開始
-Start("init", new LoadRoom());
+Start("init", new LoadScene());

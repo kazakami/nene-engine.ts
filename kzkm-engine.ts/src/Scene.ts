@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { PhysicBox, PhysicPlane, PhysicSphere } from "./PhysicObject";
 import { PhysicUnit, Unit } from "./Unit";
 
-class Room {
+class Scene {
     public units: Unit[];
     public scene: THREE.Scene;
     public camera: THREE.Camera;
@@ -51,7 +51,7 @@ class Room {
 
     public AddUnit(u: Unit): void {
         // Initを実行してからリストに追加
-        u.room = this;
+        u.scene = this;
         u.Init();
         this.units.push(u);
     }
@@ -139,4 +139,4 @@ class Room {
     }
 }
 
-export { Room };
+export { Scene };
