@@ -26,7 +26,7 @@ abstract class PhysicObject {
             }
         });
     }
-    public SetCollideCallback(callback: (CollideData) => void) {
+    public SetCollideCallback(callback: (collideData: CollideData) => void) {
         this.collideCallBack = callback;
     }
     public abstract Update(): void;
