@@ -45,7 +45,7 @@ class GameScene extends Scene {
     }
     public Update(): void {
         super.Update();
-        this.sprt.position.set(core.mouseX, core.mouseY, -1);
+        this.sprt.position.set(0, 0, 1);
     }
 }
 

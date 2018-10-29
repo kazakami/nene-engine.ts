@@ -21,7 +21,9 @@ class Scene {
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.scene2d = new THREE.Scene();
-        this.camera2d = new THREE.OrthographicCamera(0, window.innerWidth, 0, window.innerHeight, 0.0001, 10000);
+        this.camera2d = new THREE.OrthographicCamera( - window.innerWidth / 2, window.innerWidth / 2
+            , window.innerHeight / 2, - window.innerHeight / 2, 1, 10 );
+        this.camera2d.position.z = 10;
         this.units = [];
         this.frame = 0;
         this.physicWorld = new Cannon.World();
