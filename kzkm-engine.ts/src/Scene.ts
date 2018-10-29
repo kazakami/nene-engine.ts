@@ -5,19 +5,16 @@ import { PhysicBox, PhysicPlane, PhysicSphere } from "./PhysicObject";
 import { PhysicUnit, Unit } from "./Unit";
 
 class Scene {
-    public units: Unit[];
-    public core: Core;
+    public units: Unit[] = [];
+    public core: Core = null;
     public scene: THREE.Scene;
     public camera: THREE.Camera;
     public scene2d: THREE.Scene;
     public camera2d: THREE.Camera;
-
     public physicWorld: Cannon.World;
-
-    public frame: number;
-
-    public onMouseMoveCallback: (e: MouseEvent) => void;
-    public onMouseClickCallback: (e: Event) => void;
+    public frame: number = 0;
+    public onMouseMoveCallback: (e: MouseEvent) => void = null;
+    public onMouseClickCallback: (e: Event) => void = null;
 
     constructor() {
         this.scene = new THREE.Scene();
@@ -26,15 +23,10 @@ class Scene {
         this.camera2d = new THREE.OrthographicCamera( - window.innerWidth / 2, window.innerWidth / 2
             , window.innerHeight / 2, - window.innerHeight / 2, 1, 10 );
         this.camera2d.position.z = 10;
-        this.units = [];
-        this.frame = 0;
         this.physicWorld = new Cannon.World();
         this.physicWorld.gravity.set(0, -9.82, 0);
         this.physicWorld.broadphase = new Cannon.NaiveBroadphase();
         this.physicWorld.solver.iterations = 5;
-        this.onMouseClickCallback = null;
-        this.onMouseMoveCallback = null;
-        this.core = null;
     }
 
     public Update(): void {

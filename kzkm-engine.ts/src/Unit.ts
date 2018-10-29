@@ -4,20 +4,15 @@ import { PhysicObject } from "./PhysicObject";
 import { Scene } from "./Scene";
 
 abstract class Unit {
-    public isAlive: boolean;
-    public priority: number;
-    public core: Core;
-    public scene: Scene;
-    public frame: number;
-    public objects: THREE.Object3D[];
-    public physicObjects: PhysicObject[];
+    public isAlive: boolean = true;
+    public priority: number = 0;
+    public core: Core = null;
+    public scene: Scene = null;
+    public frame: number = 0;
+    public objects: THREE.Object3D[] = [];
+    public physicObjects: PhysicObject[] = [];
     constructor() {
-        this.isAlive = true;
-        this.core = null;
-        this.scene = null;
-        this.frame = 0;
-        this.objects = [];
-        this.physicObjects = [];
+        return;
     }
     public Update(): void {
         this.frame++;

@@ -5,23 +5,21 @@ import { Scene } from "./Scene";
 import { Base64toBlob } from "./Util";
 
 class Core {
-    public scenes: { [key: string]: Scene };
-    public activeScene: Scene;
+    public scenes: { [key: string]: Scene } = {};
+    public activeScene: Scene = null;
     public renderer: THREE.WebGLRenderer;
-    public objects: { [key: string]: [boolean, THREE.Object3D] };
+    public objects: { [key: string]: [boolean, THREE.Object3D] } = {};
     public loadingManager: THREE.LoadingManager;
     public objLoader: THREE.OBJLoader;
     public mtlLoader: THREE.MTLLoader;
     public canvas: HTMLCanvasElement;
-    public mouseX: number;
-    public mouseY: number;
+    public mouseX: number = 0;
+    public mouseY: number = 0;
     public windowSizeX: number;
     public windowSizeY: number;
     public link: HTMLAnchorElement;
 
     constructor() {
-        this.scenes = {};
-        this.activeScene = null;
         this.renderer = new THREE.WebGLRenderer({
             preserveDrawingBuffer: true,
         });
@@ -29,7 +27,6 @@ class Core {
         this.windowSizeX = window.innerWidth;
         this.windowSizeY = window.innerHeight;
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
-        this.objects = {};
         this.loadingManager = new THREE.LoadingManager();
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
         this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
@@ -50,8 +47,6 @@ class Core {
         this.link = document.createElement("a");
         this.link.style.display = "none";
         document.body.appendChild(this.link);
-        this.mouseX = 0;
-        this.mouseY = 0;
     }
 
     public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): void {
