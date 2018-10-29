@@ -5,19 +5,19 @@ import { Scene } from "./Scene";
 import { Base64toBlob } from "./Util";
 
 class Core {
-    public scenes: { [key: string]: Scene } = {};
-    public activeScene: Scene = null;
-    public renderer: THREE.WebGLRenderer;
-    public objects: { [key: string]: [boolean, THREE.Object3D] } = {};
-    public loadingManager: THREE.LoadingManager;
-    public objLoader: THREE.OBJLoader;
-    public mtlLoader: THREE.MTLLoader;
-    public canvas: HTMLCanvasElement;
     public mouseX: number = 0;
     public mouseY: number = 0;
     public windowSizeX: number;
     public windowSizeY: number;
-    public link: HTMLAnchorElement;
+    private canvas: HTMLCanvasElement;
+    private link: HTMLAnchorElement;
+    private renderer: THREE.WebGLRenderer;
+    private objects: { [key: string]: [boolean, THREE.Object3D] } = {};
+    private scenes: { [key: string]: Scene } = {};
+    private activeScene: Scene = null;
+    private loadingManager: THREE.LoadingManager;
+    private objLoader: THREE.OBJLoader;
+    private mtlLoader: THREE.MTLLoader;
 
     constructor() {
         this.renderer = new THREE.WebGLRenderer({
@@ -49,6 +49,12 @@ class Core {
         document.body.appendChild(this.link);
     }
 
+    /**
+     * Obj形式のファイルを読み込む
+     * @param objFilename OBJファイルのパス
+     * @param mtlFilename MTLファイルのパス
+     * @param name 3Dモデルを呼び出すためのキー
+     */
     public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): void {
         // ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
         if (mtlFilename.indexOf("/") !== -1) {
@@ -71,10 +77,18 @@ class Core {
             });
     }
 
+    /**
+     * キーで指定した3Dオブジェクトコピーしてくる
+     * @param name キー
+     */
     public GetObject(name: string): THREE.Object3D {
         return this.objects[name][1].clone(true);
     }
 
+    /**
+     * キーで指定したオブジェクトの読み込みが完了しているか調べる
+     * @param name キー
+     */
     public IsObjectAvailable(name: string): boolean {
         if (this.objects[name]) {
             return this.objects[name][0];
@@ -96,21 +110,19 @@ class Core {
         animate();
     }
 
-    public Update(): void {
-        this.activeScene.Update();
-    }
-
-    public Draw(): void {
-        this.activeScene.Draw();
-        this.renderer.clear();
-        this.renderer.render(this.activeScene.scene, this.activeScene.camera);
-        this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
-    }
-
+    /**
+     * シーンを変更
+     * @param sceneName 切り替えるシーンのキー
+     */
     public ChangeScene(sceneName: string): void {
         this.activeScene = this.scenes[sceneName];
     }
 
+    /**
+     * シーンを追加する
+     * @param sceneName シーンを呼び出すためのキー
+     * @param scene 追加するシーン
+     */
     public AddScene(sceneName: string, scene: Scene): void {
         scene.core = this;
         this.scenes[sceneName] = scene;
@@ -129,10 +141,22 @@ class Core {
         this.link.download = filename;
         this.link.click();
     }
+
+    private Update(): void {
+        this.activeScene.Update();
+    }
+
+    private Draw(): void {
+        this.activeScene.Draw();
+        this.renderer.clear();
+        this.renderer.render(this.activeScene.scene, this.activeScene.camera);
+        this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
+    }
 }
 
 /**
  * ゲームエンジンを起動する
+ * コアの参照を返しておく
  * @param defaultSceneName 初期シーンの名前
  * @param defaultScene 初期シーン
  */
