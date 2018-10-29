@@ -89,6 +89,7 @@ class Core {
     }
 
     public Init(sceneName: string, scene: Scene): void {
+        scene.core = this;
         this.scenes[sceneName] = scene;
         this.activeScene = scene;
         this.activeScene.Init();
@@ -116,6 +117,7 @@ class Core {
     }
 
     public AddScene(sceneName: string, scene: Scene): void {
+        scene.core = this;
         this.scenes[sceneName] = scene;
         scene.Init();
     }
@@ -130,13 +132,11 @@ class Core {
     }
 }
 
-let core: Core = null;
-
-function Start(defaultSceneName: string, defaultScene: Scene): void {
-    core = new Core();
+function Start(defaultSceneName: string, defaultScene: Scene): Core {
+    const core = new Core();
     core.Init(defaultSceneName, defaultScene);
+    return core;
 }
 
-export { core };
 export { Start };
 export { Core };

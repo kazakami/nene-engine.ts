@@ -1,16 +1,19 @@
 import * as THREE from "three";
+import { Core } from "./Core";
 import { PhysicObject } from "./PhysicObject";
 import { Scene } from "./Scene";
 
 abstract class Unit {
     public isAlive: boolean;
     public priority: number;
+    public core: Core;
     public scene: Scene;
     public frame: number;
     public objects: THREE.Object3D[];
     public physicObjects: PhysicObject[];
     constructor() {
         this.isAlive = true;
+        this.core = null;
         this.scene = null;
         this.frame = 0;
         this.objects = [];

@@ -1,10 +1,12 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
+import { Core } from "./Core";
 import { PhysicBox, PhysicPlane, PhysicSphere } from "./PhysicObject";
 import { PhysicUnit, Unit } from "./Unit";
 
 class Scene {
     public units: Unit[];
+    public core: Core;
     public scene: THREE.Scene;
     public camera: THREE.Camera;
     public scene2d: THREE.Scene;
@@ -32,6 +34,7 @@ class Scene {
         this.physicWorld.solver.iterations = 5;
         this.onMouseClickCallback = null;
         this.onMouseMoveCallback = null;
+        this.core = null;
     }
 
     public Update(): void {
@@ -59,6 +62,7 @@ class Scene {
     public AddUnit(u: Unit): void {
         // Initを実行してからリストに追加
         u.scene = this;
+        u.core = this.core;
         u.Init();
         this.units.push(u);
     }

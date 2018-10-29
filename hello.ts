@@ -1,6 +1,6 @@
 import * as CANNON from "cannon";
 import * as THREE from "three";
-import { core, Start } from "./kzkm-engine.ts/src/Core";
+import { Start } from "./kzkm-engine.ts/src/Core";
 import { PhysicBox, PhysicObject, PhysicObjects, PhysicSphere } from "./kzkm-engine.ts/src/PhysicObject";
 import { Scene } from "./kzkm-engine.ts/src/Scene";
 import { Unit } from "./kzkm-engine.ts/src/Unit";
@@ -8,14 +8,14 @@ import { Unit } from "./kzkm-engine.ts/src/Unit";
 class LoadScene extends Scene {
     public Init(): void {
         super.Init();
-        core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
+        this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
     }
     public Update(): void {
         super.Update();
-        if (core.IsObjectAvailable("ente")) {
+        if (this.core.IsObjectAvailable("ente")) {
             // オブジェクトenteが読み込まれればルーム遷移
-            core.AddScene("game", new GameScene());
-            core.ChangeScene("game");
+            this.core.AddScene("game", new GameScene());
+            this.core.ChangeScene("game");
         } else {
             // console.log("now loading model");
         }
@@ -40,12 +40,12 @@ class GameScene extends Scene {
         this.sprt.scale.set(10, 10, 1);
         this.scene2d.add(this.sprt);
         this.onMouseClickCallback = (e) => {
-            core.SaveImage("ScreenShot.png");
+            this.core.SaveImage("ScreenShot.png");
         };
     }
     public Update(): void {
         super.Update();
-        this.sprt.position.set(0, 0, 1);
+        this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
     }
 }
 
@@ -75,7 +75,10 @@ class Board extends Unit {
     }
     public Update(): void {
         super.Update();
-        this.floor.OrientAndRotate(core.mouseX - core.windowSizeX / 2, 100, core.mouseY - core.windowSizeY / 2
+        this.floor.OrientAndRotate(
+            this.core.mouseX - this.core.windowSizeX / 2,
+            100,
+            this.core.mouseY - this.core.windowSizeY / 2
             , this.frame / 100 * 0);
     }
     public Fin(): void {
