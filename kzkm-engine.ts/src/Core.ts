@@ -117,6 +117,10 @@ class Core {
         scene.Init();
     }
 
+    /**
+     * 現在描画されてる画像をファイルとして保存する
+     * @param filename 保存時のファイル名。デフォルトはscreenshot.png
+     */
     public SaveImage(filename: string = "screenshot.png"): void {
         const base64Image = this.canvas.toDataURL("image/png");
         // console.log(base64Image.split(",")[1]);
@@ -127,6 +131,11 @@ class Core {
     }
 }
 
+/**
+ * ゲームエンジンを起動する
+ * @param defaultSceneName 初期シーンの名前
+ * @param defaultScene 初期シーン
+ */
 function Start(defaultSceneName: string, defaultScene: Scene): Core {
     const core = new Core();
     core.Init(defaultSceneName, defaultScene);

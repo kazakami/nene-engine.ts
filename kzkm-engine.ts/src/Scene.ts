@@ -4,7 +4,12 @@ import { Core } from "./Core";
 import { PhysicBox, PhysicPlane, PhysicSphere } from "./PhysicObject";
 import { PhysicUnit, Unit } from "./Unit";
 
-class Scene {
+/**
+ * Sceneの基底クラス、これを継承して用いる
+ * 基本的にコンストラクタは用いず、Init()に起動時の処理を追加する
+ * Init(),Update()関数ともにオーバーライドした際はsuperの関数も呼ぶこと
+ */
+abstract class Scene {
     public units: Unit[] = [];
     public core: Core = null;
     public scene: THREE.Scene;
@@ -127,7 +132,7 @@ class Scene {
         });
     }
 
-    public Remove(): void {
+    protected Remove(): void {
         // 有効でなくなったUnitに紐づけられてるObject3Dを削除し、PhysicObjectも削除し、Fin()を呼び出す
         this.units.filter((u) => !u.isAlive).forEach((u) => {
             u.objects.forEach((o) => { this.scene.remove(o); });
