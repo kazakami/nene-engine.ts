@@ -35,28 +35,23 @@ class Core {
         this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
         this.canvas = this.renderer.domElement;
         document.body.appendChild(this.canvas);
-        this.canvas.addEventListener("mousemove", this.OnCanvasMouseMove, false);
-        this.canvas.addEventListener("click", this.OnCanvasClick);
+        this.canvas.addEventListener("mousemove", (e) => {
+            this.mouseX = e.offsetX;
+            this.mouseY = e.offsetY;
+            if (this.activeScene.onMouseMoveCallback !== null) {
+                this.activeScene.onMouseMoveCallback(e);
+            }
+        }, false);
+        this.canvas.addEventListener("click", (e) => {
+            if (this.activeScene.onMouseClickCallback !== null) {
+                this.activeScene.onMouseClickCallback(e);
+            }
+        });
         this.link = document.createElement("a");
         this.link.style.display = "none";
         document.body.appendChild(this.link);
         this.mouseX = 0;
         this.mouseY = 0;
-    }
-
-    public OnCanvasMouseMove(e: MouseEvent): void {
-        core.mouseX = e.offsetX;
-        core.mouseY = e.offsetY;
-        if (core.activeScene.onMouseMoveCallback !== null) {
-            core.activeScene.onMouseMoveCallback(e);
-        }
-    }
-
-    public OnCanvasClick(e: Event): void {
-        // console.log("(" + core.mouseX + ", " + core.mouseY + ")");
-        if (core.activeScene.onMouseClickCallback !== null) {
-            core.activeScene.onMouseClickCallback(e);
-        }
     }
 
     public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): void {
