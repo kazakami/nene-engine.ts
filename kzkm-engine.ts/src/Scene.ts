@@ -152,6 +152,8 @@ abstract class Scene {
                 this.physicWorld.remove(p.phyBody);
             });
             u.Fin();
+            u.objects = [];
+            u.physicObjects = [];
             u.scene = null;
             u.core = null;
         });
