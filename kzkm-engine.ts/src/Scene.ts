@@ -64,6 +64,11 @@ abstract class Scene {
         this.units.push(u);
     }
 
+    public Fin(): void {
+        this.DeleteUnits(this.units);
+        this.units = [];
+    }
+
     public LoadFromFile(filename: string): void {
         const loader = new THREE.FileLoader();
         loader.load(filename, (res) => {
@@ -134,16 +139,22 @@ abstract class Scene {
 
     protected Remove(): void {
         // 有効でなくなったUnitに紐づけられてるObject3Dを削除し、PhysicObjectも削除し、Fin()を呼び出す
-        this.units.filter((u) => !u.isAlive).forEach((u) => {
+        this.DeleteUnits(this.units.filter((u) => !u.isAlive));
+        // Unitのリストから有効でなくなったものを取り除く
+        this.units = this.units.filter((u) => u.isAlive);
+    }
+
+    private DeleteUnits(units: Unit[]): void {
+        units.forEach((u) => {
             u.objects.forEach((o) => { this.scene.remove(o); });
             u.physicObjects.forEach((p) => {
                 this.scene.remove(p.viewBody);
                 this.physicWorld.remove(p.phyBody);
             });
             u.Fin();
+            u.scene = null;
+            u.core = null;
         });
-        // Unitのリストから有効でなくなったものを取り除く
-        this.units = this.units.filter((u) => u.isAlive);
     }
 }
 
