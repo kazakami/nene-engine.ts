@@ -45,6 +45,23 @@ abstract class Unit {
         this.scene.physicWorld.addBody(p.phyBody);
         this.scene.scene.add(p.viewBody);
     }
+    /**
+     * 指定したObject3Dを削除
+     * @param o 削除するObject3D
+     */
+    public RemoveObject(o: THREE.Object3D): void {
+        this.objects = this.objects.filter((obj) => o !== obj);
+        this.scene.scene.remove(o);
+    }
+    /**
+     * 指定した物理オブジェクトを削除する
+     * @param p 削除する物理オブジェクト
+     */
+    public RemovePhysicOnject(p: PhysicObject): void {
+        this.physicObjects = this.physicObjects.filter((pobj) => p !== pobj);
+        this.scene.physicWorld.remove(p.phyBody);
+        this.scene.scene.remove(p.viewBody);
+    }
 }
 
 class PhysicUnit extends Unit {
