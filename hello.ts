@@ -38,6 +38,7 @@ class GameScene extends Scene {
         const tex = this.core.textureLoader.load("resources/png_alphablend_test.png");
         const mat = new THREE.SpriteMaterial({ color: 0xFFFFFF, map: tex });
         this.sprt = new THREE.Sprite(mat);
+        mat.dispose();
         this.sprt.scale.set(10, 10, 1);
         this.scene2d.add(this.sprt);
         this.onMouseClickCallback = (e) => {
