@@ -39,7 +39,7 @@ class GameScene extends Scene {
         const mat = new THREE.SpriteMaterial({ color: 0xFFFFFF, map: tex });
         this.sprt = new THREE.Sprite(mat);
         mat.dispose();
-        this.sprt.scale.set(10, 10, 1);
+        this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
         this.onMouseClickCallback = (e) => {
             this.core.SaveImage("ScreenShot.png");
@@ -78,10 +78,10 @@ class Board extends Unit {
     public Update(): void {
         super.Update();
         this.floor.OrientAndRotate(
-            this.core.mouseX - this.core.windowSizeX / 2,
+            this.core.mouseX,
             100,
-            this.core.mouseY - this.core.windowSizeY / 2
-            , this.frame / 100 * 0);
+            - this.core.mouseY,
+            this.frame / 100 * 0);
     }
     public Fin(): void {
         return;

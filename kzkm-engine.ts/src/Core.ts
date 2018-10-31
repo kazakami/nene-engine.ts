@@ -35,8 +35,8 @@ class Core {
         this.canvas = this.renderer.domElement;
         document.body.appendChild(this.canvas);
         this.canvas.addEventListener("mousemove", (e) => {
-            this.mouseX = e.offsetX;
-            this.mouseY = e.offsetY;
+            this.mouseX = e.offsetX - this.windowSizeX / 2;
+            this.mouseY = this.windowSizeY / 2 - e.offsetY;
             if (this.activeScene.onMouseMoveCallback !== null) {
                 this.activeScene.onMouseMoveCallback(e);
             }
