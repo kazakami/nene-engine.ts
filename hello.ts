@@ -35,7 +35,8 @@ class GameScene extends Scene {
         const light = new THREE.DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
-        const mat = new THREE.SpriteMaterial({ color: 0xFF0000 });
+        const tex = this.core.textureLoader.load("resources/png_alphablend_test.png");
+        const mat = new THREE.SpriteMaterial({ color: 0xFFFFFF, map: tex });
         this.sprt = new THREE.Sprite(mat);
         this.sprt.scale.set(10, 10, 1);
         this.scene2d.add(this.sprt);

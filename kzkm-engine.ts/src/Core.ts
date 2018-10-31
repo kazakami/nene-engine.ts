@@ -9,6 +9,7 @@ class Core {
     public mouseY: number = 0;
     public windowSizeX: number;
     public windowSizeY: number;
+    public textureLoader: THREE.TextureLoader;
     private canvas: HTMLCanvasElement;
     private link: HTMLAnchorElement;
     private renderer: THREE.WebGLRenderer;
@@ -28,6 +29,7 @@ class Core {
         this.windowSizeY = window.innerHeight;
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
         this.loadingManager = new THREE.LoadingManager();
+        this.textureLoader = new THREE.TextureLoader(this.loadingManager);
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
         this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
         this.canvas = this.renderer.domElement;
