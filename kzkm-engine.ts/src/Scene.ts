@@ -13,21 +13,18 @@ abstract class Scene {
     public units: Unit[] = [];
     public core: Core = null;
     public scene: THREE.Scene;
-    public camera: THREE.Camera;
+    public camera: THREE.PerspectiveCamera;
     public scene2d: THREE.Scene;
-    public camera2d: THREE.Camera;
+    public camera2d: THREE.OrthographicCamera;
     public physicWorld: Cannon.World;
     public frame: number = 0;
     public onMouseMoveCallback: (e: MouseEvent) => void = null;
     public onMouseClickCallback: (e: Event) => void = null;
+    public onWindowResizeCallback: (e: UIEvent) => void = null;
 
     constructor() {
         this.scene = new THREE.Scene();
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.scene2d = new THREE.Scene();
-        this.camera2d = new THREE.OrthographicCamera( - window.innerWidth / 2, window.innerWidth / 2
-            , window.innerHeight / 2, - window.innerHeight / 2, 1, 10 );
-        this.camera2d.position.z = 10;
         this.physicWorld = new Cannon.World();
         this.physicWorld.gravity.set(0, -9.82, 0);
         this.physicWorld.broadphase = new Cannon.NaiveBroadphase();
@@ -54,6 +51,12 @@ abstract class Scene {
         this.units.forEach((u) => {
             u.Init();
         });
+        this.camera = new THREE.PerspectiveCamera(75, this.core.windowSizeX / this.core.windowSizeY, 0.1, 1000);
+        this.camera2d = new THREE.OrthographicCamera(
+            -this.core.windowSizeX / 2, this.core.windowSizeX / 2,
+            this.core.windowSizeY / 2, -this.core.windowSizeY / 2,
+            1, 10 );
+        this.camera2d.position.z = 10;
     }
 
     public AddUnit(u: Unit): void {
