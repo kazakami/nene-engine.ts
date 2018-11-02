@@ -14,12 +14,12 @@ class LoadScene extends Scene {
     }
     public Update(): void {
         super.Update();
-        if (this.core.IsAllObjectAvaiable() && this.core.IsAllTextureAvaiable()) {
+        if (this.core.IsAllResourcesAvaiable()) {
             console.log("change");
             // オブジェクトenteが読み込まれればシーン遷移
             this.core.AddAndChangeScene("game", new GameScene());
         } else {
-            console.log("now loading model");
+            console.log("now loading resources");
         }
     }
 }

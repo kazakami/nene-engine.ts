@@ -72,6 +72,10 @@ class Core {
         }
     }
 
+    public IsAllResourcesAvaiable(): boolean {
+        return this.IsAllObjectAvaiable() && this.IsAllTextureAvaiable();
+    }
+
     /**
      * 画像を読み込む
      * @param filename 画像ファイルのパス
