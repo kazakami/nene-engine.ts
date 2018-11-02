@@ -109,7 +109,11 @@ class Core {
      * @param name キー
      */
     public GetTexture(name: string): THREE.Texture {
-        return this.textures[name];
+        if (this.textures[name] !== null && this.textures[name] !== undefined) {
+            return this.textures[name];
+        } else {
+            throw new Error("Texture " + name + " is null or undefined");
+        }
     }
 
     /**
@@ -146,10 +150,10 @@ class Core {
      * @param name キー
      */
     public GetObject(name: string): THREE.Object3D {
-        if (this.objects[name] !== null) {
+        if (this.objects[name] !== null && this.objects[name] !== undefined) {
             return this.objects[name].clone(true);
         } else {
-            throw new Error("Object " + name + " is null");
+            throw new Error("Object " + name + " is null or undefined");
         }
     }
 
