@@ -67,7 +67,6 @@ class PhysicSphere extends PhysicObject {
     constructor(mass: number, radius: number, obj: THREE.Object3D = null) {
         super("sphere", mass);
         if (obj === null) {
-            console.log("null");
             const geo = new THREE.SphereBufferGeometry(radius, 50, 50);
             const mat = new THREE.MeshPhongMaterial({color: 0xffffff});
             this.viewBody = new THREE.Mesh(geo, mat);
@@ -84,14 +83,18 @@ class PhysicSphere extends PhysicObject {
 }
 
 class PhysicPlane extends PhysicObject {
-    constructor(mass: number) {
+    constructor(mass: number, obj: THREE.Object3D = null) {
         super("plane", mass);
-        const geo = new THREE.PlaneGeometry(300, 300);
-        const mat = new THREE.MeshLambertMaterial({color: 0x333333});
-        this.viewBody = new THREE.Mesh(geo, mat);
+        if (obj === null) {
+            const geo = new THREE.PlaneGeometry(300, 300);
+            const mat = new THREE.MeshLambertMaterial({color: 0x333333});
+            this.viewBody = new THREE.Mesh(geo, mat);
+            geo.dispose();
+            mat.dispose();
+        } else {
+            this.viewBody = obj;
+        }
         this.phyBody.addShape(new Cannon.Plane());
-        geo.dispose();
-        mat.dispose();
     }
     public Update(): void {
         this.Sync();
@@ -99,14 +102,18 @@ class PhysicPlane extends PhysicObject {
 }
 
 class PhysicBox extends PhysicObject {
-    constructor(mass: number, width: number, height: number, depth: number) {
+    constructor(mass: number, width: number, height: number, depth: number, obj: THREE.Object3D = null) {
         super("box", mass);
-        const geo = new THREE.BoxGeometry(width, height, depth);
-        const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
-        this.viewBody = new THREE.Mesh(geo, mat);
+        if (obj === null) {
+            const geo = new THREE.BoxGeometry(width, height, depth);
+            const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
+            this.viewBody = new THREE.Mesh(geo, mat);
+            geo.dispose();
+            mat.dispose();
+        } else {
+            this.viewBody = obj;
+        }
         this.phyBody.addShape(new Cannon.Box(new Cannon.Vec3(width / 2, height / 2, depth / 2)));
-        geo.dispose();
-        mat.dispose();
     }
     public Update(): void {
         this.Sync();
