@@ -150,6 +150,9 @@ class Core {
      * @param sceneName 切り替えるシーンのキー
      */
     public ChangeScene(sceneName: string): void {
+        if (this.scenes[sceneName] === null || this.scenes[sceneName] === undefined) {
+            throw new Error("Scene " + sceneName + " does not exist.");
+        }
         this.activeScene = this.scenes[sceneName];
     }
 
