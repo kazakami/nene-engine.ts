@@ -167,6 +167,11 @@ class Core {
         scene.Init();
     }
 
+    /**
+     * シーンを追加して移動する
+     * @param sceneName シーンをのキー
+     * @param scene 追加して移行するシーン
+     */
     public AddAndChangeScene(sceneName: string, scene: Scene): void {
         this.AddScene(sceneName, scene);
         this.ChangeScene(sceneName);
