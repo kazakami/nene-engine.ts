@@ -24,8 +24,8 @@ abstract class Unit {
         this.physicObjects.forEach((p) => { p.Update(); });
     }
     public Draw(): void { return; }
-    public abstract Init(): void;
-    public abstract Fin(): void;
+    public Init(): void { return; }
+    public Fin(): void { return; }
     /**
      * sceneにObject3Dを追加し、Unitに紐づける
      * 追加されたObject3DはこのUnitの削除時に自動でシーンから除外される

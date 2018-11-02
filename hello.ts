@@ -71,9 +71,6 @@ class Ball extends Unit {
             this.ball.angularVelocity.set(0, 0, 0);
         }
     }
-    public Fin(): void {
-        return;
-    }
 }
 
 class Board extends Unit {
@@ -83,7 +80,6 @@ class Board extends Unit {
         this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON("resources/FloorPhysic.json");
         this.AddPhysicObject(this.floor);
-        return;
     }
     public Update(): void {
         super.Update();
@@ -92,9 +88,6 @@ class Board extends Unit {
             100,
             -this.core.mouseY,
             this.frame / 100 * 0);
-    }
-    public Fin(): void {
-        return;
     }
 }
 
