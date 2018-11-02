@@ -158,7 +158,7 @@ class Core {
      * @param name キー
      */
     public IsObjectAvailable(name: string): boolean {
-        return this.objects[name] !== null;
+        return this.objects[name] !== null && this.objects[name] !== undefined;
     }
 
     /**
