@@ -64,14 +64,19 @@ abstract class PhysicObject {
 }
 
 class PhysicSphere extends PhysicObject {
-    constructor(mass: number, radius: number) {
+    constructor(mass: number, radius: number, obj: THREE.Object3D = null) {
         super("sphere", mass);
-        const geo = new THREE.SphereBufferGeometry(radius, 50, 50);
-        const mat = new THREE.MeshPhongMaterial({color: 0xffffff});
-        this.viewBody = new THREE.Mesh(geo, mat);
+        if (obj === null) {
+            console.log("null");
+            const geo = new THREE.SphereBufferGeometry(radius, 50, 50);
+            const mat = new THREE.MeshPhongMaterial({color: 0xffffff});
+            this.viewBody = new THREE.Mesh(geo, mat);
+            geo.dispose();
+            mat.dispose();
+        } else {
+            this.viewBody = obj;
+        }
         this.phyBody.addShape(new Cannon.Sphere(radius));
-        geo.dispose();
-        mat.dispose();
     }
     public Update(): void {
         this.Sync();
