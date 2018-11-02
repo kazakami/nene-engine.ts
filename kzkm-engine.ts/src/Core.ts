@@ -161,6 +161,11 @@ class Core {
         scene.Init();
     }
 
+    public AddAndChangeScene(sceneName: string, scene: Scene): void {
+        this.AddScene(sceneName, scene);
+        this.ChangeScene(sceneName);
+    }
+
     /**
      * 現在描画されてる画像をファイルとして保存する
      * @param filename 保存時のファイル名。デフォルトはscreenshot.png
