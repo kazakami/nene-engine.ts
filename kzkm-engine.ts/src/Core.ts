@@ -14,6 +14,7 @@ class Core {
     private link: HTMLAnchorElement;
     private renderer: THREE.WebGLRenderer;
     private objects: { [key: string]: THREE.Object3D } = {};
+    private textures: { [key: string]: THREE.Texture } = {};
     private scenes: { [key: string]: Scene } = {};
     private activeScene: Scene = null;
     private loadingManager: THREE.LoadingManager;
@@ -69,6 +70,46 @@ class Core {
         for (const key in this.scenes) {
             this.scenes[key].OnCanvasResizeCallBack();
         }
+    }
+
+    /**
+     * 画像を読み込む
+     * @param filename 画像ファイルのパス
+     * @param name 画像を呼び出すキー
+     */
+    public LoadTexture(filename: string, name: string): void {
+        this.textures[name] = null;
+        this.textureLoader.load(filename, (tex) => {
+            this.textures[name] = tex;
+        });
+    }
+
+    /**
+     * キーで指定した画像が読み込み終了してるか調べる
+     * @param name キー
+     */
+    public IsTextureAvaiable(name: string): boolean {
+        return this.textures[name] !== null && this.textures[name] !== undefined;
+    }
+
+    /**
+     * 全ての画像が読み込み完了しているか調べる
+     */
+    public IsAllTextureAvaiable(): boolean {
+        for (const key in this.textures) {
+            if (this.textures[key] === null || this.textures[key] === undefined) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * キーで指定した画像を呼び出す
+     * @param name キー
+     */
+    public GetTexture(name: string): THREE.Texture {
+        return this.textures[name];
     }
 
     /**

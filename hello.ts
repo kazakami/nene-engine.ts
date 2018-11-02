@@ -10,10 +10,11 @@ class LoadScene extends Scene {
         super.Init();
         this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
         this.core.LoadObjMtl("resources/ball.obj", "resources/ball.mtl", "ball");
+        this.core.LoadTexture("resources/png_alphablend_test.png", "circle");
     }
     public Update(): void {
         super.Update();
-        if (this.core.IsAllObjectAvaiable()) {
+        if (this.core.IsAllObjectAvaiable() && this.core.IsAllTextureAvaiable()) {
             console.log("change");
             // オブジェクトenteが読み込まれればシーン遷移
             this.core.AddAndChangeScene("game", new GameScene());
@@ -35,8 +36,7 @@ class GameScene extends Scene {
         const light = new THREE.DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
-        const tex = this.core.textureLoader.load("resources/png_alphablend_test.png");
-        const mat = new THREE.SpriteMaterial({ color: 0xFFFFFF, map: tex });
+        const mat = new THREE.SpriteMaterial({ color: 0xFFFFFF, map: this.core.GetTexture("circle") });
         this.sprt = new THREE.Sprite(mat);
         mat.dispose();
         this.sprt.scale.set(100, 100, 1);
