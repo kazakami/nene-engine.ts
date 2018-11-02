@@ -124,6 +124,18 @@ class Core {
     }
 
     /**
+     * 指定したキーの画像からspriteを作る関数
+     * @param name キー
+     * @param color 色
+     */
+    public MakeSpriteFromTexture(name: string, color: string | number | THREE.Color = 0xFFFFFF): THREE.Sprite {
+        const mat = new THREE.SpriteMaterial({ color: color, map: this.GetTexture(name) });
+        const sprite = new THREE.Sprite(mat);
+        mat.dispose();
+        return sprite;
+    }
+
+    /**
      * Obj形式のファイルを読み込む
      * @param objFilename OBJファイルのパス
      * @param mtlFilename MTLファイルのパス

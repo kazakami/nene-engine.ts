@@ -36,9 +36,7 @@ class GameScene extends Scene {
         const light = new THREE.DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
-        const mat = new THREE.SpriteMaterial({ color: 0xFFFFFF, map: this.core.GetTexture("circle") });
-        this.sprt = new THREE.Sprite(mat);
-        mat.dispose();
+        this.sprt = this.core.MakeSpriteFromTexture("circle");
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
         this.onMouseClickCallback = (e) => {
