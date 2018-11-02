@@ -13,7 +13,7 @@ class Core {
     private canvas: HTMLCanvasElement;
     private link: HTMLAnchorElement;
     private renderer: THREE.WebGLRenderer;
-    private objects: { [key: string]: [boolean, THREE.Object3D] } = {};
+    private objects: { [key: string]: THREE.Object3D } = {};
     private scenes: { [key: string]: Scene } = {};
     private activeScene: Scene = null;
     private loadingManager: THREE.LoadingManager;
@@ -75,6 +75,7 @@ class Core {
      * @param name 3Dモデルを呼び出すためのキー
      */
     public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): void {
+        this.objects[name] = null;
         // ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
         if (mtlFilename.indexOf("/") !== -1) {
             this.mtlLoader.setPath(mtlFilename.substr(0, mtlFilename.lastIndexOf("/")) + "/");
@@ -91,7 +92,7 @@ class Core {
                 this.objLoader.setMaterials(mtl);
                 this.objLoader.load(objFilename,
                     (grp) => {
-                        this.objects[name] = [true, grp];
+                        this.objects[name] = grp;
                     });
             });
     }
@@ -101,7 +102,11 @@ class Core {
      * @param name キー
      */
     public GetObject(name: string): THREE.Object3D {
-        return this.objects[name][1].clone(true);
+        if (this.objects[name] !== null) {
+            return this.objects[name].clone(true);
+        } else {
+            throw new Error("Object " + name + " is null");
+        }
     }
 
     /**
@@ -109,11 +114,19 @@ class Core {
      * @param name キー
      */
     public IsObjectAvailable(name: string): boolean {
-        if (this.objects[name]) {
-            return this.objects[name][0];
-        } else {
-            return false;
+        return this.objects[name] !== null;
+    }
+
+    /**
+     * 全てのオブジェクトが読み込み終了してるか調べる
+     */
+    public IsAllObjectAvaiable(): boolean {
+        for (const key in this.objects) {
+            if (this.objects[key] === null) {
+                return false;
+            }
         }
+        return true;
     }
 
     public Init(sceneName: string, scene: Scene): void {
