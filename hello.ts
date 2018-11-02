@@ -12,12 +12,13 @@ class LoadScene extends Scene {
     }
     public Update(): void {
         super.Update();
-        if (this.core.IsObjectAvailable("ente")) {
+        if (this.core.IsAllObjectAvaiable()) {
+            console.log("change");
             // オブジェクトenteが読み込まれればルーム遷移
             this.core.AddScene("game", new GameScene());
             this.core.ChangeScene("game");
         } else {
-            // console.log("now loading model");
+            console.log("now loading model");
         }
     }
 }
@@ -56,7 +57,7 @@ class GameScene extends Scene {
 class Ball extends Unit {
     public ball: PhysicSphere;
     public Init(): void {
-        this.ball = new PhysicSphere(1, 1);
+        this.ball = new PhysicSphere(1, 1, this.core.GetObject("ente"));
         this.ball.phyBody.position.set(0, 10, 0);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
