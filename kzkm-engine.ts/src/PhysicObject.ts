@@ -26,6 +26,18 @@ abstract class PhysicObject {
             }
         });
     }
+    get position(): Cannon.Vec3 {
+        return this.phyBody.position;
+    }
+    get velocity(): Cannon.Vec3 {
+        return this.phyBody.velocity;
+    }
+    get quaternion(): Cannon.Quaternion {
+        return this.phyBody.quaternion;
+    }
+    get angularVelocity(): Cannon.Vec3 {
+        return this.phyBody.angularVelocity;
+    }
     public SetCollideCallback(callback: (collideData: CollideData) => void) {
         this.collideCallBack = callback;
     }
