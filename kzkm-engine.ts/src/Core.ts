@@ -72,6 +72,9 @@ class Core {
         }
     }
 
+    /**
+     * 非同期に読み込んでいる全てのリソースが利用可能かどうか調べる
+     */
     public IsAllResourcesAvaiable(): boolean {
         return this.IsAllObjectAvaiable() && this.IsAllTextureAvaiable();
     }
