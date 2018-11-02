@@ -9,6 +9,7 @@ class LoadScene extends Scene {
     public Init(): void {
         super.Init();
         this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
+        this.core.LoadObjMtl("resources/ball.obj", "resources/ball.mtl", "ball");
     }
     public Update(): void {
         super.Update();
@@ -57,7 +58,7 @@ class GameScene extends Scene {
 class Ball extends Unit {
     public ball: PhysicSphere;
     public Init(): void {
-        this.ball = new PhysicSphere(1, 1, this.core.GetObject("ente"));
+        this.ball = new PhysicSphere(1, 1, this.core.GetObject("ball"));
         this.ball.phyBody.position.set(0, 10, 0);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
