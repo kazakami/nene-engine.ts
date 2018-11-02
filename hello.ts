@@ -44,14 +44,7 @@ class GameScene extends Scene {
             this.core.SaveImage("ScreenShot.png");
         };
         this.onWindowResizeCallback = (e) => {
-            this.core.ChangeWindowSize(window.innerWidth, window.innerHeight);
-            this.camera.aspect = this.core.windowSizeX / this.core.windowSizeY;
-            this.camera.updateProjectionMatrix();
-            this.camera2d.left = - this.core.windowSizeX / 2;
-            this.camera2d.right = this.core.windowSizeX / 2;
-            this.camera2d.bottom = - this.core.windowSizeY / 2;
-            this.camera2d.top = this.core.windowSizeY / 2;
-            this.camera2d.updateProjectionMatrix();
+            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
     }
     public Update(): void {

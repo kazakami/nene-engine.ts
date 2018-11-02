@@ -61,10 +61,11 @@ class Core {
      * @param x 新しい横幅
      * @param y 新しい高さ
      */
-    public ChangeWindowSize(x: number, y: number): void {
+    public ChangeCanvasSize(x: number, y: number): void {
         this.windowSizeX = x;
         this.windowSizeY = y;
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
+        this.activeScene.OnCanvasResizeCallBack();
     }
 
     /**

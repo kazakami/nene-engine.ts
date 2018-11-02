@@ -18,6 +18,7 @@ abstract class Scene {
     public camera2d: THREE.OrthographicCamera;
     public physicWorld: Cannon.World;
     public frame: number = 0;
+    public fov: number = 75;
     public onMouseMoveCallback: (e: MouseEvent) => void = null;
     public onMouseClickCallback: (e: Event) => void = null;
     public onWindowResizeCallback: (e: UIEvent) => void = null;
@@ -51,7 +52,7 @@ abstract class Scene {
         this.units.forEach((u) => {
             u.Init();
         });
-        this.camera = new THREE.PerspectiveCamera(75, this.core.windowSizeX / this.core.windowSizeY, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(this.fov, this.core.windowSizeX / this.core.windowSizeY, 0.1, 1000);
         this.camera2d = new THREE.OrthographicCamera(
             -this.core.windowSizeX / 2, this.core.windowSizeX / 2,
             this.core.windowSizeY / 2, -this.core.windowSizeY / 2,
@@ -70,6 +71,16 @@ abstract class Scene {
     public Fin(): void {
         this.DeleteUnits(this.units);
         this.units = [];
+    }
+
+    public OnCanvasResizeCallBack(): void {
+        this.camera.aspect = this.core.windowSizeX / this.core.windowSizeY;
+        this.camera.updateProjectionMatrix();
+        this.camera2d.left = -this.core.windowSizeX / 2;
+        this.camera2d.right = this.core.windowSizeX / 2;
+        this.camera2d.bottom = -this.core.windowSizeY / 2;
+        this.camera2d.top = this.core.windowSizeY / 2;
+        this.camera2d.updateProjectionMatrix();
     }
 
     public LoadFromFile(filename: string): void {
