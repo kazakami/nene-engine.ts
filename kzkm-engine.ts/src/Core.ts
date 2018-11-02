@@ -181,8 +181,11 @@ class Core {
      * シーンの削除
      * @param sceneName キー
      */
-    public RemoveScene(sceneName: string) {
-        delete this.scenes[sceneName];
+    public RemoveScene(sceneName: string): void {
+        if (this.scenes[sceneName] !== null && this.scenes[sceneName] !== undefined) {
+            this.scenes[sceneName].Fin();
+            delete this.scenes[sceneName];
+        }
     }
 
     /**
