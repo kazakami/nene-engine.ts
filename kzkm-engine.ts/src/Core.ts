@@ -65,7 +65,10 @@ class Core {
         this.windowSizeX = x;
         this.windowSizeY = y;
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
-        this.activeScene.OnCanvasResizeCallBack();
+        // tslint:disable-next-line:forin
+        for (const key in this.scenes) {
+            this.scenes[key].OnCanvasResizeCallBack();
+        }
     }
 
     /**
