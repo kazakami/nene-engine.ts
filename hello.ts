@@ -15,9 +15,8 @@ class LoadScene extends Scene {
         super.Update();
         if (this.core.IsAllObjectAvaiable()) {
             console.log("change");
-            // オブジェクトenteが読み込まれればルーム遷移
-            this.core.AddScene("game", new GameScene());
-            this.core.ChangeScene("game");
+            // オブジェクトenteが読み込まれればシーン遷移
+            this.core.AddAndChangeScene("game", new GameScene());
         } else {
             console.log("now loading model");
         }
@@ -59,11 +58,20 @@ class Ball extends Unit {
     public ball: PhysicSphere;
     public Init(): void {
         this.ball = new PhysicSphere(1, 1, this.core.GetObject("ball"));
-        this.ball.phyBody.position.set(0, 10, 0);
+        this.ball.position.set(0, 10, 0);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
             console.log(c.position);
         });
+    }
+    public Update(): void {
+        super.Update();
+        if (this.ball.position.y < -30) {
+            this.ball.position.set(0, 10, 0);
+            this.ball.velocity.set(0, 0, 0);
+            this.ball.quaternion.set(0, 0, 0, 1);
+            this.ball.angularVelocity.set(0, 0, 0);
+        }
     }
     public Fin(): void {
         return;
@@ -74,7 +82,7 @@ class Board extends Unit {
     public floor: PhysicObjects;
     public Init(): void {
         this.floor = new PhysicObjects(0, "floor");
-        this.floor.phyBody.position.set(0, -10, 0);
+        this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON("resources/FloorPhysic.json");
         this.AddPhysicObject(this.floor);
         return;
@@ -84,7 +92,7 @@ class Board extends Unit {
         this.floor.OrientAndRotate(
             this.core.mouseX,
             100,
-            - this.core.mouseY,
+            -this.core.mouseY,
             this.frame / 100 * 0);
     }
     public Fin(): void {
