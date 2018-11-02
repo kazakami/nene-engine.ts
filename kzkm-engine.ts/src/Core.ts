@@ -178,6 +178,14 @@ class Core {
     }
 
     /**
+     * シーンの削除
+     * @param sceneName キー
+     */
+    public RemoveScene(sceneName: string) {
+        delete this.scenes[sceneName];
+    }
+
+    /**
      * 現在描画されてる画像をファイルとして保存する
      * @param filename 保存時のファイル名。デフォルトはscreenshot.png
      */
