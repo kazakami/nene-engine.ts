@@ -29,7 +29,9 @@ class GameScene extends Scene {
     public Init(): void {
         super.Init();
         this.AddUnit(new Board());
-        this.AddUnit(new Ball());
+        this.AddUnit(new Ball(0, 10, 0));
+        this.AddUnit(new Ball(5, 5, 0));
+        this.AddUnit(new Ball(0, 3, 4));
         this.camera.position.z = 15;
         this.camera.position.y = 15;
         this.camera.lookAt(0, 0, 0);
@@ -54,9 +56,18 @@ class GameScene extends Scene {
 
 class Ball extends Unit {
     public ball: PhysicSphere;
+    private x: number;
+    private y: number;
+    private z: number;
+    constructor(x = 0, y = 0, z = 0) {
+        super();
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
     public Init(): void {
         this.ball = new PhysicSphere(1, 1, this.core.GetObject("ball"));
-        this.ball.position.set(0, 10, 0);
+        this.ball.position.set(this.x, this.y, this.z);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
             console.log(c.position);
@@ -65,7 +76,7 @@ class Ball extends Unit {
     public Update(): void {
         super.Update();
         if (this.ball.position.y < -30) {
-            this.ball.position.set(0, 10, 0);
+            this.ball.position.set(this.x, this.y, this.z);
             this.ball.velocity.set(0, 0, 0);
             this.ball.quaternion.set(0, 0, 0, 1);
             this.ball.angularVelocity.set(0, 0, 0);

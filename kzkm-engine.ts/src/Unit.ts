@@ -5,7 +5,7 @@ import { Scene } from "./Scene";
 
 /**
  * Unitの基底クラス、これを継承して用いる
- * 基本的にコンストラクタは用いず、Init()に起動時の処理を追加する
+ * 基本的にコンストラクタ値の受け渡しにのみ用い、Init()に起動時の処理を追加する
  * Update()関数をオーバーライドした際はsuper.Updateを実行しないとframeおよび物理オブジェクトの更新が行われない
  */
 abstract class Unit {
