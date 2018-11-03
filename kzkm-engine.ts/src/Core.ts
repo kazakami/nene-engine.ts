@@ -80,6 +80,17 @@ class Core {
     }
 
     /**
+     * 非同期に読み込んでいるすべてのリソースの読み込み進捗を取得
+     * 返り値の0番目が読み込み完了したリソースの数
+     * 返り値の1番目が登録されているすべてのリソースの数
+     */
+    public GetAllResourcesLoadingProgress(): [number, number] {
+        const objProg = this.GetObjectLoadingProgress();
+        const texProg = this.GetTextureLoadingProgress();
+        return [objProg[0] + texProg[0], objProg[1] + texProg[1]];
+    }
+
+    /**
      * 画像を読み込む
      * @param filename 画像ファイルのパス
      * @param name 画像を呼び出すキー
@@ -133,6 +144,22 @@ class Core {
         const sprite = new THREE.Sprite(mat);
         mat.dispose();
         return sprite;
+    }
+
+    /**
+     * 画像の読み込みの進捗具合を取得する
+     * 返り値の0番目が読み込み完了した画像の数
+     * 返り値の1番目が登録されているすべての画像の数
+     */
+    public GetTextureLoadingProgress(): [number, number] {
+        const AllNum = Object.keys(this.textures).length;
+        let LoadedNum = 0;
+        for (const key in this.textures) {
+            if (this.textures[key] !== null && this.textures[key] !== undefined) {
+                LoadedNum++;
+            }
+        }
+        return [LoadedNum, AllNum];
     }
 
     /**
@@ -194,6 +221,22 @@ class Core {
             }
         }
         return true;
+    }
+
+    /**
+     * オブジェクトの読み込みの進捗具合を取得する
+     * 返り値の0番目が読み込み完了したオブジェクトの数
+     * 返り値の1番目が登録されているすべてのオブジェクトの数
+     */
+    public GetObjectLoadingProgress(): [number, number] {
+        const AllNum = Object.keys(this.objects).length;
+        let LoadedNum = 0;
+        for (const key in this.objects) {
+            if (this.objects[key] !== null && this.objects[key] !== undefined) {
+                LoadedNum++;
+            }
+        }
+        return [LoadedNum, AllNum];
     }
 
     public Init(sceneName: string, scene: Scene): void {
