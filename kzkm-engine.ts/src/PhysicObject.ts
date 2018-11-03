@@ -4,8 +4,14 @@ import { OrientQuaternion, UndefCoalescing } from "./Util";
 
 class CollideData {
     public position: Cannon.Vec3;
-    public constructor(p: Cannon.Vec3) {
+    public body: Cannon.Body;
+    public contact: Cannon.ContactEquation;
+    public target: Cannon.Body;
+    public constructor(p: Cannon.Vec3, b: Cannon.Body, c: Cannon.ContactEquation, t: Cannon.Body) {
         this.position = p;
+        this.body = b;
+        this.contact = c;
+        this.target = t;
     }
 }
 
@@ -18,11 +24,14 @@ abstract class PhysicObject {
         const phyMat = new Cannon.Material(name);
         this.phyBody = new Cannon.Body({mass: mass, material: phyMat});
         this.phyBody.addEventListener("collide", (e) => {
+            const b: Cannon.Body = e.body;
+            const c: Cannon.ContactEquation = e. contact;
+            const t: Cannon.Body = e.target;
             if (this.collideCallBack !== null) {
-                const v: Cannon.Vec3 = e.contact.ri;
+                const v: Cannon.Vec3 = c.ri;
                 const p = this.phyBody.position;
-                const c = new CollideData(new Cannon.Vec3(v.x + p.x, v.y + p.y, v.z + p.z));
-                this.collideCallBack(c);
+                const collide = new CollideData(new Cannon.Vec3(v.x + p.x, v.y + p.y, v.z + p.z), b, c, t);
+                this.collideCallBack(collide);
             }
         });
     }
@@ -76,8 +85,8 @@ abstract class PhysicObject {
 }
 
 class PhysicSphere extends PhysicObject {
-    constructor(mass: number, radius: number, obj: THREE.Object3D = null) {
-        super("sphere", mass);
+    constructor(mass: number, radius: number, name: string = "sphere", obj: THREE.Object3D = null) {
+        super(name, mass);
         if (obj === null) {
             const geo = new THREE.SphereBufferGeometry(radius, 50, 50);
             const mat = new THREE.MeshPhongMaterial({color: 0xffffff});
@@ -95,8 +104,8 @@ class PhysicSphere extends PhysicObject {
 }
 
 class PhysicPlane extends PhysicObject {
-    constructor(mass: number, obj: THREE.Object3D = null) {
-        super("plane", mass);
+    constructor(mass: number, name: string = "plane", obj: THREE.Object3D = null) {
+        super(name, mass);
         if (obj === null) {
             const geo = new THREE.PlaneGeometry(300, 300);
             const mat = new THREE.MeshLambertMaterial({color: 0x333333});
@@ -114,8 +123,9 @@ class PhysicPlane extends PhysicObject {
 }
 
 class PhysicBox extends PhysicObject {
-    constructor(mass: number, width: number, height: number, depth: number, obj: THREE.Object3D = null) {
-        super("box", mass);
+    constructor(mass: number, width: number, height: number, depth: number,
+                name: string = "box", obj: THREE.Object3D = null) {
+        super(name, mass);
         if (obj === null) {
             const geo = new THREE.BoxGeometry(width, height, depth);
             const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
