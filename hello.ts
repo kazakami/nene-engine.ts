@@ -71,7 +71,7 @@ class Ball extends Unit {
         this.ball.position.set(this.x, this.y, this.z);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
-            console.log(c.position);
+            console.log(c.collidePosition, c.collideName);
         });
     }
     public Update(): void {

@@ -3,15 +3,24 @@ import * as THREE from "three";
 import { OrientQuaternion, UndefCoalescing } from "./Util";
 
 class CollideData {
-    public position: Cannon.Vec3;
+    // 多分これが衝突相手
     public body: Cannon.Body;
+    // 衝突に関する情報
     public contact: Cannon.ContactEquation;
+    // 多分これが自分
     public target: Cannon.Body;
-    public constructor(p: Cannon.Vec3, b: Cannon.Body, c: Cannon.ContactEquation, t: Cannon.Body) {
-        this.position = p;
+    public constructor(b: Cannon.Body, c: Cannon.ContactEquation, t: Cannon.Body) {
         this.body = b;
         this.contact = c;
         this.target = t;
+    }
+    get collidePosition(): Cannon.Vec3 {
+        const v = this.contact.ri;
+        const p = this.target.position;
+        return new Cannon.Vec3(v.x + p.x, v.y + p.y, v.z + p.z);
+    }
+    get collideName(): string {
+        return this.body.material.name;
     }
 }
 
@@ -24,14 +33,11 @@ abstract class PhysicObject {
         const phyMat = new Cannon.Material(name);
         this.phyBody = new Cannon.Body({mass: mass, material: phyMat});
         this.phyBody.addEventListener("collide", (e) => {
-            const b: Cannon.Body = e.body;
-            const c: Cannon.ContactEquation = e. contact;
-            const t: Cannon.Body = e.target;
             if (this.collideCallBack !== null) {
-                const v: Cannon.Vec3 = c.ri;
-                const p = this.phyBody.position;
-                const collide = new CollideData(new Cannon.Vec3(v.x + p.x, v.y + p.y, v.z + p.z), b, c, t);
-                this.collideCallBack(collide);
+                const b: Cannon.Body = e.body;
+                const c: Cannon.ContactEquation = e. contact;
+                const t: Cannon.Body = e.target;
+                this.collideCallBack(new CollideData(b, c, t));
             }
         });
     }
