@@ -67,7 +67,7 @@ class Ball extends Unit {
         this.z = z;
     }
     public Init(): void {
-        this.ball = new PhysicSphere(1, 1, this.core.GetObject("ball"));
+        this.ball = new PhysicSphere(1, 1, "ball", this.core.GetObject("ball"));
         this.ball.position.set(this.x, this.y, this.z);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
