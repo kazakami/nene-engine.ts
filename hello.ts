@@ -4,6 +4,7 @@ import { Start } from "./kzkm-engine.ts/src/Core";
 import { PhysicBox, PhysicObject, PhysicObjects, PhysicSphere } from "./kzkm-engine.ts/src/PhysicObject";
 import { Scene } from "./kzkm-engine.ts/src/Scene";
 import { Unit } from "./kzkm-engine.ts/src/Unit";
+import { Random } from "./kzkm-engine.ts/src/Util";
 
 class LoadScene extends Scene {
     public Init(): void {
@@ -11,6 +12,7 @@ class LoadScene extends Scene {
         this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
         this.core.LoadObjMtl("resources/ball.obj", "resources/ball.mtl", "ball");
         this.core.LoadTexture("resources/png_alphablend_test.png", "circle");
+        this.core.LoadTexture("resources/star.png", "star");
     }
     public Update(): void {
         super.Update();
@@ -43,7 +45,7 @@ class GameScene extends Scene {
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
         this.onMouseClickCallback = (e) => {
-            this.core.SaveImage("ScreenShot.png");
+            // this.core.SaveImage("ScreenShot.png");
         };
         this.onWindowResizeCallback = (e) => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
@@ -52,6 +54,43 @@ class GameScene extends Scene {
     public Update(): void {
         super.Update();
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
+    }
+}
+
+class Particle extends Unit {
+    private x: number;
+    private y: number;
+    private z: number;
+    private vx: number;
+    private vy: number;
+    private vz: number;
+    private sprite: THREE.Object3D;
+    constructor(x: number, y: number, z: number, vx: number, vy: number, vz: number) {
+        super();
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.vx = vx;
+        this.vy = vy;
+        this.vz = vz;
+    }
+    public Init(): void {
+        this.sprite = new THREE.Object3D();
+        this.sprite.add(this.core.MakeSpriteFromTexture("star"));
+        this.sprite.position.set(this.x, this.y, this.z);
+        // this.sprite.position.set(0, 10, 0);
+        this.AddObject(this.sprite);
+    }
+    public Update(): void {
+        super.Update();
+        this.vy -= 9.8 / 60 / 60;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.z += this.vz;
+        this.sprite.position.set(this.x, this.y, this.z);
+        if (this.frame > 100) {
+            this.isAlive = false;
+        }
     }
 }
 
@@ -71,7 +110,13 @@ class Ball extends Unit {
         this.ball.position.set(this.x, this.y, this.z);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
-            console.log(c.collidePosition, c.collideName);
+            // console.log(c.collidePosition, c.collideName);
+            const p = c.collidePosition;
+            for (let i = 0; i < 10; i++) {
+                this.scene.AddUnit(new Particle(
+                    p.x, p.y, p.z,
+                    Random(0.1), Random(0.1), Random(0.1)));
+            }
         });
     }
     public Update(): void {
