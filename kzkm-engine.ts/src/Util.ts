@@ -1,5 +1,9 @@
 import * as THREE from "three";
 
+function Random(range: number) {
+    return Math.random() * 2 * range - range;
+}
+
 function Base64toBlob(base64: string, type: string): Blob {
     const decodedData = atob(base64);
     const buffer = new Uint8Array(decodedData.length);
@@ -73,5 +77,8 @@ class PhysicObjectBoxAttribute extends PhysicObjectAttribute {
 class PhysicObjectPlaneAttribute extends PhysicObjectAttribute {
 }
 
-export { Base64toBlob, FileLoad, OrientQuaternion, UndefCoalescing,
-    PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute };
+export {
+    Base64toBlob, FileLoad, OrientQuaternion, UndefCoalescing,
+    PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute,
+    Random,
+};
