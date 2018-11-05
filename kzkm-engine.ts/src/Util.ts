@@ -4,6 +4,10 @@ function Random(range: number) {
     return Math.random() * 2 * range - range;
 }
 
+function RandomColor(): THREE.Color {
+    return new THREE.Color(Math.random(), Math.random(), Math.random());
+}
+
 function Base64toBlob(base64: string, type: string): Blob {
     const decodedData = atob(base64);
     const buffer = new Uint8Array(decodedData.length);
@@ -80,5 +84,5 @@ class PhysicObjectPlaneAttribute extends PhysicObjectAttribute {
 export {
     Base64toBlob, FileLoad, OrientQuaternion, UndefCoalescing,
     PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute,
-    Random,
+    Random, RandomColor,
 };
