@@ -4,7 +4,7 @@ import { Start } from "./kzkm-engine.ts/src/Core";
 import { PhysicBox, PhysicObject, PhysicObjects, PhysicSphere } from "./kzkm-engine.ts/src/PhysicObject";
 import { Scene } from "./kzkm-engine.ts/src/Scene";
 import { Unit } from "./kzkm-engine.ts/src/Unit";
-import { Random } from "./kzkm-engine.ts/src/Util";
+import { Random, RandomColor } from "./kzkm-engine.ts/src/Util";
 
 class LoadScene extends Scene {
     public Init(): void {
@@ -76,7 +76,7 @@ class Particle extends Unit {
     }
     public Init(): void {
         this.sprite = new THREE.Object3D();
-        this.sprite.add(this.core.MakeSpriteFromTexture("star"));
+        this.sprite.add(this.core.MakeSpriteFromTexture("star", RandomColor()));
         this.sprite.position.set(this.x, this.y, this.z);
         // this.sprite.position.set(0, 10, 0);
         this.AddObject(this.sprite);
