@@ -1,10 +1,10 @@
 import * as CANNON from "cannon";
 import * as THREE from "three";
-import { Start } from "./kzkm-engine.ts/src/Core";
-import { PhysicBox, PhysicObject, PhysicObjects, PhysicSphere } from "./kzkm-engine.ts/src/PhysicObject";
-import { Scene } from "./kzkm-engine.ts/src/Scene";
-import { Unit } from "./kzkm-engine.ts/src/Unit";
-import { Random, RandomColor } from "./kzkm-engine.ts/src/Util";
+import { Start } from "./nene-engine.ts/src/Core";
+import { PhysicBox, PhysicObject, PhysicObjects, PhysicSphere } from "./nene-engine.ts/src/PhysicObject";
+import { Scene } from "./nene-engine.ts/src/Scene";
+import { Unit } from "./nene-engine.ts/src/Unit";
+import { Random, RandomColor } from "./nene-engine.ts/src/Util";
 
 class LoadScene extends Scene {
     public Init(): void {

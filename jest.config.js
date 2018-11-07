@@ -1,6 +1,6 @@
 module.exports = {
     "roots": [
-      "<rootDir>/kzkm-engine.ts/src"
+      "<rootDir>/nene-engine.ts/src"
     ],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
