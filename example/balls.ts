@@ -1,10 +1,9 @@
-import * as CANNON from "cannon";
 import * as THREE from "three";
-import { Start } from "./nene-engine.ts/src/Core";
-import { PhysicBox, PhysicObject, PhysicObjects, PhysicSphere } from "./nene-engine.ts/src/PhysicObject";
-import { Scene } from "./nene-engine.ts/src/Scene";
-import { Unit } from "./nene-engine.ts/src/Unit";
-import { Random, RandomColor } from "./nene-engine.ts/src/Util";
+import { Start } from "../src/Core";
+import { PhysicObjects, PhysicSphere } from "../src/PhysicObject";
+import { Scene } from "../src/Scene";
+import { Unit } from "../src/Unit";
+import { Random, RandomColor } from "../src/Util";
 
 class LoadScene extends Scene {
     public Init(): void {

@@ -1,6 +1,6 @@
 module.exports = {
     "roots": [
-      "<rootDir>/nene-engine.ts/src"
+      "<rootDir>/src"
     ],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
