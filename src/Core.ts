@@ -10,6 +10,8 @@ class Core {
     public windowSizeX: number;
     public windowSizeY: number;
     public textureLoader: THREE.TextureLoader;
+    public textCanvas: HTMLCanvasElement;
+    public ctx: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
     private link: HTMLAnchorElement;
     private renderer: THREE.WebGLRenderer;
@@ -33,16 +35,36 @@ class Core {
         this.textureLoader = new THREE.TextureLoader(this.loadingManager);
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
         this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
+        const div = document.createElement("div");
+        div.setAttribute("position", "relative");
         this.canvas = this.renderer.domElement;
-        document.body.appendChild(this.canvas);
-        this.canvas.addEventListener("mousemove", (e) => {
+        this.canvas.setAttribute("style", "position: absolute;");
+        div.appendChild(this.canvas);
+        // 2D文字列描画のためのcanvasの作成
+        this.textCanvas = document.createElement("canvas");
+        this.textCanvas.setAttribute("width", this.windowSizeX.toString());
+        this.textCanvas.setAttribute("height", this.windowSizeY.toString());
+        this.textCanvas.setAttribute("z-index", "100");
+        this.textCanvas.setAttribute("style", "position: absolute;");
+        div.appendChild(this.textCanvas);
+        this.ctx = this.textCanvas.getContext("2d");
+        this.ctx.font = "50px serif";
+        this.ctx.textAlign = "left";
+        this.ctx.textBaseline = "top";
+        document.body.appendChild(div);
+        // blobの内容をダウンロードさせるためのダミーリンクの作成
+        this.link = document.createElement("a");
+        this.link.style.display = "none";
+        document.body.appendChild(this.link);
+        // イベントの登録
+        this.textCanvas.addEventListener("mousemove", (e) => {
             this.mouseX = e.offsetX - this.windowSizeX / 2;
             this.mouseY = this.windowSizeY / 2 - e.offsetY;
             if (this.activeScene.onMouseMoveCallback !== null) {
                 this.activeScene.onMouseMoveCallback(e);
             }
         }, false);
-        this.canvas.addEventListener("click", (e) => {
+        this.textCanvas.addEventListener("click", (e) => {
             if (this.activeScene.onMouseClickCallback !== null) {
                 this.activeScene.onMouseClickCallback(e);
             }
@@ -52,9 +74,6 @@ class Core {
                 this.activeScene.onWindowResizeCallback(e);
             }
         });
-        this.link = document.createElement("a");
-        this.link.style.display = "none";
-        document.body.appendChild(this.link);
     }
 
     /**
@@ -66,6 +85,8 @@ class Core {
         this.windowSizeX = x;
         this.windowSizeY = y;
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
+        this.textCanvas.width = this.windowSizeX;
+        this.textCanvas.height = this.windowSizeY;
         // tslint:disable-next-line:forin
         for (const key in this.scenes) {
             this.scenes[key].OnCanvasResizeCallBack();
@@ -318,6 +339,7 @@ class Core {
         this.renderer.clear();
         this.renderer.render(this.activeScene.scene, this.activeScene.camera);
         this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
+        this.ctx.fillText("文字列描画のテスト", 0, 0);
     }
 }
 
