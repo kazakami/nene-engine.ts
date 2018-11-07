@@ -314,6 +314,7 @@ class Core {
 
     private Draw(): void {
         this.activeScene.Draw();
+        this.renderer.setClearColor(this.activeScene.backgroundColor);
         this.renderer.clear();
         this.renderer.render(this.activeScene.scene, this.activeScene.camera);
         this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);

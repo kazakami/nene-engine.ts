@@ -30,6 +30,7 @@ class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public Init(): void {
         super.Init();
+        this.backgroundColor = new THREE.Color(0x887766);
         this.AddUnit(new Board());
         this.AddUnit(new Ball(0, 10, 0));
         this.AddUnit(new Ball(5, 5, 0));

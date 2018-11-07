@@ -13,6 +13,7 @@ abstract class Scene {
     public units: Unit[] = [];
     public core: Core = null;
     public scene: THREE.Scene;
+    public backgroundColor: THREE.Color;
     public camera: THREE.PerspectiveCamera;
     public scene2d: THREE.Scene;
     public camera2d: THREE.OrthographicCamera;
@@ -24,6 +25,7 @@ abstract class Scene {
     public onWindowResizeCallback: (e: UIEvent) => void = null;
 
     constructor() {
+        this.backgroundColor = new THREE.Color(0x000000);
         this.scene = new THREE.Scene();
         this.scene2d = new THREE.Scene();
         this.physicWorld = new Cannon.World();
