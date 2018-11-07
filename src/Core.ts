@@ -341,6 +341,7 @@ class Core {
         this.activeScene.Draw();
         this.renderer.setClearColor(this.activeScene.backgroundColor);
         this.renderer.clear();
+        this.ctx.clearRect(0, 0, this.windowSizeX, this.windowSizeY);
         this.renderer.render(this.activeScene.scene, this.activeScene.camera);
         this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
         this.ctx.fillText("hogehoge", 0, 0);
