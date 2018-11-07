@@ -87,6 +87,10 @@ class Core {
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
         this.textCanvas.width = this.windowSizeX;
         this.textCanvas.height = this.windowSizeY;
+        this.ctx = this.textCanvas.getContext("2d");
+        this.ctx.font = "50px serif";
+        this.ctx.textAlign = "left";
+        this.ctx.textBaseline = "top";
         // tslint:disable-next-line:forin
         for (const key in this.scenes) {
             this.scenes[key].OnCanvasResizeCallBack();
@@ -339,7 +343,7 @@ class Core {
         this.renderer.clear();
         this.renderer.render(this.activeScene.scene, this.activeScene.camera);
         this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
-        this.ctx.fillText("文字列描画のテスト", 0, 0);
+        this.ctx.fillText("hogehoge", 0, 0);
     }
 }
 
