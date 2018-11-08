@@ -345,7 +345,7 @@ class Core {
         if (maxWidth === null) {
             this.ctx.fillText(str, this.windowSizeX / 2 + x, this.windowSizeY / 2 - y);
         } else {
-            this.ctx.fillText(str, x, y, maxWidth);
+            this.ctx.fillText(str, this.windowSizeX / 2 + x, this.windowSizeY / 2 - y, maxWidth);
         }
     }
 
