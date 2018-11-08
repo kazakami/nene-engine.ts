@@ -71,7 +71,7 @@ abstract class PhysicObject {
         const q = OrientQuaternion(x, y, z);
         this.phyBody.quaternion.set(q.x, q.y, q.z, q.w);
     }
-    public OrientAndRotate(x: number, y: number, z: number, angle: number): void {
+    public OrientAndRotate(x: number, y: number, z: number, angle: number = 0): void {
         const q1 = OrientQuaternion(x, y, z);
         const q2 = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(x, y, z).normalize(), angle);
         const q3 = new THREE.Quaternion().multiplyQuaternions(q2, q1);
