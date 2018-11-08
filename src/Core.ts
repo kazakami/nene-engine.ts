@@ -23,6 +23,8 @@ class Core {
     private loadingManager: THREE.LoadingManager;
     private objLoader: THREE.OBJLoader;
     private mtlLoader: THREE.MTLLoader;
+    private intervals: number[] = [];
+    private previousTime: number = null;
 
     constructor() {
         this.renderer = new THREE.WebGLRenderer({
@@ -349,8 +351,17 @@ class Core {
         }
     }
 
+    get fps(): number {
+        if (this.intervals.length === 0) {
+            return 0;
+        } else {
+            return this.intervals.reduce((p, c) => p + c) / this.intervals.length;
+        }
+    }
+
     private Update(): void {
         this.activeScene.Update();
+        this.CalcFPS();
     }
 
     private Draw(): void {
@@ -360,6 +371,21 @@ class Core {
         this.renderer.render(this.activeScene.scene, this.activeScene.camera);
         this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
         this.activeScene.Draw();
+    }
+
+    private CalcFPS(): void {
+        if (this.previousTime === null) {
+            this.previousTime = Date.now();
+            return;
+        } else {
+            const now = Date.now();
+            const interval = now - this.previousTime;
+            this.previousTime = now;
+            this.intervals.push(interval);
+            if (this.intervals.length > 60) {
+                this.intervals.shift();
+            }
+        }
     }
 }
 
