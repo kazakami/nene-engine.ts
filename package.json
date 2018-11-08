@@ -1,6 +1,6 @@
 {
   "name": "nene-engine.ts",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Game Engine for web written by TypeScript ",
   "main": "index.js",
   "scripts": {
