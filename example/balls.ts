@@ -55,6 +55,10 @@ class GameScene extends Scene {
         super.Update();
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
     }
+    public Draw(): void {
+        super.Draw();
+        this.core.DrawText("文字列", this.core.mouseX, this.core.mouseY);
+    }
 }
 
 class Particle extends Unit {

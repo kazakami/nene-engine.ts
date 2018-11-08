@@ -9,11 +9,12 @@ class Core {
     public mouseY: number = 0;
     public windowSizeX: number;
     public windowSizeY: number;
-    public textureLoader: THREE.TextureLoader;
-    public textCanvas: HTMLCanvasElement;
-    public ctx: CanvasRenderingContext2D;
+    private textureLoader: THREE.TextureLoader;
+    private textCanvas: HTMLCanvasElement;
+    private ctx: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
     private link: HTMLAnchorElement;
+    private div: HTMLDivElement;
     private renderer: THREE.WebGLRenderer;
     private objects: { [key: string]: THREE.Object3D } = {};
     private textures: { [key: string]: THREE.Texture } = {};
@@ -35,23 +36,23 @@ class Core {
         this.textureLoader = new THREE.TextureLoader(this.loadingManager);
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
         this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
-        const div = document.createElement("div");
-        div.setAttribute("position", "relative");
+        this.div = document.createElement("div");
+        this.div.setAttribute("position", "relative");
         this.canvas = this.renderer.domElement;
         this.canvas.setAttribute("style", "position: absolute;");
-        div.appendChild(this.canvas);
+        this.div.appendChild(this.canvas);
         // 2D文字列描画のためのcanvasの作成
         this.textCanvas = document.createElement("canvas");
         this.textCanvas.setAttribute("width", this.windowSizeX.toString());
         this.textCanvas.setAttribute("height", this.windowSizeY.toString());
         this.textCanvas.setAttribute("z-index", "100");
         this.textCanvas.setAttribute("style", "position: absolute;");
-        div.appendChild(this.textCanvas);
+        this.div.appendChild(this.textCanvas);
         this.ctx = this.textCanvas.getContext("2d");
         this.ctx.font = "50px serif";
         this.ctx.textAlign = "left";
         this.ctx.textBaseline = "top";
-        document.body.appendChild(div);
+        document.body.appendChild(this.div);
         // blobの内容をダウンロードさせるためのダミーリンクの作成
         this.link = document.createElement("a");
         this.link.style.display = "none";
@@ -333,18 +334,32 @@ class Core {
         this.link.click();
     }
 
+    /**
+     * 指定した座標に文字列を描画する
+     * @param str 描画する文字列
+     * @param x X座標
+     * @param y Y座標
+     * @param maxWidth 最大横幅
+     */
+    public DrawText(str: string, x: number, y: number, maxWidth: number = null): void {
+        if (maxWidth === null) {
+            this.ctx.fillText(str, this.windowSizeX / 2 + x, this.windowSizeY / 2 - y);
+        } else {
+            this.ctx.fillText(str, x, y, maxWidth);
+        }
+    }
+
     private Update(): void {
         this.activeScene.Update();
     }
 
     private Draw(): void {
-        this.activeScene.Draw();
         this.renderer.setClearColor(this.activeScene.backgroundColor);
         this.renderer.clear();
         this.ctx.clearRect(0, 0, this.windowSizeX, this.windowSizeY);
         this.renderer.render(this.activeScene.scene, this.activeScene.camera);
         this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
-        this.ctx.fillText("hogehoge", 0, 0);
+        this.activeScene.Draw();
     }
 }
 
