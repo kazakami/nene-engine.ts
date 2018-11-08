@@ -328,12 +328,37 @@ class Core {
      * @param filename 保存時のファイル名。デフォルトはscreenshot.png
      */
     public SaveImage(filename: string = "screenshot.png"): void {
-        const base64Image = this.canvas.toDataURL("image/png");
-        // console.log(base64Image.split(",")[1]);
-        const blob = Base64toBlob(base64Image.split(",")[1], "image/png");
-        this.link.href = URL.createObjectURL(blob);
-        this.link.download = filename;
-        this.link.click();
+        const glImage = new Image();
+        const textsImage = new Image();
+        let glImageLoaded = false;
+        let textsImageLoaded = false;
+        const drawAndSave = () => {
+            const tmpCanvas = document.createElement("canvas");
+            tmpCanvas.setAttribute("width", this.windowSizeX.toString());
+            tmpCanvas.setAttribute("height", this.windowSizeY.toString());
+            const context = tmpCanvas.getContext("2d");
+            context.drawImage(glImage, 0, 0);
+            context.drawImage(textsImage, 0, 0);
+            const base64Image = tmpCanvas.toDataURL("image/png");
+            const blob = Base64toBlob(base64Image.split(",")[1], "image/png");
+            this.link.href = URL.createObjectURL(blob);
+            this.link.download = filename;
+            this.link.click();
+        };
+        glImage.onload = () => {
+            glImageLoaded = true;
+            if (glImageLoaded && textsImageLoaded) {
+                drawAndSave();
+            }
+        };
+        textsImage.onload = () => {
+            textsImageLoaded = true;
+            if (glImageLoaded && textsImageLoaded) {
+                drawAndSave();
+            }
+        };
+        textsImage.src = this.textCanvas.toDataURL("image/png");
+        glImage.src = this.canvas.toDataURL("image/png");
     }
 
     /**

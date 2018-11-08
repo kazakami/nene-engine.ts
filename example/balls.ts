@@ -44,7 +44,7 @@ class GameScene extends Scene {
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
         this.onMouseClickCallback = () => {
-            // this.core.SaveImage("ScreenShot.png");
+            this.core.SaveImage("ScreenShot.png");
         };
         this.onWindowResizeCallback = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
