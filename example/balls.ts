@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import { Start } from "../src/Core";
-import { PhysicObjects, PhysicSphere } from "../src/PhysicObject";
-import { Scene } from "../src/Scene";
-import { Unit } from "../src/Unit";
-import { Random, RandomColor } from "../src/Util";
+import { Start } from "../src/main";
+import { PhysicObjects, PhysicSphere } from "../src/main";
+import { Scene } from "../src/main";
+import { Unit } from "../src/main";
+import { Random, RandomColor } from "../src/main";
 
 class LoadScene extends Scene {
     public Init(): void {
