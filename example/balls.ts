@@ -35,8 +35,7 @@ class GameScene extends Scene {
         this.AddUnit(new Ball(0, 10, 0));
         this.AddUnit(new Ball(5, 5, 0));
         this.AddUnit(new Ball(0, 3, 4));
-        this.camera.position.z = 15;
-        this.camera.position.y = 15;
+        this.camera.position.set(0, 15, 15);
         this.camera.lookAt(0, 0, 0);
         const light = new THREE.DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
@@ -44,10 +43,10 @@ class GameScene extends Scene {
         this.sprt = this.core.MakeSpriteFromTexture("circle");
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
-        this.onMouseClickCallback = (e) => {
+        this.onMouseClickCallback = () => {
             // this.core.SaveImage("ScreenShot.png");
         };
-        this.onWindowResizeCallback = (e) => {
+        this.onWindowResizeCallback = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
     }
@@ -62,27 +61,15 @@ class GameScene extends Scene {
 }
 
 class Particle extends Unit {
-    private x: number;
-    private y: number;
-    private z: number;
-    private vx: number;
-    private vy: number;
-    private vz: number;
     private sprite: THREE.Object3D;
-    constructor(x: number, y: number, z: number, vx: number, vy: number, vz: number) {
+    constructor(private x: number, private y: number, private z: number,
+                private vx: number, private vy: number, private vz: number) {
         super();
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.vx = vx;
-        this.vy = vy;
-        this.vz = vz;
     }
     public Init(): void {
         this.sprite = new THREE.Object3D();
         this.sprite.add(this.core.MakeSpriteFromTexture("star", RandomColor()));
         this.sprite.position.set(this.x, this.y, this.z);
-        // this.sprite.position.set(0, 10, 0);
         this.AddObject(this.sprite);
     }
     public Update(): void {
@@ -100,21 +87,14 @@ class Particle extends Unit {
 
 class Ball extends Unit {
     public ball: PhysicSphere;
-    private x: number;
-    private y: number;
-    private z: number;
-    constructor(x = 0, y = 0, z = 0) {
+    constructor(private x = 0, private y = 0, private z = 0) {
         super();
-        this.x = x;
-        this.y = y;
-        this.z = z;
     }
     public Init(): void {
         this.ball = new PhysicSphere(1, 1, "ball", this.core.GetObject("ball"));
         this.ball.position.set(this.x, this.y, this.z);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
-            // console.log(c.collidePosition, c.collideName);
             const p = c.collidePosition;
             for (let i = 0; i < 10; i++) {
                 this.scene.AddUnit(new Particle(
@@ -147,8 +127,7 @@ class Board extends Unit {
         this.floor.OrientAndRotate(
             this.core.mouseX,
             100,
-            -this.core.mouseY,
-            this.frame / 100 * 0);
+            -this.core.mouseY);
     }
 }
 
