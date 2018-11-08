@@ -9,3 +9,6 @@ index.html
 jest.config.js
 package-lock.json
 style.css
+tsconfig.json
+tslint.json
+webpack.config.js
