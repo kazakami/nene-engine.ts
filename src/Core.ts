@@ -355,7 +355,7 @@ class Core {
         if (this.intervals.length === 0) {
             return 0;
         } else {
-            return this.intervals.reduce((p, c) => p + c) / this.intervals.length;
+            return 1000 / (this.intervals.reduce((p, c) => p + c) / this.intervals.length);
         }
     }
 
