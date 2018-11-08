@@ -1,0 +1,11 @@
+coverage
+dist
+example
+node_modules
+resources
+src/test
+.gitignore
+index.html
+jest.config.js
+package-lock.json
+style.css
