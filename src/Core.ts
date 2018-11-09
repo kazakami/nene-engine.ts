@@ -97,6 +97,16 @@ class Core {
         return Coalescing(this.keyState[key], false);
     }
 
+    public GetAllDownKey(): string[] {
+        const keys: string[] = [];
+        for (const key in this.keyState) {
+            if (this.keyState[key]) {
+                keys.push(key);
+            }
+        }
+        return keys.sort();
+    }
+
     /**
      * ウィンドウのサイズ変更
      * @param x 新しい横幅

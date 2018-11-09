@@ -41,7 +41,7 @@ class GameScene extends Scene {
     }
     public Draw(): void {
         super.Draw();
-        this.core.DrawText(this.core.GetKeyState("q") ? "down" : "up", this.core.mouseX, this.core.mouseY);
+        this.core.DrawText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
     }
 }
 
