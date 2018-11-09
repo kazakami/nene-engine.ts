@@ -1,11 +1,14 @@
 module.exports = {
     mode: 'development',
 
-    entry: './example/balls.ts',
+    entry: {
+      'balls': './examples/balls.ts',
+      '2D': './examples/2D.ts'
+    },
 
     output: {
-      path: `${__dirname}/dist`,
-      filename: 'balls.js'
+      path: `${__dirname}/examples/dist`,
+      filename: '[name].js'
     },
     module: {
       rules: [
