@@ -7,7 +7,8 @@
     "rules": {
         "object-literal-shorthand": false,
         "max-classes-per-file": false,
-        "no-console": false
+        "no-console": false,
+        "forin": false
     },
     "rulesDirectory": []
 }
