@@ -4,3 +4,4 @@ package-lock.json
 launch.json
 .vscode
 coverage
+.DS_Store
