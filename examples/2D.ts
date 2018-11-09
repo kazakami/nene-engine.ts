@@ -29,7 +29,7 @@ class GameScene extends Scene {
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
         this.onMouseClickCallback = () => {
-            this.core.SaveImage("ScreenShot.png");
+            // this.core.SaveImage("ScreenShot.png");
         };
         this.onWindowResizeCallback = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
@@ -41,7 +41,7 @@ class GameScene extends Scene {
     }
     public Draw(): void {
         super.Draw();
-        this.core.DrawText(this.core.fps.toString(), this.core.mouseX, this.core.mouseY);
+        this.core.DrawText(this.core.GetKeyState("q") ? "down" : "up", this.core.mouseX, this.core.mouseY);
     }
 }
 

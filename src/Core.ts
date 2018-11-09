@@ -2,7 +2,7 @@ import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
 import * as THREE from "three";
 import { Scene } from "./Scene";
-import { Base64toBlob } from "./Util";
+import { Base64toBlob, Coalescing } from "./Util";
 
 class Core {
     public mouseX: number = 0;
@@ -25,6 +25,7 @@ class Core {
     private mtlLoader: THREE.MTLLoader;
     private intervals: number[] = [];
     private previousTime: number = null;
+    private keyState: { [key: string]: boolean } = {};
 
     constructor() {
         this.renderer = new THREE.WebGLRenderer({
@@ -77,6 +78,23 @@ class Core {
                 this.activeScene.onWindowResizeCallback(e);
             }
         });
+        document.addEventListener("keypress", (e) => {
+            if (!e.repeat) {
+                this.keyState[e.key] = true;
+            }
+        });
+        document.addEventListener("keyup", (e) => {
+            this.keyState[e.key] = false;
+        });
+        window.addEventListener("blur", (e) => {
+            for (const key in this.keyState) {
+                this.keyState[key] = false;
+            }
+        });
+    }
+
+    public GetKeyState(key: string): boolean {
+        return Coalescing(this.keyState[key], false);
     }
 
     /**
@@ -94,7 +112,6 @@ class Core {
         this.ctx.font = "50px serif";
         this.ctx.textAlign = "left";
         this.ctx.textBaseline = "top";
-        // tslint:disable-next-line:forin
         for (const key in this.scenes) {
             this.scenes[key].OnCanvasResizeCallBack();
         }
