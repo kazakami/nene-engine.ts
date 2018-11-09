@@ -55,6 +55,22 @@ function UndefCoalescing<T>(input: T, defaultValue: T): T {
     }
 }
 
+function NullCoalescing<T>(input: T, defaultValue: T): T {
+    if (input === null) {
+        return defaultValue;
+    } else {
+        return input;
+    }
+}
+
+function Coalescing<T>(input: T, defaultValue: T): T {
+    if (typeof input === "undefined" || input === null) {
+        return defaultValue;
+    } else {
+        return input;
+    }
+}
+
 class PhysicObjectAttribute {
     public name?: string;
     public type: "plane" | "sphere" | "box";
@@ -82,7 +98,7 @@ class PhysicObjectPlaneAttribute extends PhysicObjectAttribute {
 }
 
 export {
-    Base64toBlob, FileLoad, OrientQuaternion, UndefCoalescing,
+    Base64toBlob, Coalescing, FileLoad, NullCoalescing, OrientQuaternion, UndefCoalescing,
     PhysicObjectAttribute, PhysicObjectBoxAttribute, PhysicObjectPlaneAttribute, PhysicObjectSphereAttribute,
     Random, RandomColor,
 };
