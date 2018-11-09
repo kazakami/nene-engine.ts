@@ -71,6 +71,10 @@ export function Coalescing<T>(input: T, defaultValue: T): T {
     }
 }
 
+export function BooleanToString(b: boolean): string {
+    return b ? "true" : "false";
+}
+
 export class PhysicObjectAttribute {
     public name?: string;
     public type: "plane" | "sphere" | "box";
