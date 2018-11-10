@@ -6,6 +6,7 @@ class LoadScene extends Scene {
         super.Init();
         this.core.LoadTexture("resources/png_alphablend_test.png", "circle");
         this.core.LoadTexture("resources/star.png", "star");
+        this.core.LoadTexture("resources/fire.png", "fire");
     }
     public Update(): void {
         super.Update();
@@ -38,10 +39,24 @@ class GameScene extends Scene {
     public Update(): void {
         super.Update();
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
+        if (this.core.IsKeyPressing("q")) {
+            this.AddUnit(new Fire(this.core.mouseX, this.core.mouseY));
+        }
     }
     public Draw(): void {
         super.Draw();
         this.core.DrawText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
+    }
+}
+
+class Fire extends Unit {
+    private sprite: THREE.Sprite;
+    constructor(private x, private y) { super(); }
+    public Init(): void {
+        this.sprite = this.core.MakeSpriteFromTexture("fire");
+        this.sprite.scale.set(32, 32, 1);
+        this.sprite.position.set(this.x, this.y, 1);
+        this.scene.scene2d.add(this.sprite);
     }
 }
 
