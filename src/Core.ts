@@ -208,6 +208,7 @@ class Core {
 
     /**
      * 指定したキーの画像からspriteを作る関数
+     * spriteの大きさの初期値が(0, 0)である事に注意
      * @param name キー
      * @param color 色
      */
