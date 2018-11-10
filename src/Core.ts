@@ -26,6 +26,7 @@ class Core {
     private intervals: number[] = [];
     private previousTime: number = null;
     private keyState: { [key: string]: boolean } = {};
+    private previousKeyState: { [key: string]: boolean } = {};
 
     constructor() {
         this.renderer = new THREE.WebGLRenderer({
@@ -93,10 +94,26 @@ class Core {
         });
     }
 
-    public GetKeyState(key: string): boolean {
+    /**
+     * 指定したキーがこのフレームに押し下げられたか判定する
+     * @param key キー
+     */
+    public IsKeyPressing(key: string): boolean {
+        return Coalescing(this.keyState[key], false) && !Coalescing(this.previousKeyState[key], false);
+    }
+
+    /**
+     * 指定したキーだ押し下げられているが返す
+     * @param key キー
+     */
+    public IsKeyDown(key: string): boolean {
         return Coalescing(this.keyState[key], false);
     }
 
+    /**
+     * 押し下げられているすべてのキーを配列として返す
+     * 返り値はソートされている
+     */
     public GetAllDownKey(): string[] {
         const keys: string[] = [];
         for (const key in this.keyState) {
@@ -414,6 +431,9 @@ class Core {
     private Update(): void {
         this.activeScene.Update();
         this.CalcFPS();
+        for (const key in this.keyState) {
+            this.previousKeyState[key] = this.keyState[key];
+        }
     }
 
     private Draw(): void {
