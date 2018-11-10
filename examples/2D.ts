@@ -56,7 +56,13 @@ class Fire extends Unit {
         this.sprite = this.core.MakeSpriteFromTexture("fire");
         this.sprite.scale.set(32, 32, 1);
         this.sprite.position.set(this.x, this.y, 1);
-        this.scene.scene2d.add(this.sprite);
+        this.AddSprite(this.sprite);
+    }
+    public Update(): void {
+        super.Update();
+        if (this.frame > 100) {
+            this.isAlive = false;
+        }
     }
 }
 
