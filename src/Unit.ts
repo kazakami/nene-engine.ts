@@ -15,6 +15,7 @@ abstract class Unit {
     public scene: Scene = null;
     public frame: number = 0;
     public objects: THREE.Object3D[] = [];
+    public sprites: THREE.Sprite[] = [];
     public physicObjects: PhysicObject[] = [];
     constructor() {
         return;
@@ -36,6 +37,15 @@ abstract class Unit {
         this.scene.scene.add(o);
     }
     /**
+     * scene2dにSpriteを追加し、Unitに紐づける
+     * 追加されたSpriteはこのUnitの削除時に自動でシーンから除外される
+     * @param s 追加するSprite
+     */
+    public AddSprite(s: THREE.Sprite): void {
+        this.sprites.push(s);
+        this.scene.scene2d.add(s);
+    }
+    /**
      * sceneにviewBodyを追加し、physicWorldにphysicBodyを追加し、オブジェクトをUnitに紐付ける
      * 追加された物理オブジェクトはこのUnitの削除時に自動でシーンから除外される
      * @param p 追加する物理オブジェクト
@@ -52,6 +62,14 @@ abstract class Unit {
     public RemoveObject(o: THREE.Object3D): void {
         this.objects = this.objects.filter((obj) => o !== obj);
         this.scene.scene.remove(o);
+    }
+    /**
+     * 指定したSpriteを削除
+     * @param s 削除するSprite
+     */
+    public RemoveSprite(s: THREE.Sprite): void {
+        this.sprites = this.sprites.filter((spr) => s !== spr);
+        this.scene.scene2d.remove(s);
     }
     /**
      * 指定した物理オブジェクトを削除する

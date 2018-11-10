@@ -163,12 +163,14 @@ abstract class Scene {
     private DeleteUnits(units: Unit[]): void {
         units.forEach((u) => {
             u.objects.forEach((o) => { this.scene.remove(o); });
+            u.sprites.forEach((s) => { this.scene2d.remove(s); });
             u.physicObjects.forEach((p) => {
                 this.scene.remove(p.viewBody);
                 this.physicWorld.remove(p.phyBody);
             });
             u.Fin();
             u.objects = [];
+            u.sprites = [];
             u.physicObjects = [];
             u.scene = null;
             u.core = null;
