@@ -4,9 +4,9 @@ import { Random, RandomColor, Scene, Start, Unit } from "../src/main";
 class LoadScene extends Scene {
     public Init(): void {
         super.Init();
-        this.core.LoadTexture("resources/png_alphablend_test.png", "circle");
-        this.core.LoadTexture("resources/star.png", "star");
-        this.core.LoadTexture("resources/fire.png", "fire");
+        this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle");
+        this.core.LoadTexture("resources/images/star.png", "star");
+        this.core.LoadTexture("resources/images/fire.png", "fire");
     }
     public Update(): void {
         super.Update();

@@ -4,10 +4,11 @@ import { PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } 
 class LoadScene extends Scene {
     public Init(): void {
         super.Init();
-        this.core.LoadObjMtl("resources/ente progress_export.obj", "resources/ente progress_export.mtl", "ente");
-        this.core.LoadObjMtl("resources/ball.obj", "resources/ball.mtl", "ball");
-        this.core.LoadTexture("resources/png_alphablend_test.png", "circle");
-        this.core.LoadTexture("resources/star.png", "star");
+        this.core.LoadObjMtl("resources/models/ente progress_export.obj",
+                             "resources/models/ente progress_export.mtl", "ente");
+        this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball");
+        this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle");
+        this.core.LoadTexture("resources/images/star.png", "star");
     }
     public Update(): void {
         super.Update();
@@ -115,7 +116,7 @@ class Board extends Unit {
     public Init(): void {
         this.floor = new PhysicObjects(0, "floor");
         this.floor.position.set(0, -10, 0);
-        this.floor.AddShapeFromJSON("resources/FloorPhysic.json");
+        this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json");
         this.AddPhysicObject(this.floor);
     }
     public Update(): void {
