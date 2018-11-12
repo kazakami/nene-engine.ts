@@ -15,7 +15,7 @@ abstract class Unit {
     public scene: Scene = null;
     public frame: number = 0;
     public objects: THREE.Object3D[] = [];
-    public sprites: THREE.Sprite[] = [];
+    public sprites: THREE.Object3D[] = [];
     public physicObjects: PhysicObject[] = [];
     constructor() {
         return;
@@ -37,13 +37,13 @@ abstract class Unit {
         this.scene.scene.add(o);
     }
     /**
-     * scene2dにSpriteを追加し、Unitに紐づける
-     * 追加されたSpriteはこのUnitの削除時に自動でシーンから除外される
-     * @param s 追加するSprite
+     * scene2dにObject3Dを追加し、Unitに紐づける
+     * 追加されたObject3DはこのUnitの削除時に自動でシーンから除外される
+     * @param o 追加するObject3D
      */
-    public AddSprite(s: THREE.Sprite): void {
-        this.sprites.push(s);
-        this.scene.scene2d.add(s);
+    public AddSprite(o: THREE.Object3D): void {
+        this.sprites.push(o);
+        this.scene.scene2d.add(o);
     }
     /**
      * sceneにviewBodyを追加し、physicWorldにphysicBodyを追加し、オブジェクトをUnitに紐付ける
@@ -56,7 +56,7 @@ abstract class Unit {
         this.scene.scene.add(p.viewBody);
     }
     /**
-     * 指定したObject3Dを削除
+     * 指定したObject3Dをsceneから削除
      * @param o 削除するObject3D
      */
     public RemoveObject(o: THREE.Object3D): void {
@@ -64,12 +64,12 @@ abstract class Unit {
         this.scene.scene.remove(o);
     }
     /**
-     * 指定したSpriteを削除
-     * @param s 削除するSprite
+     * 指定したObjectをscene2dから削除
+     * @param o 削除するObject3D
      */
-    public RemoveSprite(s: THREE.Sprite): void {
-        this.sprites = this.sprites.filter((spr) => s !== spr);
-        this.scene.scene2d.remove(s);
+    public RemoveSprite(o: THREE.Object3D): void {
+        this.sprites = this.sprites.filter((spr) => o !== spr);
+        this.scene.scene2d.remove(o);
     }
     /**
      * 指定した物理オブジェクトを削除する
