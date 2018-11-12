@@ -6,7 +6,7 @@
     "url": "https://github.com/kazakami/nene-engine.ts"
   },
   "description": "Game Engine for web written by TypeScript ",
-  "main": "src/main.ts",
+  "main": "src/nene-engine.ts",
   "scripts": {
     "build": "webpack --verbose",
     "test": "jest"
