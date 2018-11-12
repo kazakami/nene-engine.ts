@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } from "../src/main";
+import { PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init(): void {

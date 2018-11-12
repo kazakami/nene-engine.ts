@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Random, RandomColor, Scene, Start, TiledTexturedSprite, Unit } from "../src/main";
+import { Random, RandomColor, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init(): void {
