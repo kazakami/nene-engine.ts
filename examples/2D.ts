@@ -55,52 +55,50 @@ class GameScene extends Scene {
 }
 
 class Chara extends Unit {
-    private sprite: THREE.Sprite;
-    private mat: THREE.SpriteMaterial;
-    private tex: THREE.Texture;
+    private tts: TiledTexturedSprite;
     private shadow: THREE.Sprite;
     private jumpingHeight = 0;
     private jumpingVel = 0;
     constructor(private x, private y) { super(); }
     public Init(): void {
+        this.tts = new TiledTexturedSprite(this.core.GetTexture("knight"));
+        this.tts.SetTileNumber(5, 1);
+        this.tts.sprite.scale.set(64, 64, 1);
+        this.tts.sprite.position.set(this.x, this.y, 1);
         this.shadow = this.core.MakeSpriteFromTexture("shadow");
         this.shadow.scale.set(32, 16, 1);
-        this.tex = this.core.GetTexture("knight").clone();
-        this.tex.needsUpdate = true;
-        this.tex.wrapS = this.tex.wrapT = THREE.RepeatWrapping;
-        this.tex.repeat.set(1 / 5, 1);
-        this.mat = new THREE.SpriteMaterial({map: this.tex});
-        this.sprite = new THREE.Sprite(this.mat);
-        this.sprite.scale.set(64, 64, 1);
-        this.sprite.position.set(this.x, this.y, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
-        this.AddSprite(this.sprite);
+        this.AddSprite(this.tts);
         this.AddSprite(this.shadow);
     }
     public Update(): void {
         super.Update();
-        this.tex.offset.x = 0;
+        this.tts.SetTile(0, 0);
         if (this.core.IsKeyDown("w")) {
             this.y += 3;
-            this.tex.offset.x = (Math.floor(this.frame / 5) % 2) * 2 / 5;
+            this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
         if (this.core.IsKeyDown("s")) {
             this.y -= 3;
-            this.tex.offset.x = (Math.floor(this.frame / 5) % 2) * 2 / 5;
+            this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
         if (this.core.IsKeyDown("d")) {
             this.x += 3;
-            this.tex.offset.x = (Math.floor(this.frame / 5) % 2) * 2 / 5;
+            this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
         if (this.core.IsKeyDown("a")) {
             this.x -= 3;
-            this.tex.offset.x = (Math.floor(this.frame / 5) % 2) * 2 / 5;
+            this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
         if (this.core.IsKeyDown("k")) {
-            this.tex.offset.x += 1 / 5;
+            this.tts.SetTile(1, 0);
+            if (this.core.IsKeyDown("a") || this.core.IsKeyDown("s") ||
+                this.core.IsKeyDown("d") || this.core.IsKeyDown("w")) {
+                    this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2 + 1, 0);
+            }
         }
         if (this.jumpingHeight !== 0) {
-            this.tex.offset.x = 4 / 5;
+            this.tts.SetTile(4, 0);
             this.jumpingVel -= 0.2;
             this.jumpingHeight += this.jumpingVel;
             if (this.jumpingHeight < 0) {
@@ -112,12 +110,8 @@ class Chara extends Unit {
             this.jumpingVel = 5;
             this.jumpingHeight += this.jumpingVel;
         }
-        this.sprite.position.set(this.x, this.y + this.jumpingHeight, 1);
+        this.tts.sprite.position.set(this.x, this.y + this.jumpingHeight, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
-    }
-    public Fin(): void {
-        this.tex.dispose();
-        this.mat.dispose();
     }
 }
 
