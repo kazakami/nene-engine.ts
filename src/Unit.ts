@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { Core } from "./Core";
 import { PhysicObject } from "./PhysicObject";
 import { Scene } from "./Scene";
+import { TiledTexturedSprite } from "./TiledTexturedSprite";
 
 /**
  * Unitの基底クラス、これを継承して用いる
@@ -15,7 +16,7 @@ abstract class Unit {
     public scene: Scene = null;
     public frame: number = 0;
     public objects: THREE.Object3D[] = [];
-    public sprites: THREE.Object3D[] = [];
+    public sprites: Array<THREE.Object3D | TiledTexturedSprite> = [];
     public physicObjects: PhysicObject[] = [];
     constructor() {
         return;
@@ -41,9 +42,13 @@ abstract class Unit {
      * 追加されたObject3DはこのUnitの削除時に自動でシーンから除外される
      * @param o 追加するObject3D
      */
-    public AddSprite(o: THREE.Object3D): void {
+    public AddSprite(o: THREE.Object3D | TiledTexturedSprite): void {
         this.sprites.push(o);
-        this.scene.scene2d.add(o);
+        if ("isTiledTexturedSprite" in o) {
+            this.scene.scene2d.add(o.sprite);
+        } else {
+            this.scene.scene2d.add(o);
+        }
     }
     /**
      * sceneにviewBodyを追加し、physicWorldにphysicBodyを追加し、オブジェクトをUnitに紐付ける
@@ -67,9 +72,14 @@ abstract class Unit {
      * 指定したObjectをscene2dから削除
      * @param o 削除するObject3D
      */
-    public RemoveSprite(o: THREE.Object3D): void {
+    public RemoveSprite(o: THREE.Object3D | TiledTexturedSprite): void {
         this.sprites = this.sprites.filter((spr) => o !== spr);
-        this.scene.scene2d.remove(o);
+        if ("isTiledTexturedSprite" in o) {
+            this.scene.scene2d.remove(o.sprite);
+            o.Dispose();
+        } else {
+            this.scene.scene2d.remove(o);
+        }
     }
     /**
      * 指定した物理オブジェクトを削除する
