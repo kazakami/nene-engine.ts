@@ -1,6 +1,5 @@
 import * as THREE from "three";
-import { Random, RandomColor, Scene, Start, Unit } from "../src/main";
-import { TiledTexturedSprite } from "../src/TiledTexturedSprite";
+import { Random, RandomColor, Scene, Start, TiledTexturedSprite, Unit } from "../src/main";
 
 class LoadScene extends Scene {
     public Init(): void {
