@@ -55,7 +55,7 @@ class GameScene extends Scene {
     }
     public Draw(): void {
         super.Draw();
-        this.core.DrawText(this.core.fps.toString(), this.core.mouseX, this.core.mouseY);
+        this.core.DrawText("🍣" + this.core.fps.toString(), this.core.mouseX, this.core.mouseY);
     }
 }
 
