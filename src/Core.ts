@@ -151,8 +151,8 @@ class Core {
     /**
      * 非同期に読み込んでいる全てのリソースが利用可能かどうか調べる
      */
-    public IsAllResourcesAvaiable(): boolean {
-        return this.IsAllObjectAvaiable() && this.IsAllTextureAvaiable() && this.IsAllTextAvailable();
+    public IsAllResourcesAvailable(): boolean {
+        return this.IsAllObjectAvailable() && this.IsAllTextureAvailable() && this.IsAllTextAvailable();
     }
 
     /**
@@ -246,14 +246,14 @@ class Core {
      * キーで指定した画像が読み込み終了してるか調べる
      * @param name キー
      */
-    public IsTextureAvaiable(name: string): boolean {
+    public IsTextureAvailable(name: string): boolean {
         return this.textures[name] !== null && this.textures[name] !== undefined;
     }
 
     /**
      * 全ての画像が読み込み完了しているか調べる
      */
-    public IsAllTextureAvaiable(): boolean {
+    public IsAllTextureAvailable(): boolean {
         for (const key in this.textures) {
             if (this.textures[key] === null || this.textures[key] === undefined) {
                 return false;
@@ -355,7 +355,7 @@ class Core {
     /**
      * 全てのオブジェクトが読み込み終了してるか調べる
      */
-    public IsAllObjectAvaiable(): boolean {
+    public IsAllObjectAvailable(): boolean {
         for (const key in this.objects) {
             if (this.objects[key] === null) {
                 return false;

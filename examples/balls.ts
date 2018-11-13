@@ -13,7 +13,7 @@ class LoadScene extends Scene {
     public Update(): void {
         super.Update();
         console.log(this.core.GetAllResourcesLoadingProgress());
-        if (this.core.IsAllResourcesAvaiable()) {
+        if (this.core.IsAllResourcesAvailable()) {
             console.log("change");
             // オブジェクトenteが読み込まれればシーン遷移
             this.core.AddAndChangeScene("game", new GameScene());
