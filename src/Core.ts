@@ -20,6 +20,7 @@ class Core {
     private textures: { [key: string]: THREE.Texture } = {};
     private scenes: { [key: string]: Scene } = {};
     private activeScene: Scene = null;
+    private nextSceneName: string = null;
     private loadingManager: THREE.LoadingManager;
     private objLoader: THREE.OBJLoader;
     private mtlLoader: THREE.MTLLoader;
@@ -328,13 +329,14 @@ class Core {
 
     /**
      * シーンを変更
+     * 次のフレームから指定したシーンに切り替わる
      * @param sceneName 切り替えるシーンのキー
      */
     public ChangeScene(sceneName: string): void {
         if (this.scenes[sceneName] === null || this.scenes[sceneName] === undefined) {
             throw new Error("Scene " + sceneName + " does not exist.");
         }
-        this.activeScene = this.scenes[sceneName];
+        this.nextSceneName = sceneName;
     }
 
     /**
@@ -431,6 +433,14 @@ class Core {
     }
 
     private Update(): void {
+        // シーン変更の必要があれば切り替える
+        if (this.nextSceneName !== null) {
+            if (this.scenes[this.nextSceneName] === null || this.scenes[this.nextSceneName] === undefined) {
+                throw new Error("Scene " + this.nextSceneName + " does not exist.");
+            }
+            this.activeScene = this.scenes[this.nextSceneName];
+            this.nextSceneName = null;
+        }
         this.activeScene.Update();
         this.CalcFPS();
         for (const key in this.keyState) {
