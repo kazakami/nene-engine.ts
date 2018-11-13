@@ -18,12 +18,14 @@ class Core {
     private renderer: THREE.WebGLRenderer;
     private objects: { [key: string]: THREE.Object3D } = {};
     private textures: { [key: string]: THREE.Texture } = {};
+    private texts: { [key: string]: string } = {};
     private scenes: { [key: string]: Scene } = {};
     private activeScene: Scene = null;
     private nextSceneName: string = null;
     private loadingManager: THREE.LoadingManager;
     private objLoader: THREE.OBJLoader;
     private mtlLoader: THREE.MTLLoader;
+    private fileLoader: THREE.FileLoader;
     private intervals: number[] = [];
     private previousTime: number = null;
     private keyState: { [key: string]: boolean } = {};
@@ -41,6 +43,7 @@ class Core {
         this.textureLoader = new THREE.TextureLoader(this.loadingManager);
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
         this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
+        this.fileLoader = new THREE.FileLoader(this.loadingManager);
         this.div = document.createElement("div");
         this.div.setAttribute("position", "relative");
         this.canvas = this.renderer.domElement;
@@ -149,7 +152,7 @@ class Core {
      * 非同期に読み込んでいる全てのリソースが利用可能かどうか調べる
      */
     public IsAllResourcesAvaiable(): boolean {
-        return this.IsAllObjectAvaiable() && this.IsAllTextureAvaiable();
+        return this.IsAllObjectAvaiable() && this.IsAllTextureAvaiable() && this.IsAllTextAvailable();
     }
 
     /**
@@ -160,8 +163,71 @@ class Core {
     public GetAllResourcesLoadingProgress(): [number, number] {
         const objProg = this.GetObjectLoadingProgress();
         const texProg = this.GetTextureLoadingProgress();
-        const allProg =  [objProg, texProg].reduce(([a0, a1], [b0, b1]) => [a0 + b0, a1 + b1]);
+        const textProg = this.GetTextLoadingProgress();
+        const allProg =  [objProg, texProg, textProg].reduce(([a0, a1], [b0, b1]) => [a0 + b0, a1 + b1]);
         return allProg;
+    }
+
+    /**
+     * テキストファイルを読み込む
+     * @param filename テキストファイルのパス
+     * @param name テキストファイルを呼び出すキー
+     */
+    public LoadFile(filename: string, name: string): void {
+        this.texts[name] = null;
+        this.fileLoader.load(filename, (file) => {
+            if (typeof file === "string") {
+                this.texts[name] = file;
+            }
+        });
+    }
+
+    /**
+     * キーで指定したテキストファイルが読み込み終了しているか調べる
+     * @param name キー
+     */
+    public IsTextAvailable(name: string): boolean {
+        return this.texts[name] !== null && this.texts[name] !== undefined;
+    }
+
+    /**
+     * 全てのテキストファイルが読み込み完了しているか調べる
+     */
+    public IsAllTextAvailable(): boolean {
+        for (const key in this.texts) {
+            if (this.texts[key] === null || this.texts[key] === undefined) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * テキストファイルの読み込みの進捗具合を取得する
+     * 返り値の0番目が読み込み完了したテキストファイルの数
+     * 返り値の1番目が登録されているすべてのテキストファイルの数
+     */
+    public GetTextLoadingProgress(): [number, number] {
+        const AllNum = Object.keys(this.texts).length;
+        let LoadedNum = 0;
+        for (const key in this.texts) {
+            if (this.texts[key] !== null && this.texts[key] !== undefined) {
+                LoadedNum++;
+            }
+        }
+        return [LoadedNum, AllNum];
+    }
+
+    /**
+     * キーで指定したテキストファイルを呼び出す
+     * @param name キー
+     */
+    public GetText(name: string): string {
+        if (this.texts[name] !== null && this.texts[name] !== undefined) {
+            return this.texts[name];
+        } else {
+            throw new Error("Text File  " + name + " is null or undefined");
+        }
     }
 
     /**
