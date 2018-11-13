@@ -1,5 +1,11 @@
 import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
+import "imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer.js";
+import "imports-loader?THREE=three!three/examples/js/postprocessing/FilmPass.js";
+import "imports-loader?THREE=three!three/examples/js/postprocessing/RenderPass.js";
+import "imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass.js";
+import "imports-loader?THREE=three!three/examples/js/shaders/CopyShader.js";
+import "imports-loader?THREE=three!three/examples/js/shaders/FilmShader.js";
 import * as THREE from "three";
 import { Scene } from "./Scene";
 import { Base64toBlob, Coalescing } from "./Util";
@@ -9,13 +15,13 @@ class Core {
     public mouseY: number = 0;
     public windowSizeX: number;
     public windowSizeY: number;
+    public renderer: THREE.WebGLRenderer;
     private textureLoader: THREE.TextureLoader;
     private textCanvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
     private link: HTMLAnchorElement;
     private div: HTMLDivElement;
-    private renderer: THREE.WebGLRenderer;
     private objects: { [key: string]: THREE.Object3D } = {};
     private textures: { [key: string]: THREE.Texture } = {};
     private texts: { [key: string]: string } = {};
@@ -518,7 +524,11 @@ class Core {
         this.renderer.setClearColor(this.activeScene.backgroundColor);
         this.renderer.clear();
         this.ctx.clearRect(0, 0, this.windowSizeX, this.windowSizeY);
-        this.renderer.render(this.activeScene.scene, this.activeScene.camera);
+        if (this.activeScene.composer === null) {
+            this.renderer.render(this.activeScene.scene, this.activeScene.camera);
+        } else {
+            this.activeScene.composer.render();
+        }
         this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
         this.activeScene.Draw();
     }

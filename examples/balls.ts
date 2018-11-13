@@ -48,6 +48,11 @@ class GameScene extends Scene {
         this.onWindowResizeCallback = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
+        this.composer = new THREE.EffectComposer(this.core.renderer);
+        this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
+        const pass = new THREE.FilmPass();
+        pass.renderToScreen = true;
+        this.composer.addPass(pass);
     }
     public Update(): void {
         super.Update();
@@ -95,11 +100,11 @@ class Ball extends Unit {
             const mat = new THREE.ShaderMaterial({
                 fragmentShader: this.core.GetText("sample1.frag"),
                 uniforms: {
-                    hoge: {value: 0.5},
+                    // hoge: {value: 0.5},
                 },
                 vertexShader: this.core.GetText("sample1.vert"),
             });
-            mat.uniforms.hoge = {value: 1.0};
+            mat.uniforms.hoge = {value: 0.0};
             const mesh = new THREE.Mesh(geo, mat);
             this.ball = new PhysicSphere(1, 1, "ball", mesh);
         } else {
