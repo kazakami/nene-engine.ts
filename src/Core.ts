@@ -159,7 +159,8 @@ class Core {
     public GetAllResourcesLoadingProgress(): [number, number] {
         const objProg = this.GetObjectLoadingProgress();
         const texProg = this.GetTextureLoadingProgress();
-        return [objProg[0] + texProg[0], objProg[1] + texProg[1]];
+        const allProg =  [objProg, texProg].reduce(([a0, a1], [b0, b1]) => [a0 + b0, a1 + b1]);
+        return allProg;
     }
 
     /**
