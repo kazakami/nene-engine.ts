@@ -9,6 +9,8 @@ class LoadScene extends Scene {
         this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball");
         this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle");
         this.core.LoadTexture("resources/images/star.png", "star");
+        this.core.LoadFile("resources/shaders/sample1.vert", "sample1.vert");
+        this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag");
     }
     public Update(): void {
         super.Update();
@@ -30,7 +32,7 @@ class GameScene extends Scene {
         this.backgroundColor = new THREE.Color(0x887766);
         this.AddUnit(new Board());
         this.AddUnit(new Ball(0, 10, 0));
-        this.AddUnit(new Ball(5, 5, 0));
+        this.AddUnit(new Ball(5, 5, 0, true));
         this.AddUnit(new Ball(0, 3, 4));
         this.camera.position.set(0, 15, 15);
         this.camera.lookAt(0, 0, 0);
@@ -84,11 +86,21 @@ class Particle extends Unit {
 
 class Ball extends Unit {
     public ball: PhysicSphere;
-    constructor(private x = 0, private y = 0, private z = 0) {
+    constructor(private x = 0, private y = 0, private z = 0, private shaded = false) {
         super();
     }
     public Init(): void {
-        this.ball = new PhysicSphere(1, 1, "ball", this.core.GetObject("ball"));
+        if (this.shaded) {
+            const geo = new THREE.SphereBufferGeometry(1, 10, 10);
+            const mat: THREE.Material = new THREE.ShaderMaterial({
+                fragmentShader: this.core.GetText("sample1.frag"),
+                vertexShader: this.core.GetText("sample1.vert"),
+            });
+            const mesh = new THREE.Mesh(geo, mat);
+            this.ball = new PhysicSphere(1, 1, "ball", mesh);
+        } else {
+            this.ball = new PhysicSphere(1, 1, "ball", this.core.GetObject("ball"));
+        }
         this.ball.position.set(this.x, this.y, this.z);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
