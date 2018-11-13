@@ -92,10 +92,14 @@ class Ball extends Unit {
     public Init(): void {
         if (this.shaded) {
             const geo = new THREE.SphereBufferGeometry(1, 10, 10);
-            const mat: THREE.Material = new THREE.ShaderMaterial({
+            const mat = new THREE.ShaderMaterial({
                 fragmentShader: this.core.GetText("sample1.frag"),
+                uniforms: {
+                    hoge: {value: 0.5},
+                },
                 vertexShader: this.core.GetText("sample1.vert"),
             });
+            mat.uniforms.hoge = {value: 1.0};
             const mesh = new THREE.Mesh(geo, mat);
             this.ball = new PhysicSphere(1, 1, "ball", mesh);
         } else {
