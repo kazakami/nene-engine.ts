@@ -1,5 +1,22 @@
 import * as THREE from "three";
 
+export function AllIsNotNullOrUndefined<T>(arr: {[key: string]: T}): boolean {
+    for (const key in arr) {
+        if (arr[key] === null || arr[key] === undefined) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export function AssociativeArrayToArray<T>(arr: {[key: string]: T}): T[] {
+    const a: T[] = [];
+    for (const key in arr ) {
+        a.push(arr[key]);
+    }
+    return a;
+}
+
 export function Random(range: number) {
     return Math.random() * 2 * range - range;
 }
