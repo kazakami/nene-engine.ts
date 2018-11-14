@@ -531,19 +531,7 @@ class Core {
             this.activeScene.composer.render();
         }
         this.renderer.clearDepth();
-        if (this.activeScene.composer2d === null) {
-            this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
-        } else {
-            const tex = new THREE.Texture(this.canvas);
-            tex.needsUpdate = true;
-            const mat = new THREE.SpriteMaterial({map: tex});
-            const sp = new THREE.Sprite(mat);
-            sp.scale.set(this.windowSizeX, this.windowSizeY, 1);
-            this.activeScene.scene2d.add(sp);
-            this.activeScene.composer2d.render();
-            this.activeScene.scene2d.remove(sp);
-            mat.dispose();
-        }
+        this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
         this.activeScene.Draw();
     }
 
