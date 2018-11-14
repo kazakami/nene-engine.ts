@@ -21,6 +21,7 @@ abstract class Scene {
     public frame: number = 0;
     public fov: number = 75;
     public composer: THREE.EffectComposer = null;
+    public composer2d: THREE.EffectComposer = null;
     public onMouseMoveCallback: (e: MouseEvent) => void = null;
     public onMouseClickCallback: (e: Event) => void = null;
     public onWindowResizeCallback: (e: UIEvent) => void = null;
