@@ -11,6 +11,8 @@ class LoadScene extends Scene {
         this.core.LoadTexture("resources/images/star.png", "star");
         this.core.LoadFile("resources/shaders/sample1.vert", "sample1.vert");
         this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag");
+        this.core.LoadFile("resources/shaders/pass1.vert", "pass1.vert");
+        this.core.LoadFile("resources/shaders/pass1.frag", "pass1.frag");
     }
     public Update(): void {
         super.Update();
@@ -50,7 +52,13 @@ class GameScene extends Scene {
         };
         this.composer = new THREE.EffectComposer(this.core.renderer);
         this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
-        const pass = new THREE.FilmPass();
+        const pass = new THREE.ShaderPass({
+            fragmentShader: this.core.GetText("pass1.frag"),
+            uniforms: {
+                tDiffuse: {value: null},
+            },
+            vertexShader: this.core.GetText("pass1.vert"),
+        });
         pass.renderToScreen = true;
         this.composer.addPass(pass);
     }
