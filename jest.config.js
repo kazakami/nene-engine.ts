@@ -3,15 +3,16 @@ module.exports = {
       "<rootDir>/src"
     ],
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.ts$": "ts-jest"
     },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
+    "testRegex": "\\.test\\.ts$",
     "moduleFileExtensions": [
       "ts",
-      "tsx",
       "js",
-      "jsx",
       "json",
       "node"
     ],
+    "moduleNameMapper": {
+      "imports-loader?.*": "<rootDir>/src/test/importsLoader.js"
+    },
   }

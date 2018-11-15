@@ -1,0 +1,1 @@
+module.exports = 'IMPORTS_LOADER_MOCK';
