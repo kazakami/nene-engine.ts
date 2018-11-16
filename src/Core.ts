@@ -10,6 +10,19 @@ import * as THREE from "three";
 import { Scene } from "./Scene";
 import { Base64toBlob, Coalescing } from "./Util";
 
+class CoreOption {
+    public antialias?: boolean;
+    public parent?: HTMLElement;
+    public windowSizeX?: number;
+    public windowSizeY?: number;
+    constructor(option: CoreOption) {
+        this.antialias = Coalescing(option.antialias, true);
+        this.parent = Coalescing(option.parent, document.body);
+        this.windowSizeX = Coalescing(option.windowSizeX, window.innerWidth);
+        this.windowSizeY = Coalescing(option.windowSizeY, window.innerHeight);
+    }
+}
+
 class Core {
     public mouseX: number = 0;
     public mouseY: number = 0;
@@ -37,14 +50,15 @@ class Core {
     private keyState: { [key: string]: boolean } = {};
     private previousKeyState: { [key: string]: boolean } = {};
 
-    constructor() {
+    constructor(private option: CoreOption) {
         this.renderer = new THREE.WebGLRenderer({
-            antialias: true,
+            antialias: option.antialias,
             preserveDrawingBuffer: true,
         });
         this.renderer.autoClear = false;
-        this.windowSizeX = window.innerWidth;
-        this.windowSizeY = window.innerHeight;
+        console.log(option.windowSizeX);
+        this.windowSizeX = option.windowSizeX;
+        this.windowSizeY = option.windowSizeY;
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
         this.loadingManager = new THREE.LoadingManager();
         this.textureLoader = new THREE.TextureLoader(this.loadingManager);
@@ -67,11 +81,11 @@ class Core {
         this.ctx.font = "50px serif";
         this.ctx.textAlign = "left";
         this.ctx.textBaseline = "top";
-        document.body.appendChild(this.div);
+        option.parent.appendChild(this.div);
         // blobの内容をダウンロードさせるためのダミーリンクの作成
         this.link = document.createElement("a");
         this.link.style.display = "none";
-        document.body.appendChild(this.link);
+        option.parent.appendChild(this.link);
         // イベントの登録
         this.textCanvas.addEventListener("mousemove", (e) => {
             this.mouseX = e.offsetX - this.windowSizeX / 2;
@@ -557,8 +571,9 @@ class Core {
  * @param defaultSceneName 初期シーンの名前
  * @param defaultScene 初期シーン
  */
-function Start(defaultSceneName: string, defaultScene: Scene): Core {
-    const core = new Core();
+function Start(defaultSceneName: string, defaultScene: Scene, option?: CoreOption): Core {
+    const modifiedOption = new CoreOption(Coalescing(option, {}));
+    const core = new Core(modifiedOption);
     core.Init(defaultSceneName, defaultScene);
     return core;
 }

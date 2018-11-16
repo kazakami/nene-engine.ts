@@ -134,4 +134,6 @@ class Fire extends Unit {
 }
 
 // ゲームの開始
-Start("init", new LoadScene());
+Start("init", new LoadScene(), {
+    antialias: true,
+});
