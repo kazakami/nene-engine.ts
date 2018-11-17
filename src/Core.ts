@@ -51,72 +51,13 @@ class Core {
     private previousKeyState: { [key: string]: boolean } = {};
 
     constructor(private option: CoreOption) {
-        this.renderer = new THREE.WebGLRenderer({
-            antialias: option.antialias,
-            preserveDrawingBuffer: true,
-        });
-        this.renderer.autoClear = false;
-        console.log(option.windowSizeX);
-        this.windowSizeX = option.windowSizeX;
-        this.windowSizeY = option.windowSizeY;
-        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
-        this.loadingManager = new THREE.LoadingManager();
-        this.textureLoader = new THREE.TextureLoader(this.loadingManager);
-        this.objLoader = new THREE.OBJLoader(this.loadingManager);
-        this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
-        this.fileLoader = new THREE.FileLoader(this.loadingManager);
-        this.div = document.createElement("div");
-        this.div.setAttribute("position", "relative");
-        this.canvas = this.renderer.domElement;
-        this.canvas.setAttribute("style", "position: absolute;");
-        this.div.appendChild(this.canvas);
-        // 2D文字列描画のためのcanvasの作成
-        this.textCanvas = document.createElement("canvas");
-        this.textCanvas.setAttribute("width", this.windowSizeX.toString());
-        this.textCanvas.setAttribute("height", this.windowSizeY.toString());
-        this.textCanvas.setAttribute("z-index", "100");
-        this.textCanvas.setAttribute("style", "position: absolute;");
-        this.div.appendChild(this.textCanvas);
-        this.ctx = this.textCanvas.getContext("2d");
-        this.ctx.font = "50px serif";
-        this.ctx.textAlign = "left";
-        this.ctx.textBaseline = "top";
-        option.parent.appendChild(this.div);
-        // blobの内容をダウンロードさせるためのダミーリンクの作成
-        this.link = document.createElement("a");
-        this.link.style.display = "none";
-        option.parent.appendChild(this.link);
-        // イベントの登録
-        this.textCanvas.addEventListener("mousemove", (e) => {
-            this.mouseX = e.offsetX - this.windowSizeX / 2;
-            this.mouseY = this.windowSizeY / 2 - e.offsetY;
-            if (this.activeScene.onMouseMoveCallback !== null) {
-                this.activeScene.onMouseMoveCallback(e);
-            }
-        }, false);
-        this.textCanvas.addEventListener("click", (e) => {
-            if (this.activeScene.onMouseClickCallback !== null) {
-                this.activeScene.onMouseClickCallback(e);
-            }
-        });
-        window.addEventListener("resize", (e) => {
-            if (this.activeScene.onWindowResizeCallback !== null) {
-                this.activeScene.onWindowResizeCallback(e);
-            }
-        });
-        document.addEventListener("keypress", (e) => {
-            if (!e.repeat) {
-                this.keyState[e.key] = true;
-            }
-        });
-        document.addEventListener("keyup", (e) => {
-            this.keyState[e.key] = false;
-        });
-        window.addEventListener("blur", (e) => {
-            for (const key in this.keyState) {
-                this.keyState[key] = false;
-            }
-        });
+    }
+
+    /**
+     * Coreに与えられてるオプションを取得する
+     */
+    public GetOption(): CoreOption {
+        return this.option;
     }
 
     /**
@@ -402,6 +343,71 @@ class Core {
     }
 
     public Init(sceneName: string, scene: Scene): void {
+        this.renderer = new THREE.WebGLRenderer({
+            antialias: this.option.antialias,
+            preserveDrawingBuffer: true,
+        });
+        this.renderer.autoClear = false;
+        this.windowSizeX = this.option.windowSizeX;
+        this.windowSizeY = this.option.windowSizeY;
+        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
+        this.loadingManager = new THREE.LoadingManager();
+        this.textureLoader = new THREE.TextureLoader(this.loadingManager);
+        this.objLoader = new THREE.OBJLoader(this.loadingManager);
+        this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
+        this.fileLoader = new THREE.FileLoader(this.loadingManager);
+        this.div = document.createElement("div");
+        this.div.setAttribute("position", "relative");
+        this.canvas = this.renderer.domElement;
+        this.canvas.setAttribute("style", "position: absolute;");
+        this.div.appendChild(this.canvas);
+        // 2D文字列描画のためのcanvasの作成
+        this.textCanvas = document.createElement("canvas");
+        this.textCanvas.setAttribute("width", this.windowSizeX.toString());
+        this.textCanvas.setAttribute("height", this.windowSizeY.toString());
+        this.textCanvas.setAttribute("z-index", "100");
+        this.textCanvas.setAttribute("style", "position: absolute;");
+        this.div.appendChild(this.textCanvas);
+        this.ctx = this.textCanvas.getContext("2d");
+        this.ctx.font = "50px serif";
+        this.ctx.textAlign = "left";
+        this.ctx.textBaseline = "top";
+        this.option.parent.appendChild(this.div);
+        // blobの内容をダウンロードさせるためのダミーリンクの作成
+        this.link = document.createElement("a");
+        this.link.style.display = "none";
+        this.option.parent.appendChild(this.link);
+        // イベントの登録
+        this.textCanvas.addEventListener("mousemove", (e) => {
+            this.mouseX = e.offsetX - this.windowSizeX / 2;
+            this.mouseY = this.windowSizeY / 2 - e.offsetY;
+            if (this.activeScene.onMouseMoveCallback !== null) {
+                this.activeScene.onMouseMoveCallback(e);
+            }
+        }, false);
+        this.textCanvas.addEventListener("click", (e) => {
+            if (this.activeScene.onMouseClickCallback !== null) {
+                this.activeScene.onMouseClickCallback(e);
+            }
+        });
+        window.addEventListener("resize", (e) => {
+            if (this.activeScene.onWindowResizeCallback !== null) {
+                this.activeScene.onWindowResizeCallback(e);
+            }
+        });
+        document.addEventListener("keypress", (e) => {
+            if (!e.repeat) {
+                this.keyState[e.key] = true;
+            }
+        });
+        document.addEventListener("keyup", (e) => {
+            this.keyState[e.key] = false;
+        });
+        window.addEventListener("blur", (e) => {
+            for (const key in this.keyState) {
+                this.keyState[key] = false;
+            }
+        });
         scene.core = this;
         this.scenes[sceneName] = scene;
         this.activeScene = scene;
