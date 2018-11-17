@@ -3,7 +3,6 @@ import { PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } 
 
 class LoadScene extends Scene {
     public Init(): void {
-        super.Init();
         this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                              "resources/models/ente progress_export.mtl", "ente");
         this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball");
@@ -15,7 +14,6 @@ class LoadScene extends Scene {
         this.core.LoadFile("resources/shaders/pass1.frag", "pass1.frag");
     }
     public Update(): void {
-        super.Update();
         console.log(this.core.GetAllResourcesLoadingProgress());
         if (this.core.IsAllResourcesAvailable()) {
             console.log("change");
@@ -30,7 +28,6 @@ class LoadScene extends Scene {
 class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public Init(): void {
-        super.Init();
         this.backgroundColor = new THREE.Color(0x887766);
         this.AddUnit(new Board());
         this.AddUnit(new Ball(0, 10, 0));
@@ -64,11 +61,9 @@ class GameScene extends Scene {
         this.composer.addPass(pass);
     }
     public Update(): void {
-        super.Update();
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
     }
-    public Draw(): void {
-        super.Draw();
+    public DrawText(): void {
         this.core.DrawText("🍣" + this.core.fps.toString(), this.core.mouseX, this.core.mouseY);
     }
 }
@@ -86,7 +81,6 @@ class Particle extends Unit {
         this.AddObject(this.sprite);
     }
     public Update(): void {
-        super.Update();
         this.vy -= 9.8 / 60 / 60;
         this.x += this.vx;
         this.y += this.vy;
@@ -131,7 +125,6 @@ class Ball extends Unit {
         });
     }
     public Update(): void {
-        super.Update();
         if (this.ball.position.y < -30) {
             this.ball.position.set(this.x, this.y, this.z);
             this.ball.velocity.set(0, 0, 0);
@@ -150,7 +143,6 @@ class Board extends Unit {
         this.AddPhysicObject(this.floor);
     }
     public Update(): void {
-        super.Update();
         this.floor.OrientAndRotate(
             this.core.mouseX,
             100,

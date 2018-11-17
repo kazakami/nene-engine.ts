@@ -3,7 +3,6 @@ import { Random, RandomColor, Scene, Start, TiledTexturedSprite, Unit } from "..
 
 class LoadScene extends Scene {
     public Init(): void {
-        super.Init();
         this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle");
         this.core.LoadTexture("resources/images/star.png", "star");
         this.core.LoadTexture("resources/images/fire.png", "fire");
@@ -12,7 +11,6 @@ class LoadScene extends Scene {
         this.core.LoadTexture("resources/images/shadow.png", "shadow");
     }
     public Update(): void {
-        super.Update();
         console.log(this.core.GetAllResourcesLoadingProgress());
         if (this.core.IsAllResourcesAvailable()) {
             console.log("change");
@@ -27,7 +25,6 @@ class LoadScene extends Scene {
 class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public Init(): void {
-        super.Init();
         this.backgroundColor = new THREE.Color(0x887766);
         this.sprt = this.core.MakeSpriteFromTexture("circle");
         this.sprt.scale.set(100, 100, 1);
@@ -41,14 +38,12 @@ class GameScene extends Scene {
         };
     }
     public Update(): void {
-        super.Update();
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
         if (this.core.IsKeyPressing("q")) {
             this.AddUnit(new Fire(this.core.mouseX, this.core.mouseY));
         }
     }
-    public Draw(): void {
-        super.Draw();
+    public DrawText(): void {
         this.core.DrawText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
     }
 }
@@ -71,7 +66,6 @@ class Chara extends Unit {
         this.AddSprite(this.shadow);
     }
     public Update(): void {
-        super.Update();
         this.tts.SetTile(0, 0);
         if (this.core.IsKeyDown("w")) {
             this.y += 3;
@@ -125,7 +119,6 @@ class Fire extends Unit {
         this.AddSprite(this.tts);
     }
     public Update(): void {
-        super.Update();
         this.tts.SetTile(Math.floor(this.frame / 5), 0);
         if (this.frame > 100) {
             this.isAlive = false;

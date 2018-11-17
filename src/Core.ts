@@ -29,9 +29,9 @@ class Core {
     public windowSizeX: number;
     public windowSizeY: number;
     public renderer: THREE.WebGLRenderer;
+    public ctx: CanvasRenderingContext2D;
     private textureLoader: THREE.TextureLoader;
     private textCanvas: HTMLCanvasElement;
-    private ctx: CanvasRenderingContext2D;
     private canvas: HTMLCanvasElement;
     private link: HTMLAnchorElement;
     private div: HTMLDivElement;
@@ -405,6 +405,7 @@ class Core {
         scene.core = this;
         this.scenes[sceneName] = scene;
         this.activeScene = scene;
+        this.activeScene.InnerInit();
         this.activeScene.Init();
         const animate = () => {
             requestAnimationFrame(animate);
@@ -434,6 +435,7 @@ class Core {
     public AddScene(sceneName: string, scene: Scene): void {
         scene.core = this;
         this.scenes[sceneName] = scene;
+        scene.InnerInit();
         scene.Init();
     }
 
@@ -528,6 +530,7 @@ class Core {
             this.activeScene = this.scenes[this.nextSceneName];
             this.nextSceneName = null;
         }
+        this.activeScene.InnerUpdate();
         this.activeScene.Update();
         this.CalcFPS();
         for (const key in this.keyState) {
@@ -536,17 +539,8 @@ class Core {
     }
 
     private Draw(): void {
-        this.renderer.setClearColor(this.activeScene.backgroundColor);
-        this.renderer.clear();
-        this.ctx.clearRect(0, 0, this.windowSizeX, this.windowSizeY);
-        if (this.activeScene.composer === null) {
-            this.renderer.render(this.activeScene.scene, this.activeScene.camera);
-        } else {
-            this.activeScene.composer.render();
-        }
-        this.renderer.clearDepth();
-        this.renderer.render(this.activeScene.scene2d, this.activeScene.camera2d);
-        this.activeScene.Draw();
+        this.activeScene.Render();
+        this.activeScene.DrawText();
     }
 
     private CalcFPS(): void {

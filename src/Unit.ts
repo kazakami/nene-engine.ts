@@ -7,7 +7,6 @@ import { TiledTexturedSprite } from "./TiledTexturedSprite";
 /**
  * Unitの基底クラス、これを継承して用いる
  * 基本的にコンストラクタ値の受け渡しにのみ用い、Init()に起動時の処理を追加する
- * Update()関数をオーバーライドした際はsuper.Updateを実行しないとframeおよび物理オブジェクトの更新が行われない
  */
 abstract class Unit {
     public isAlive: boolean = true;
@@ -21,11 +20,17 @@ abstract class Unit {
     constructor() {
         return;
     }
-    public Update(): void {
+    /**
+     * この関数は基本的にオーバーライドすべきでない
+     */
+    public InnerUpdate(): void {
         this.frame++;
         this.physicObjects.forEach((p) => { p.Update(); });
     }
-    public Draw(): void { return; }
+    public Update(): void {
+        return;
+    }
+    public DrawText(): void { return; }
     public Init(): void { return; }
     public Fin(): void { return; }
     /**

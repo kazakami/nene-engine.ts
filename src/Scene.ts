@@ -7,7 +7,6 @@ import { PhysicUnit, Unit } from "./Unit";
 /**
  * Sceneの基底クラス、これを継承して用いる
  * 基本的にコンストラクタは用いず、Init()に起動時の処理を追加する
- * Init(),Update()関数ともにオーバーライドした際はsuperの関数も呼ぶこと
  */
 abstract class Scene {
     public units: Unit[] = [];
@@ -35,23 +34,51 @@ abstract class Scene {
         this.physicWorld.solver.iterations = 5;
     }
 
-    public Update(): void {
+    /**
+     * この関数は基本的にオーバーライドすべきでない
+     */
+    public InnerUpdate(): void {
         this.frame++;
         // 有効でなくなったUnitの削除処理を行ってからUpdate()を実行する
         this.Remove();
         this.units.forEach((u) => {
+            u.InnerUpdate();
             u.Update();
         });
         this.physicWorld.step(1 / 60);
     }
 
-    public Draw(): void {
+    public Update(): void {
+        return;
+    }
+
+    public Render(): void {
+        this.core.renderer.setClearColor(this.backgroundColor);
+        this.core.renderer.clear();
+        this.core.ctx.clearRect(0, 0, this.core.windowSizeX, this.core.windowSizeY);
+        if (this.composer === null) {
+            this.core.renderer.render(this.scene, this.camera);
+        } else {
+            this.composer.render();
+        }
+        this.core.renderer.clearDepth();
+        this.core.renderer.render(this.scene2d, this.camera2d);
+    }
+
+    public DrawText(): void {
         this.units.forEach((u) => {
-            u.Draw();
+            u.DrawText();
         });
     }
 
     public Init(): void {
+        return;
+    }
+
+    /**
+     * この関数は基本的にオーバーライドすべきでない
+     */
+    public InnerInit(): void {
         this.units.forEach((u) => {
             u.Init();
         });
