@@ -54,6 +54,13 @@ class Core {
     }
 
     /**
+     * Coreに与えられてるオプションを取得する
+     */
+    public GetOption(): CoreOption {
+        return this.option;
+    }
+
+    /**
      * 指定したキーがこのフレームに押し下げられたか判定する
      * @param key キー
      */
