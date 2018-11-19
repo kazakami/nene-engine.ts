@@ -1,3 +1,4 @@
+import "imports-loader?THREE=three!three/examples/js/loaders/GLTFLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/MTLLoader.js";
 import "imports-loader?THREE=three!three/examples/js/loaders/OBJLoader.js";
 import "imports-loader?THREE=three!three/examples/js/postprocessing/EffectComposer.js";
@@ -45,6 +46,7 @@ class Core {
     private objLoader: THREE.OBJLoader;
     private mtlLoader: THREE.MTLLoader;
     private fileLoader: THREE.FileLoader;
+    private gltfLoader: THREE.GLTFLoader;
     private intervals: number[] = [];
     private previousTime: number = null;
     private keyState: { [key: string]: boolean } = {};
@@ -266,6 +268,18 @@ class Core {
     }
 
     /**
+     * GLTF形式のファイルを読み込む
+     * @param filename GLTFファイルのパス
+     * @param name 3Dモデルを呼び出すためのキー
+     */
+    public LoadGLTF(filename: string, name: string): void {
+        this.objects[name] = null;
+        this.gltfLoader.load(filename, (gltf) => {
+            this.objects[name] = gltf.scene;
+        });
+    }
+
+    /**
      * Obj形式のファイルを読み込む
      * @param objFilename OBJファイルのパス
      * @param mtlFilename MTLファイルのパス
@@ -356,6 +370,7 @@ class Core {
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
         this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
         this.fileLoader = new THREE.FileLoader(this.loadingManager);
+        this.gltfLoader = new THREE.GLTFLoader(this.loadingManager);
         this.div = document.createElement("div");
         this.div.setAttribute("position", "relative");
         this.canvas = this.renderer.domElement;

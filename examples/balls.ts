@@ -12,6 +12,7 @@ class LoadScene extends Scene {
         this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag");
         this.core.LoadFile("resources/shaders/pass1.vert", "pass1.vert");
         this.core.LoadFile("resources/shaders/pass1.frag", "pass1.frag");
+        this.core.LoadGLTF("resources/models/octagon.gltf", "oct");
     }
     public Update(): void {
         console.log(this.core.GetAllResourcesLoadingProgress());
