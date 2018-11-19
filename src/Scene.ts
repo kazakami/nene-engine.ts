@@ -24,6 +24,9 @@ abstract class Scene {
     public onMouseClickCallback: (e: Event) => void = null;
     public onWindowResizeCallback: (e: UIEvent) => void = null;
     public onLoadError: (e: ErrorEvent) => void = null;
+    public onTouchStart: (e: TouchEvent) => void = null;
+    public onTouchMove: (e: TouchEvent) => void = null;
+    public onTouchEnd: (e: TouchEvent) => void = null;
 
     constructor() {
         this.backgroundColor = new THREE.Color(0x000000);
