@@ -395,6 +395,25 @@ class Core {
                 this.activeScene.onWindowResizeCallback(e);
             }
         });
+        this.textCanvas.addEventListener("touchstart", (e) => {
+            if (this.activeScene.onTouchStart !== null) {
+                this.activeScene.onTouchStart(e);
+            }
+        });
+        this.textCanvas.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            const t = e.targetTouches[0];
+            this.mouseX = t.pageX - this.windowSizeX / 2;
+            this.mouseY = this.windowSizeY / 2 - t.pageY;
+            if (this.activeScene.onTouchMove !== null) {
+                this.activeScene.onTouchMove(e);
+            }
+        });
+        this.textCanvas.addEventListener("touchend", (e) => {
+            if (this.activeScene.onTouchEnd !== null) {
+                this.activeScene.onTouchEnd(e);
+            }
+        });
         document.addEventListener("keypress", (e) => {
             if (!e.repeat) {
                 this.keyState[e.key] = true;
