@@ -3,6 +3,8 @@ import { PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } 
 
 class LoadScene extends Scene {
     public Init(): void {
+        this.backgroundColor = new THREE.Color(0x887766);
+        this.onLoadError = (e) => { console.log(e); };
         this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                              "resources/models/ente progress_export.mtl", "ente");
         this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball");
@@ -12,16 +14,17 @@ class LoadScene extends Scene {
         this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag");
         this.core.LoadFile("resources/shaders/pass1.vert", "pass1.vert");
         this.core.LoadFile("resources/shaders/pass1.frag", "pass1.frag");
+        this.core.LoadGLTF("resources/models/octagon.gltf", "oct");
     }
     public Update(): void {
-        console.log(this.core.GetAllResourcesLoadingProgress());
         if (this.core.IsAllResourcesAvailable()) {
-            console.log("change");
             // オブジェクトenteが読み込まれればシーン遷移
             this.core.AddAndChangeScene("game", new GameScene());
-        } else {
-            console.log("now loading resources");
         }
+    }
+    public DrawText(): void {
+        const [a, b] = this.core.GetAllResourcesLoadingProgress();
+        this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
     }
 }
 

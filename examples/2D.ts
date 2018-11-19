@@ -3,6 +3,8 @@ import { Random, RandomColor, Scene, Start, TiledTexturedSprite, Unit } from "..
 
 class LoadScene extends Scene {
     public Init(): void {
+        this.backgroundColor = new THREE.Color(0x887766);
+        this.onLoadError = (e) => { console.log(e); };
         this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle");
         this.core.LoadTexture("resources/images/star.png", "star");
         this.core.LoadTexture("resources/images/fire.png", "fire");
@@ -11,14 +13,14 @@ class LoadScene extends Scene {
         this.core.LoadTexture("resources/images/shadow.png", "shadow");
     }
     public Update(): void {
-        console.log(this.core.GetAllResourcesLoadingProgress());
         if (this.core.IsAllResourcesAvailable()) {
-            console.log("change");
             // オブジェクトenteが読み込まれればシーン遷移
             this.core.AddAndChangeScene("game", new GameScene());
-        } else {
-            console.log("now loading resources");
         }
+    }
+    public DrawText(): void {
+        const [a, b] = this.core.GetAllResourcesLoadingProgress();
+        this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
     }
 }
 
