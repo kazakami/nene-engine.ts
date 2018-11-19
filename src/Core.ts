@@ -147,8 +147,11 @@ class Core {
             },
             null,
             (e) => {
-                delete this.texts[name];
-                throw e;
+                if (this.activeScene.onLoadError !== null) {
+                    this.activeScene.onLoadError(e);
+                } else {
+                    throw e;
+                }
             });
     }
 
@@ -213,8 +216,11 @@ class Core {
             },
             null,
             (e) => {
-                delete this.textures[name];
-                throw e;
+                if (this.activeScene.onLoadError !== null) {
+                    this.activeScene.onLoadError(e);
+                } else {
+                    throw e;
+                }
             });
     }
 
@@ -292,8 +298,11 @@ class Core {
             },
             null,
             (e) => {
-                delete this.objects[name];
-                throw e;
+                if (this.activeScene.onLoadError !== null) {
+                    this.activeScene.onLoadError(e);
+                } else {
+                    throw e;
+                }
             });
     }
 
@@ -325,14 +334,20 @@ class Core {
                     },
                     null,
                     (e) => {
-                        delete this.objects[name];
-                        throw e;
+                        if (this.activeScene.onLoadError !== null) {
+                            this.activeScene.onLoadError(e);
+                        } else {
+                            throw e;
+                        }
                     });
             },
             null,
             (e) => {
-                delete this.objects[name];
-                throw e;
+                if (this.activeScene.onLoadError !== null) {
+                    this.activeScene.onLoadError(e);
+                } else {
+                    throw e;
+                }
             });
     }
 
