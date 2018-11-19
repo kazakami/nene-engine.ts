@@ -139,11 +139,17 @@ class Core {
      */
     public LoadFile(filename: string, name: string): void {
         this.texts[name] = null;
-        this.fileLoader.load(filename, (file) => {
-            if (typeof file === "string") {
-                this.texts[name] = file;
-            }
-        });
+        this.fileLoader.load(filename,
+            (file) => {
+                if (typeof file === "string") {
+                    this.texts[name] = file;
+                }
+            },
+            null,
+            (e) => {
+                delete this.texts[name];
+                throw e;
+            });
     }
 
     /**
@@ -201,9 +207,15 @@ class Core {
      */
     public LoadTexture(filename: string, name: string): void {
         this.textures[name] = null;
-        this.textureLoader.load(filename, (tex) => {
-            this.textures[name] = tex;
-        });
+        this.textureLoader.load(filename,
+            (tex) => {
+                this.textures[name] = tex;
+            },
+            null,
+            (e) => {
+                delete this.textures[name];
+                throw e;
+            });
     }
 
     /**
@@ -274,9 +286,15 @@ class Core {
      */
     public LoadGLTF(filename: string, name: string): void {
         this.objects[name] = null;
-        this.gltfLoader.load(filename, (gltf) => {
-            this.objects[name] = gltf.scene;
-        });
+        this.gltfLoader.load(filename,
+            (gltf) => {
+                this.objects[name] = gltf.scene;
+            },
+            null,
+            (e) => {
+                delete this.objects[name];
+                throw e;
+            });
     }
 
     /**
@@ -304,7 +322,17 @@ class Core {
                 this.objLoader.load(objFilename,
                     (grp) => {
                         this.objects[name] = grp;
+                    },
+                    null,
+                    (e) => {
+                        delete this.objects[name];
+                        throw e;
                     });
+            },
+            null,
+            (e) => {
+                delete this.objects[name];
+                throw e;
             });
     }
 
