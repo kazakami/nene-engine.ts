@@ -64,6 +64,15 @@ class GameScene extends Scene {
         this.composer.addPass(pass);
     }
     public Update(): void {
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(
+            {x: this.core.mouseX / (this.core.windowSizeX / 2),
+             y: this.core.mouseY / (this.core.windowSizeY / 2)},
+            this.camera);
+        const intersects = raycaster.intersectObjects(this.scene.children, true);
+        if (this.frame % 60 === 0) {
+            console.log(intersects[0]);
+        }
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
     }
     public DrawText(): void {
