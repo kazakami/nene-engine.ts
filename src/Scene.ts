@@ -58,15 +58,16 @@ abstract class Scene {
         return;
     }
 
-    public Raycast(): void {
-        this.raycaster.setFromCamera(
-            {x: this.core.mouseX / (this.core.windowSizeX / 2),
-             y: this.core.mouseY / (this.core.windowSizeY / 2)},
-            this.camera);
+    public Raycast(position: THREE.Vec2 = null): void {
+        if (position === null) {
+            position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
+                        y: this.core.mouseY / (this.core.windowSizeY / 2)};
+        }
+        this.raycaster.setFromCamera(position, this.camera);
         this.units.filter((u) => u.raycastTarget).forEach((u) => {
             const intersects = this.raycaster.intersectObjects(u.allObject3D, true);
             if (intersects.length !== 0) {
-                console.log(intersects);
+                u.onRaycastedCallback(intersects);
             }
         });
     }
@@ -224,6 +225,7 @@ abstract class Scene {
             });
             u.Fin();
             u.objects = [];
+            u.allObject3D = [];
             u.sprites = [];
             u.physicObjects = [];
             u.scene = null;
