@@ -64,6 +64,9 @@ class GameScene extends Scene {
         this.composer.addPass(pass);
     }
     public Update(): void {
+        if (this.frame % 60 === 0) {
+            this.Raycast();
+        }
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
     }
     public DrawText(): void {
@@ -101,6 +104,7 @@ class Ball extends Unit {
         super();
     }
     public Init(): void {
+        this.raycastTarget = true;
         if (this.shaded) {
             const geo = new THREE.SphereBufferGeometry(1, 10, 10);
             const mat = new THREE.ShaderMaterial({
@@ -126,6 +130,9 @@ class Ball extends Unit {
                     Random(0.1), Random(0.1), Random(0.1)));
             }
         });
+        this.onRaycastedCallback = (ints) => {
+            console.log("Ball was raycasted");
+        };
     }
     public Update(): void {
         if (this.ball.position.y < -30) {
@@ -140,10 +147,14 @@ class Ball extends Unit {
 class Board extends Unit {
     public floor: PhysicObjects;
     public Init(): void {
+        this.raycastTarget = true;
         this.floor = new PhysicObjects(0, "floor");
         this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json");
         this.AddPhysicObject(this.floor);
+        this.onRaycastedCallback = (ints) => {
+            console.log("Board was raycasted");
+        };
     }
     public Update(): void {
         this.floor.OrientAndRotate(

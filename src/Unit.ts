@@ -14,12 +14,16 @@ abstract class Unit {
     public core: Core = null;
     public scene: Scene = null;
     public frame: number = 0;
+    public allObject3D: THREE.Object3D[] = [];
     public objects: THREE.Object3D[] = [];
     public sprites: Array<THREE.Object3D | TiledTexturedSprite> = [];
     public physicObjects: PhysicObject[] = [];
+    public raycastTarget: boolean = false;
+    public onRaycastedCallback: (intersections: THREE.Intersection[]) => void = null;
     constructor() {
         return;
     }
+
     /**
      * この関数は基本的にオーバーライドすべきでない
      */
@@ -39,6 +43,7 @@ abstract class Unit {
      * @param o 追加するObject3D
      */
     public AddObject(o: THREE.Object3D): void {
+        this.allObject3D.push(o);
         this.objects.push(o);
         this.scene.scene.add(o);
     }
@@ -64,6 +69,7 @@ abstract class Unit {
         this.physicObjects.push(p);
         this.scene.physicWorld.addBody(p.phyBody);
         this.scene.scene.add(p.viewBody);
+        this.allObject3D.push(p.viewBody);
     }
     /**
      * 指定したObject3Dをsceneから削除
@@ -71,6 +77,7 @@ abstract class Unit {
      */
     public RemoveObject(o: THREE.Object3D): void {
         this.objects = this.objects.filter((obj) => o !== obj);
+        this.allObject3D = this.allObject3D.filter((obj) => o !== obj);
         this.scene.scene.remove(o);
     }
     /**
@@ -92,6 +99,7 @@ abstract class Unit {
      */
     public RemovePhysicOnject(p: PhysicObject): void {
         this.physicObjects = this.physicObjects.filter((pobj) => p !== pobj);
+        this.allObject3D = this.allObject3D.filter((obj) => obj !== p.viewBody);
         this.scene.physicWorld.remove(p.phyBody);
         this.scene.scene.remove(p.viewBody);
     }
