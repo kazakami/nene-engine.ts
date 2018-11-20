@@ -30,6 +30,7 @@ class LoadScene extends Scene {
 
 class GameScene extends Scene {
     public sprt: THREE.Sprite;
+    public r: THREE.Raycaster;
     public Init(): void {
         this.backgroundColor = new THREE.Color(0x887766);
         this.AddUnit(new Board());
@@ -62,16 +63,24 @@ class GameScene extends Scene {
         });
         pass.renderToScreen = true;
         this.composer.addPass(pass);
+        this.r = new THREE.Raycaster();
     }
     public Update(): void {
-        const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(
+        this.r.setFromCamera(
             {x: this.core.mouseX / (this.core.windowSizeX / 2),
              y: this.core.mouseY / (this.core.windowSizeY / 2)},
             this.camera);
-        const intersects = raycaster.intersectObjects(this.scene.children, true);
+            /*
         if (this.frame % 60 === 0) {
+            const intersects = this.r.intersectObjects(this.scene.children, true);
             console.log(intersects[0]);
+        }
+        */
+        if (this.frame % 60 === 0) {
+            this.units.filter((u) => u.raycastTarget).forEach((u) => {
+                const intersects = this.r.intersectObjects(u.allObject3D, true);
+                console.log(intersects[0]);
+            });
         }
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
     }
@@ -110,6 +119,7 @@ class Ball extends Unit {
         super();
     }
     public Init(): void {
+        this.raycastTarget = true;
         if (this.shaded) {
             const geo = new THREE.SphereBufferGeometry(1, 10, 10);
             const mat = new THREE.ShaderMaterial({
@@ -149,6 +159,7 @@ class Ball extends Unit {
 class Board extends Unit {
     public floor: PhysicObjects;
     public Init(): void {
+        this.raycastTarget = true;
         this.floor = new PhysicObjects(0, "floor");
         this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json");
