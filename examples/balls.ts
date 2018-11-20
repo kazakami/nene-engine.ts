@@ -130,6 +130,9 @@ class Ball extends Unit {
                     Random(0.1), Random(0.1), Random(0.1)));
             }
         });
+        this.onRaycastedCallback = (ints) => {
+            console.log("Ball was raycasted");
+        };
     }
     public Update(): void {
         if (this.ball.position.y < -30) {
@@ -149,6 +152,9 @@ class Board extends Unit {
         this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json");
         this.AddPhysicObject(this.floor);
+        this.onRaycastedCallback = (ints) => {
+            console.log("Board was raycasted");
+        };
     }
     public Update(): void {
         this.floor.OrientAndRotate(
