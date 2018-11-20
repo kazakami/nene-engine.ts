@@ -13,6 +13,7 @@ abstract class Scene {
     public core: Core = null;
     public scene: THREE.Scene;
     public backgroundColor: THREE.Color;
+    public raycaster: THREE.Raycaster;
     public camera: THREE.PerspectiveCamera;
     public scene2d: THREE.Scene;
     public camera2d: THREE.OrthographicCamera;
@@ -30,6 +31,7 @@ abstract class Scene {
 
     constructor() {
         this.backgroundColor = new THREE.Color(0x000000);
+        this.raycaster = new THREE.Raycaster();
         this.scene = new THREE.Scene();
         this.scene2d = new THREE.Scene();
         this.physicWorld = new Cannon.World();
@@ -54,6 +56,19 @@ abstract class Scene {
 
     public Update(): void {
         return;
+    }
+
+    public Raycast(): void {
+        this.raycaster.setFromCamera(
+            {x: this.core.mouseX / (this.core.windowSizeX / 2),
+             y: this.core.mouseY / (this.core.windowSizeY / 2)},
+            this.camera);
+        this.units.filter((u) => u.raycastTarget).forEach((u) => {
+            const intersects = this.raycaster.intersectObjects(u.allObject3D, true);
+            if (intersects.length !== 0) {
+                console.log(intersects);
+            }
+        });
     }
 
     public Render(): void {
