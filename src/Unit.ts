@@ -19,6 +19,7 @@ abstract class Unit {
     public sprites: Array<THREE.Object3D | TiledTexturedSprite> = [];
     public physicObjects: PhysicObject[] = [];
     public raycastTarget: boolean = false;
+    public onRaycastedCallback: (intersections: THREE.Intersection[]) => void = null;
     constructor() {
         return;
     }
