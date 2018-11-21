@@ -30,6 +30,7 @@ class LoadScene extends Scene {
 
 class GameScene extends Scene {
     public sprt: THREE.Sprite;
+    public casted: string[];
     public Init(): void {
         this.backgroundColor = new THREE.Color(0x887766);
         this.AddUnit(new Board());
@@ -64,13 +65,16 @@ class GameScene extends Scene {
         this.composer.addPass(pass);
     }
     public Update(): void {
-        if (this.frame % 60 === 0) {
-            this.Raycast();
-        }
+        this.casted = [];
+        this.Raycast();
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
     }
     public DrawText(): void {
-        this.core.DrawText("🍣" + this.core.fps.toString(), this.core.mouseX, this.core.mouseY);
+        this.core.ctx.fillStyle = "rgb(200, 200, 200)";
+        this.core.DrawText("fps: " + Math.floor(this.core.fps).toString(),
+            - this.core.windowSizeX / 2,
+            this.core.windowSizeY / 2);
+        this.core.DrawText(this.casted.join(), this.core.mouseX, this.core.mouseY);
     }
 }
 
@@ -130,8 +134,8 @@ class Ball extends Unit {
                     Random(0.1), Random(0.1), Random(0.1)));
             }
         });
-        this.onRaycastedCallback = (ints) => {
-            console.log("Ball was raycasted");
+        this.onRaycastedCallback = (ints, message) => {
+            (this.scene as GameScene).casted.push("Ball");
         };
     }
     public Update(): void {
@@ -152,8 +156,8 @@ class Board extends Unit {
         this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json");
         this.AddPhysicObject(this.floor);
-        this.onRaycastedCallback = (ints) => {
-            console.log("Board was raycasted");
+        this.onRaycastedCallback = (ints, message) => {
+            (this.scene as GameScene).casted.push("Board");
         };
     }
     public Update(): void {
