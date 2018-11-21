@@ -109,6 +109,9 @@ class Core {
         this.ctx.textBaseline = "top";
         for (const key in this.scenes) {
             this.scenes[key].OnCanvasResizeCallBack();
+            if (this.scenes[key].composer !== null) {
+                this.scenes[key].composer.setSize(this.windowSizeX, this.windowSizeY);
+            }
         }
     }
 
@@ -404,6 +407,7 @@ class Core {
             antialias: this.option.antialias,
             preserveDrawingBuffer: true,
         });
+        this.renderer.setPixelRatio(1);
         this.renderer.autoClear = false;
         this.windowSizeX = this.option.windowSizeX;
         this.windowSizeY = this.option.windowSizeY;
@@ -449,6 +453,7 @@ class Core {
             }
         });
         window.addEventListener("resize", (e) => {
+            this.renderer.setPixelRatio(1);
             if (this.activeScene.onWindowResizeCallback !== null) {
                 this.activeScene.onWindowResizeCallback(e);
             }
