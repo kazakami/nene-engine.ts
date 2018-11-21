@@ -19,7 +19,12 @@ abstract class Unit {
     public sprites: Array<THREE.Object3D | TiledTexturedSprite> = [];
     public physicObjects: PhysicObject[] = [];
     public raycastTarget: boolean = false;
-    public onRaycastedCallback: (intersections: THREE.Intersection[]) => void = null;
+    /**
+     * raycastされた際に呼ばれるコールバック関数
+     * raycastTargetがtrueに成ってないと対象にならないことに注意
+     * messageはScene.Raycastを呼ぶときに付加するメッセージ
+     */
+    public onRaycastedCallback: (intersections: THREE.Intersection[], message: object) => void = null;
     constructor() {
         return;
     }
