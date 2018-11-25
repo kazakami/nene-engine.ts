@@ -21,6 +21,8 @@ abstract class Scene {
     public frame: number = 0;
     public fov: number = 75;
     public composer: THREE.EffectComposer = null;
+    public composer2d: THREE.EffectComposer = null;
+    public offScreen: THREE.Sprite;
     public onMouseMoveCallback: (e: MouseEvent) => void = null;
     public onMouseClickCallback: (e: Event) => void = null;
     public onWindowResizeCallback: (e: UIEvent) => void = null;
@@ -73,16 +75,33 @@ abstract class Scene {
     }
 
     public Render(): void {
-        this.core.renderer.setClearColor(this.backgroundColor);
-        this.core.renderer.clear();
         this.core.ctx.clearRect(0, 0, this.core.windowSizeX, this.core.windowSizeY);
+        this.core.renderer.setClearColor(this.backgroundColor);
         if (this.composer === null) {
-            this.core.renderer.render(this.scene, this.camera);
+            this.core.renderer.render(this.scene, this.camera, this.core.renderTarget);
+            // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
+            const mat = new THREE.SpriteMaterial({map: this.core.renderTarget.texture});
+            this.offScreen = new THREE.Sprite(mat);
+            this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         } else {
             this.composer.render();
+            // 3D用のシーンでcomposerを使っていればcomposerの結果出力バッファを用いる
+            const mat = new THREE.SpriteMaterial({map: this.composer.readBuffer.texture});
+            this.offScreen = new THREE.Sprite(mat);
+            this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         }
-        this.core.renderer.clearDepth();
-        this.core.renderer.render(this.scene2d, this.camera2d);
+        this.scene2d.add(this.offScreen);
+        if (this.composer2d === null) {
+            this.core.renderer.render(this.scene2d, this.camera2d);
+        } else {
+            // 最終のpassのrenderToScreenをtrueにしてrenderした後、renderToScreenを元に戻す
+            const num = this.composer2d.passes.length;
+            const before = this.composer2d.passes[num - 1].renderToScreen;
+            this.composer2d.passes[num - 1].renderToScreen = true;
+            this.composer2d.render();
+            this.composer2d.passes[num - 1].renderToScreen = before;
+        }
+        this.scene2d.remove(this.offScreen);
     }
 
     public DrawText(): void {

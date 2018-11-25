@@ -30,6 +30,7 @@ class Core {
     public windowSizeX: number;
     public windowSizeY: number;
     public renderer: THREE.WebGLRenderer;
+    public renderTarget: THREE.WebGLRenderTarget;
     public ctx: CanvasRenderingContext2D;
     private textureLoader: THREE.TextureLoader;
     private textCanvas: HTMLCanvasElement;
@@ -101,6 +102,7 @@ class Core {
         this.windowSizeX = x;
         this.windowSizeY = y;
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
+        this.renderTarget.setSize(this.windowSizeX, this.windowSizeY);
         this.textCanvas.width = this.windowSizeX;
         this.textCanvas.height = this.windowSizeY;
         this.ctx = this.textCanvas.getContext("2d");
@@ -111,6 +113,9 @@ class Core {
             this.scenes[key].OnCanvasResizeCallBack();
             if (this.scenes[key].composer !== null) {
                 this.scenes[key].composer.setSize(this.windowSizeX, this.windowSizeY);
+            }
+            if (this.scenes[key].composer2d !== null) {
+                this.scenes[key].composer2d.setSize(this.windowSizeX, this.windowSizeY);
             }
         }
     }
@@ -408,10 +413,13 @@ class Core {
             preserveDrawingBuffer: true,
         });
         this.renderer.setPixelRatio(1);
-        this.renderer.autoClear = false;
         this.windowSizeX = this.option.windowSizeX;
         this.windowSizeY = this.option.windowSizeY;
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
+        this.renderTarget = new THREE.WebGLRenderTarget(this.windowSizeX, this.windowSizeY, {
+            magFilter: THREE.NearestFilter,
+            minFilter: THREE.NearestFilter,
+        });
         this.loadingManager = new THREE.LoadingManager();
         this.textureLoader = new THREE.TextureLoader(this.loadingManager);
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
