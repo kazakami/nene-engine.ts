@@ -51,7 +51,6 @@ class GameScene extends Scene {
         this.onWindowResizeCallback = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
-
         this.composer = new THREE.EffectComposer(this.core.renderer);
         this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
         const pass = new THREE.ShaderPass({
@@ -61,8 +60,13 @@ class GameScene extends Scene {
             },
             vertexShader: this.core.GetText("pass1.vert"),
         });
-        pass.renderToScreen = true;
         this.composer.addPass(pass);
+        // this.composer = null;
+        this.composer2d = new THREE.EffectComposer(this.core.renderer);
+        this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
+        const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
+        this.composer2d.addPass(pass2d);
+        // this.composer2d = null;
     }
     public Update(): void {
         this.casted = [];
