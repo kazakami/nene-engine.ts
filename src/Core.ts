@@ -626,8 +626,10 @@ class Core {
             this.activeScene = this.scenes[this.nextSceneName];
             this.nextSceneName = null;
         }
-        this.activeScene.InnerUpdate();
-        this.activeScene.Update();
+        if (this.activeScene !== null) {
+            this.activeScene.InnerUpdate();
+            this.activeScene.Update();
+        }
         this.CalcFPS();
         for (const key in this.keyState) {
             this.previousKeyState[key] = this.keyState[key];
@@ -670,3 +672,4 @@ function Start(defaultSceneName: string, defaultScene: Scene, option?: CoreOptio
 
 export { Start };
 export { Core };
+export { CoreOption };
