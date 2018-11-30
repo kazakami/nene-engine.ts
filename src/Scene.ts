@@ -104,10 +104,17 @@ abstract class Scene {
         this.scene2d.remove(this.offScreen);
     }
 
-    public DrawText(): void {
+    /**
+     * 基本的にこの関数はオーバーライドすべきでない
+     */
+    public InnerDrawText(): void {
         this.units.forEach((u) => {
             u.DrawText();
         });
+    }
+
+    public DrawText(): void {
+        return;
     }
 
     public Init(): void {
