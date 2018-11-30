@@ -175,7 +175,6 @@ abstract class Scene {
         this.camera2d.position.z = 10;
         this.offScreenMat = new THREE.SpriteMaterial({
             color: 0xFFFFFF,
-            map: this.core.renderTarget.texture,
         });
         this.offScreen = new THREE.Sprite(this.offScreenMat);
         this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
