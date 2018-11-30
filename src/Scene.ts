@@ -23,6 +23,7 @@ abstract class Scene {
     public composer: THREE.EffectComposer = null;
     public composer2d: THREE.EffectComposer = null;
     public offScreen: THREE.Sprite;
+    public offScreenMat: THREE.SpriteMaterial;
     public onMouseMoveCallback: (e: MouseEvent) => void = null;
     public onMouseClickCallback: (e: Event) => void = null;
     public onWindowResizeCallback: (e: UIEvent) => void = null;
@@ -78,19 +79,16 @@ abstract class Scene {
         this.core.ctx.clearRect(0, 0, this.core.windowSizeX, this.core.windowSizeY);
         this.core.renderer.setClearColor(this.backgroundColor);
         if (this.composer === null) {
-            this.core.renderer.render(this.scene, this.camera, this.core.renderTarget);
+            this.core.renderer.render(this.scene, this.camera , this.core.renderTarget);
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
-            const mat = new THREE.SpriteMaterial({map: this.core.renderTarget.texture});
-            this.offScreen = new THREE.Sprite(mat);
-            this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+            this.offScreenMat.map = this.core.renderTarget.texture;
         } else {
             this.composer.render();
             // 3D用のシーンでcomposerを使っていればcomposerの結果出力バッファを用いる
-            const mat = new THREE.SpriteMaterial({map: this.composer.readBuffer.texture});
-            this.offScreen = new THREE.Sprite(mat);
-            this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+            this.offScreenMat.map = this.composer.readBuffer.texture;
         }
-        this.scene2d.add(this.offScreen);
+        // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
+        this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         if (this.composer2d === null) {
             this.core.renderer.render(this.scene2d, this.camera2d);
         } else {
@@ -101,7 +99,6 @@ abstract class Scene {
             this.composer2d.render();
             this.composer2d.passes[num - 1].renderToScreen = before;
         }
-        this.scene2d.remove(this.offScreen);
     }
 
     /**
@@ -134,6 +131,14 @@ abstract class Scene {
             this.core.windowSizeY / 2, -this.core.windowSizeY / 2,
             1, 10 );
         this.camera2d.position.z = 10;
+        this.offScreenMat = new THREE.SpriteMaterial({
+            color: 0xFFFFFF,
+            map: this.core.renderTarget.texture,
+        });
+        this.offScreen = new THREE.Sprite(this.offScreenMat);
+        this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.offScreen.position.set(0, 0, 1);
+        this.scene2d.add(this.offScreen);
     }
 
     public AddUnit(u: Unit): void {
