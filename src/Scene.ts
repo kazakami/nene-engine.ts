@@ -6,7 +6,7 @@ import { PhysicUnit, Unit } from "./Unit";
 
 /**
  * Sceneの基底クラス、これを継承して用いる
- * 基本的にコンストラクタは用いず、Init()に起動時の処理を追加する
+ * Init()に起動時の処理を追加する
  */
 abstract class Scene {
     public units: Unit[] = [];
@@ -32,6 +32,9 @@ abstract class Scene {
     public onTouchMove: (e: TouchEvent) => void = null;
     public onTouchEnd: (e: TouchEvent) => void = null;
 
+    /**
+     * 初期化処理はInit()に記述すべきでコンストラクタはパラメータの受け渡しのみに用いること
+     */
     constructor() {
         this.backgroundColor = new THREE.Color(0x000000);
         this.raycaster = new THREE.Raycaster();
@@ -57,10 +60,17 @@ abstract class Scene {
         this.physicWorld.step(1 / 60);
     }
 
+    /**
+     * Updateの処理を記述するにはこの関数をオーバーライドする
+     */
     public Update(): void {
         return;
     }
 
+    /**
+     * 3Dオブジェクト等や3次元座標等から画面に描画した際の2次元座標を取得
+     * @param input 3Dオブジェクト等や3次元座標等
+     */
     public GetScreenPosition(input: THREE.Object3D |
                                     THREE.Vector3 |
                                     Cannon.Vec3 |
@@ -83,6 +93,10 @@ abstract class Scene {
         return [p.x * this.core.windowSizeX / 2, p.y * this.core.windowSizeY / 2];
     }
 
+    /**
+     * レイキャストを行う
+     * @param data messageはUnitに対して処理を分岐させるパラメータ、positionはレイキャストを行う画面上の座標で省略時はマウス座標
+     */
     public Raycast(data: {message?: object, position?: THREE.Vec2} = {message: null, position: null}): void {
         if (data.position === null) {
             data.position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
@@ -132,10 +146,16 @@ abstract class Scene {
         });
     }
 
+    /**
+     * 文字の描画処理を記述するにはこの関数をオーバーライドする
+     */
     public DrawText(): void {
         return;
     }
 
+    /**
+     * 起動時の初期化処理を記述するためにはこの関数をオーバーライドする。
+     */
     public Init(): void {
         return;
     }
@@ -163,6 +183,12 @@ abstract class Scene {
         this.scene2d.add(this.offScreen);
     }
 
+    /**
+     * シーンにUnitを追加する
+     * 追加されたUnitは毎フレームUpdateやDrawText等が呼ばれるようになる
+     * UnitのisAliveがfalseになると自動で取り除かれる
+     * @param u 追加するUnit
+     */
     public AddUnit(u: Unit): void {
         // Initを実行してからリストに追加
         u.scene = this;
