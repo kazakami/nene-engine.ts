@@ -61,12 +61,12 @@ class GameScene extends Scene {
             vertexShader: this.core.GetText("pass1.vert"),
         });
         this.composer.addPass(pass);
-        // this.composer = null;
+        this.composer = null;
         this.composer2d = new THREE.EffectComposer(this.core.renderer);
         this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
         const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
         this.composer2d.addPass(pass2d);
-        // this.composer2d = null;
+        this.composer2d = null;
     }
     public Update(): void {
         this.casted = [];
@@ -108,6 +108,8 @@ class Particle extends Unit {
 
 class Ball extends Unit {
     public ball: PhysicSphere;
+    public x2d: number;
+    public y2d: number;
     constructor(private x = 0, private y = 0, private z = 0, private shaded = false) {
         super();
     }
@@ -148,6 +150,16 @@ class Ball extends Unit {
             this.ball.velocity.set(0, 0, 0);
             this.ball.quaternion.set(0, 0, 0, 1);
             this.ball.angularVelocity.set(0, 0, 0);
+        }
+        const v = new THREE.Vector3(this.ball.position.x, this.ball.position.y, this.ball.position.z);
+        v.project(this.scene.camera);
+        this.x2d = v.x * this.core.windowSizeX / 2;
+        this.y2d = v.y * this.core.windowSizeY / 2;
+    }
+    public DrawText(): void {
+        if (this.shaded) {
+            this.core.DrawText("here", this.x2d, this.y2d);
+            // console.log(this.core.renderer.context.canvas.width);
         }
     }
 }
