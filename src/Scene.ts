@@ -1,7 +1,7 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
 import { Core } from "./Core";
-import { PhysicBox, PhysicPlane, PhysicSphere } from "./PhysicObject";
+import { PhysicBox, PhysicObject, PhysicPlane, PhysicSphere } from "./PhysicObject";
 import { PhysicUnit, Unit } from "./Unit";
 
 /**
@@ -59,6 +59,28 @@ abstract class Scene {
 
     public Update(): void {
         return;
+    }
+
+    public GetScreenPosition(input: THREE.Object3D |
+                                    THREE.Vector3 |
+                                    Cannon.Vec3 |
+                                    PhysicObject |
+                                    [number, number, number])
+                            : [number, number] {
+        const p = new THREE.Vector3();
+        if (input instanceof THREE.Vector3) {
+            p.copy(input);
+        } else if (input instanceof THREE.Object3D) {
+            p.copy(input.position);
+        } else if (input instanceof Cannon.Vec3) {
+            p.set(input.x, input.y, input.z);
+        } else if (input instanceof PhysicObject) {
+            p.set(input.position.x, input.position.y, input.position.z);
+        } else {
+            p.set(input[0], input[1], input[2]);
+        }
+        p.project(this.camera);
+        return [p.x * this.core.windowSizeX / 2, p.y * this.core.windowSizeY / 2];
     }
 
     public Raycast(data: {message?: object, position?: THREE.Vec2} = {message: null, position: null}): void {
