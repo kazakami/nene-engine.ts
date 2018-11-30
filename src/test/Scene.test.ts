@@ -73,11 +73,11 @@ test("InnerUpdate() call unit.Update()", () => {
     expect(unit.frame).toEqual(3);
 });
 
-test("Fin() call unit.Fin()", () => {
+test("InnerFin() call unit.Fin()", () => {
     const scene = new TestScene();
     const unit = new TestUnit();
     scene.AddUnit(unit);
-    scene.Fin();
+    scene.InnerFin();
     expect(unit.finned).toEqual(true);
     expect(scene.units).toEqual([]);
 });

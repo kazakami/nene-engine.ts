@@ -196,9 +196,19 @@ abstract class Scene {
         this.units.push(u);
     }
 
-    public Fin(): void {
+    /**
+     * 基本的にこの関数はオーバーライドすべきでない
+     */
+    public InnerFin(): void {
         this.DeleteUnits(this.units);
         this.units = [];
+    }
+
+    /**
+     * シーン削除時の処理を記述するためにはこの関数をオーバーライドする。
+     */
+    public Fin(): void {
+        return;
     }
 
     public OnCanvasResizeCallBack(): void {

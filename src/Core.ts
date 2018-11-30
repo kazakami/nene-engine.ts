@@ -551,6 +551,7 @@ class Core {
      */
     public RemoveScene(sceneName: string): void {
         if (this.scenes[sceneName] !== null && this.scenes[sceneName] !== undefined) {
+            this.scenes[sceneName].InnerFin();
             this.scenes[sceneName].Fin();
             delete this.scenes[sceneName];
         }
