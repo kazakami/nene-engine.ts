@@ -5,8 +5,12 @@ import { Scene } from "../Scene";
 class TestScene extends Scene {
     public IsRendered = false;
     public IsDrawedText = false;
+    public IsFinned = false;
+    public IsInitted = false;
     public Render() { this.IsRendered = true; }
     public DrawText() { this.IsDrawedText = true; }
+    public Init() { this.IsInitted = true; }
+    public Fin() { this.IsFinned = true; }
 }
 
 test("new Core()", () => {
@@ -14,6 +18,14 @@ test("new Core()", () => {
         antialias: false,
     });
     expect(c.GetOption().antialias).toBe(false);
+});
+
+test("AddScene() calls Scene.Init()", () => {
+    const c = new Core({});
+    const s = new TestScene();
+    expect(s.IsInitted).toBeFalsy();
+    c.AddScene("TestScene", s);
+    expect(s.IsInitted).toBeTruthy();
 });
 
 test("AddScene() and ChangeScene()", () => {
@@ -56,6 +68,15 @@ test("RemoveScene()", () => {
     expect(c["scenes"]["TestScene"]).toBe(s);
     c.RemoveScene("TestScene");
     expect(c["scenes"]["TestScene"]).toBeUndefined();
+});
+
+test("RemoveScene() calls Scene.Fin()", () => {
+    const c = new Core({});
+    const s = new TestScene();
+    c.AddScene("TestScene", s);
+    expect(s.IsFinned).toBeFalsy();
+    c.RemoveScene("TestScene");
+    expect(s.IsFinned).toBeTruthy();
 });
 
 describe("about text", () => {
