@@ -108,8 +108,6 @@ class Particle extends Unit {
 
 class Ball extends Unit {
     public ball: PhysicSphere;
-    public x2d: number;
-    public y2d: number;
     constructor(private x = 0, private y = 0, private z = 0, private shaded = false) {
         super();
     }
@@ -151,15 +149,11 @@ class Ball extends Unit {
             this.ball.quaternion.set(0, 0, 0, 1);
             this.ball.angularVelocity.set(0, 0, 0);
         }
-        const v = new THREE.Vector3(this.ball.position.x, this.ball.position.y, this.ball.position.z);
-        v.project(this.scene.camera);
-        this.x2d = v.x * this.core.windowSizeX / 2;
-        this.y2d = v.y * this.core.windowSizeY / 2;
     }
     public DrawText(): void {
         if (this.shaded) {
-            this.core.DrawText("here", this.x2d, this.y2d);
-            // console.log(this.core.renderer.context.canvas.width);
+            const [x, y] = this.scene.GetScreenPosition(this.ball);
+            this.core.DrawText("custom shadered", x, y);
         }
     }
 }
