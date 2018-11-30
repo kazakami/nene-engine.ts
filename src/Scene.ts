@@ -1,12 +1,12 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
 import { Core } from "./Core";
-import { PhysicBox, PhysicPlane, PhysicSphere } from "./PhysicObject";
+import { PhysicBox, PhysicObject, PhysicPlane, PhysicSphere } from "./PhysicObject";
 import { PhysicUnit, Unit } from "./Unit";
 
 /**
  * Sceneの基底クラス、これを継承して用いる
- * 基本的にコンストラクタは用いず、Init()に起動時の処理を追加する
+ * Init()に起動時の処理を追加する
  */
 abstract class Scene {
     public units: Unit[] = [];
@@ -23,6 +23,7 @@ abstract class Scene {
     public composer: THREE.EffectComposer = null;
     public composer2d: THREE.EffectComposer = null;
     public offScreen: THREE.Sprite;
+    public offScreenMat: THREE.SpriteMaterial;
     public onMouseMoveCallback: (e: MouseEvent) => void = null;
     public onMouseClickCallback: (e: Event) => void = null;
     public onWindowResizeCallback: (e: UIEvent) => void = null;
@@ -31,6 +32,9 @@ abstract class Scene {
     public onTouchMove: (e: TouchEvent) => void = null;
     public onTouchEnd: (e: TouchEvent) => void = null;
 
+    /**
+     * 初期化処理はInit()に記述すべきでコンストラクタはパラメータの受け渡しのみに用いること
+     */
     constructor() {
         this.backgroundColor = new THREE.Color(0x000000);
         this.raycaster = new THREE.Raycaster();
@@ -56,10 +60,43 @@ abstract class Scene {
         this.physicWorld.step(1 / 60);
     }
 
+    /**
+     * Updateの処理を記述するにはこの関数をオーバーライドする
+     */
     public Update(): void {
         return;
     }
 
+    /**
+     * 3Dオブジェクト等や3次元座標等から画面に描画した際の2次元座標を取得
+     * @param input 3Dオブジェクト等や3次元座標等
+     */
+    public GetScreenPosition(input: THREE.Object3D |
+                                    THREE.Vector3 |
+                                    Cannon.Vec3 |
+                                    PhysicObject |
+                                    [number, number, number])
+                            : [number, number] {
+        const p = new THREE.Vector3();
+        if (input instanceof THREE.Vector3) {
+            p.copy(input);
+        } else if (input instanceof THREE.Object3D) {
+            p.copy(input.position);
+        } else if (input instanceof Cannon.Vec3) {
+            p.set(input.x, input.y, input.z);
+        } else if (input instanceof PhysicObject) {
+            p.set(input.position.x, input.position.y, input.position.z);
+        } else {
+            p.set(input[0], input[1], input[2]);
+        }
+        p.project(this.camera);
+        return [p.x * this.core.windowSizeX / 2, p.y * this.core.windowSizeY / 2];
+    }
+
+    /**
+     * レイキャストを行う
+     * @param data messageはUnitに対して処理を分岐させるパラメータ、positionはレイキャストを行う画面上の座標で省略時はマウス座標
+     */
     public Raycast(data: {message?: object, position?: THREE.Vec2} = {message: null, position: null}): void {
         if (data.position === null) {
             data.position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
@@ -78,19 +115,16 @@ abstract class Scene {
         this.core.ctx.clearRect(0, 0, this.core.windowSizeX, this.core.windowSizeY);
         this.core.renderer.setClearColor(this.backgroundColor);
         if (this.composer === null) {
-            this.core.renderer.render(this.scene, this.camera, this.core.renderTarget);
+            this.core.renderer.render(this.scene, this.camera , this.core.renderTarget);
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
-            const mat = new THREE.SpriteMaterial({map: this.core.renderTarget.texture});
-            this.offScreen = new THREE.Sprite(mat);
-            this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+            this.offScreenMat.map = this.core.renderTarget.texture;
         } else {
             this.composer.render();
             // 3D用のシーンでcomposerを使っていればcomposerの結果出力バッファを用いる
-            const mat = new THREE.SpriteMaterial({map: this.composer.readBuffer.texture});
-            this.offScreen = new THREE.Sprite(mat);
-            this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+            this.offScreenMat.map = this.composer.readBuffer.texture;
         }
-        this.scene2d.add(this.offScreen);
+        // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
+        this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         if (this.composer2d === null) {
             this.core.renderer.render(this.scene2d, this.camera2d);
         } else {
@@ -101,15 +135,27 @@ abstract class Scene {
             this.composer2d.render();
             this.composer2d.passes[num - 1].renderToScreen = before;
         }
-        this.scene2d.remove(this.offScreen);
     }
 
-    public DrawText(): void {
+    /**
+     * 基本的にこの関数はオーバーライドすべきでない
+     */
+    public InnerDrawText(): void {
         this.units.forEach((u) => {
             u.DrawText();
         });
     }
 
+    /**
+     * 文字の描画処理を記述するにはこの関数をオーバーライドする
+     */
+    public DrawText(): void {
+        return;
+    }
+
+    /**
+     * 起動時の初期化処理を記述するためにはこの関数をオーバーライドする。
+     */
     public Init(): void {
         return;
     }
@@ -127,8 +173,21 @@ abstract class Scene {
             this.core.windowSizeY / 2, -this.core.windowSizeY / 2,
             1, 10 );
         this.camera2d.position.z = 10;
+        this.offScreenMat = new THREE.SpriteMaterial({
+            color: 0xFFFFFF,
+        });
+        this.offScreen = new THREE.Sprite(this.offScreenMat);
+        this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.offScreen.position.set(0, 0, 1);
+        this.scene2d.add(this.offScreen);
     }
 
+    /**
+     * シーンにUnitを追加する
+     * 追加されたUnitは毎フレームUpdateやDrawText等が呼ばれるようになる
+     * UnitのisAliveがfalseになると自動で取り除かれる
+     * @param u 追加するUnit
+     */
     public AddUnit(u: Unit): void {
         // Initを実行してからリストに追加
         u.scene = this;

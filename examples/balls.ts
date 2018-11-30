@@ -150,6 +150,12 @@ class Ball extends Unit {
             this.ball.angularVelocity.set(0, 0, 0);
         }
     }
+    public DrawText(): void {
+        if (this.shaded) {
+            const [x, y] = this.scene.GetScreenPosition(this.ball);
+            this.core.DrawText("custom shadered", x, y);
+        }
+    }
 }
 
 class Board extends Unit {

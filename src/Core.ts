@@ -638,6 +638,7 @@ class Core {
 
     private Draw(): void {
         this.activeScene.Render();
+        this.activeScene.InnerDrawText();
         this.activeScene.DrawText();
     }
 
