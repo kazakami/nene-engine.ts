@@ -3,7 +3,8 @@ module.exports = {
 
     entry: {
       'balls': './examples/balls.ts',
-      '2D': './examples/2D.ts'
+      '2D': './examples/2D.ts',
+      'flight': './examples/flight.ts'
     },
 
     output: {
