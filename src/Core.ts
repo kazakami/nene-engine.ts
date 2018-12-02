@@ -52,8 +52,24 @@ class Core {
     private previousTime: number = null;
     private keyState: { [key: string]: boolean } = {};
     private previousKeyState: { [key: string]: boolean } = {};
+    private ratio: number = 1;
 
     constructor(private option: CoreOption) {
+    }
+
+    get PixelRatio(): number {
+        return this.ratio;
+    }
+
+    set PixelRatio(r: number) {
+        this.ratio = r;
+        this.ChangeCanvasSize(this.windowSizeX, this.windowSizeY);
+    }
+
+    public MakeEffectComposer(): THREE.EffectComposer {
+        const c = new THREE.EffectComposer(this.renderer);
+        c.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
+        return c;
     }
 
     /**
@@ -101,8 +117,9 @@ class Core {
     public ChangeCanvasSize(x: number, y: number): void {
         this.windowSizeX = x;
         this.windowSizeY = y;
+        this.renderer.setPixelRatio(this.ratio);
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
-        this.renderTarget.setSize(this.windowSizeX, this.windowSizeY);
+        this.renderTarget.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
         this.textCanvas.width = this.windowSizeX;
         this.textCanvas.height = this.windowSizeY;
         this.ctx = this.textCanvas.getContext("2d");
@@ -112,10 +129,10 @@ class Core {
         for (const key in this.scenes) {
             this.scenes[key].OnCanvasResizeCallBack();
             if (this.scenes[key].composer !== null) {
-                this.scenes[key].composer.setSize(this.windowSizeX, this.windowSizeY);
+                this.scenes[key].composer.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
             }
             if (this.scenes[key].composer2d !== null) {
-                this.scenes[key].composer2d.setSize(this.windowSizeX, this.windowSizeY);
+                this.scenes[key].composer2d.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
             }
         }
     }
@@ -412,11 +429,9 @@ class Core {
             antialias: this.option.antialias,
             preserveDrawingBuffer: true,
         });
-        this.renderer.setPixelRatio(1);
         this.windowSizeX = this.option.windowSizeX;
         this.windowSizeY = this.option.windowSizeY;
-        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
-        this.renderTarget = new THREE.WebGLRenderTarget(this.windowSizeX, this.windowSizeY, {
+        this.renderTarget = new THREE.WebGLRenderTarget(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio, {
             magFilter: THREE.NearestFilter,
             minFilter: THREE.NearestFilter,
         });
@@ -430,6 +445,8 @@ class Core {
         this.div.setAttribute("position", "relative");
         this.canvas = this.renderer.domElement;
         this.canvas.setAttribute("style", "position: absolute;");
+        this.renderer.setPixelRatio(this.ratio);
+        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
         this.div.appendChild(this.canvas);
         // 2D文字列描画のためのcanvasの作成
         this.textCanvas = document.createElement("canvas");
@@ -461,7 +478,7 @@ class Core {
             }
         });
         window.addEventListener("resize", (e) => {
-            this.renderer.setPixelRatio(1);
+            this.renderer.setPixelRatio(this.ratio);
             if (this.activeScene.onWindowResizeCallback !== null) {
                 this.activeScene.onWindowResizeCallback(e);
             }
