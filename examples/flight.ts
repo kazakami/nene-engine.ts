@@ -42,7 +42,7 @@ class GameScene extends Scene {
             map: this.core.GetTexture("grass")});
         const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI / 2;
-        // this.scene.add(ground);
+        this.scene.add(ground);
         this.AddUnit(new Player());
         const light = new THREE.DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
@@ -52,7 +52,6 @@ class GameScene extends Scene {
 
 class Player extends Unit {
     private plane: THREE.Object3D;
-    private l: THREE.Line;
     private x: number = 0;
     private y: number = 10;
     private z: number = 0;
@@ -71,44 +70,38 @@ class Player extends Unit {
         up.applyQuaternion(this.rot);
         const pitchAxis = new THREE.Vector3(1, 0, 0);
         pitchAxis.applyQuaternion(this.rot);
-        const geo = new THREE.Geometry();
-        geo.vertices.push(new THREE.Vector3(-pitchAxis.x, -pitchAxis.y, -pitchAxis.z));
-        geo.vertices.push(new THREE.Vector3(pitchAxis.x, pitchAxis.y, pitchAxis.z));
-        this.scene.scene.remove(this.l);
-        this.l = new THREE.Line(geo, new THREE.LineBasicMaterial({color: 0xff0000}));
-        this.scene.scene.add(this.l);
-        const v = new THREE.Vector3(0, 0.3, -1);
-        // v.applyQuaternion(this.rot);
         if (this.core.IsKeyDown("a")) {
             const q = new THREE.Quaternion();
             q.setFromAxisAngle(dir, -0.1);
-            // this.rot.multiply(q);
             this.rot.multiplyQuaternions(q, this.rot);
         }
         if (this.core.IsKeyDown("d")) {
             const q = new THREE.Quaternion();
             q.setFromAxisAngle(dir, 0.1);
-            // this.rot.multiply(q);
             this.rot.multiplyQuaternions(q, this.rot);
         }
         if (this.core.IsKeyDown("w")) {
             const q = new THREE.Quaternion();
             q.setFromAxisAngle(pitchAxis, 0.1);
-            // this.rot.multiply(q);
             this.rot.multiplyQuaternions(q, this.rot);
         }
         if (this.core.IsKeyDown("s")) {
             const q = new THREE.Quaternion();
             q.setFromAxisAngle(pitchAxis, -0.1);
-            // this.rot.multiply(q);
             this.rot.multiplyQuaternions(q, this.rot);
         }
+        const speed = 1;
+        this.vx = dir.x * speed;
+        this.vy = dir.y * speed;
+        this.vz = dir.z * speed;
         this.x += this.vx;
         this.y += this.vy;
         this.z += this.vz;
+        const v = new THREE.Vector3(0, 0.3, -1);
+        v.applyQuaternion(this.rot);
         const dis = 20;
         v.multiplyScalar(dis);
-        // this.scene.camera.up.set(up.x, up.y, up.z);
+        this.scene.camera.up.set(up.x, up.y, up.z);
         this.scene.camera.position.set(this.x + v.x, this.y + v.y, this.z + v.z);
         this.scene.camera.lookAt(this.x, this.y, this.z);
         this.plane.position.set(this.x, this.y, this.z);
