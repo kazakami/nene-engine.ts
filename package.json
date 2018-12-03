@@ -14,22 +14,22 @@
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
   "license": "MIT",
   "dependencies": {
-    "cannon": "^0.6.2",
-    "imports-loader": "^0.8.0",
-    "three": "^0.98.0"
-  },
-  "devDependencies": {
     "@types/cannon": "^0.1.3",
     "@types/jest": "^23.3.10",
     "@types/three": "^0.93.10",
+    "cannon": "^0.6.2",
+    "imports-loader": "^0.8.0",
+    "three": "^0.99.0",
+    "typescript": "^3.2.1"
+  },
+  "devDependencies": {
     "coveralls": "^3.0.2",
     "jest": "^23.6.0",
     "ts-jest": "^23.10.5",
     "ts-loader": "^5.3.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
-    "typescript": "^3.2.1",
-    "webpack": "^4.26.0",
+    "webpack": "^4.26.1",
     "webpack-cli": "^3.1.2"
   }
 }
