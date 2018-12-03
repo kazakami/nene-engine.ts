@@ -502,6 +502,11 @@ class Core {
                 this.activeScene.onTouchEnd(e);
             }
         });
+        this.textCanvas.addEventListener("wheel", (e) => {
+            if (this.activeScene.onWheel !== null) {
+                this.activeScene.onWheel(e);
+            }
+        });
         document.addEventListener("keypress", (e) => {
             if (!e.repeat) {
                 this.keyState[e.key] = true;
