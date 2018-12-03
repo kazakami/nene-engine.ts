@@ -27,6 +27,7 @@ abstract class Scene {
     public onMouseMoveCallback: (e: MouseEvent) => void = null;
     public onMouseClickCallback: (e: Event) => void = null;
     public onWindowResizeCallback: (e: UIEvent) => void = null;
+    public onWheel: (e: WheelEvent) => void = null;
     public onLoadError: (e: ErrorEvent) => void = null;
     public onTouchStart: (e: TouchEvent) => void = null;
     public onTouchMove: (e: TouchEvent) => void = null;
@@ -167,7 +168,7 @@ abstract class Scene {
         this.units.forEach((u) => {
             u.Init();
         });
-        this.camera = new THREE.PerspectiveCamera(this.fov, this.core.windowSizeX / this.core.windowSizeY, 0.1, 1000);
+        this.camera = new THREE.PerspectiveCamera(this.fov, this.core.windowSizeX / this.core.windowSizeY, 0.1, 5000);
         this.camera2d = new THREE.OrthographicCamera(
             -this.core.windowSizeX / 2, this.core.windowSizeX / 2,
             this.core.windowSizeY / 2, -this.core.windowSizeY / 2,
