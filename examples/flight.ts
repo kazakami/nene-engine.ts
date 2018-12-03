@@ -6,6 +6,7 @@ class LoadScene extends Scene {
         this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                              "resources/models/ente progress_export.mtl", "ente");
         this.core.LoadObjMtl("resources/models/progress_export.obj", "resources/models/progress_export.mtl", "plane");
+        this.core.LoadGLTF("resources/models/progress.glb", "plane2");
         this.core.LoadTexture("resources/images/grass.png", "grass");
     }
     public Update(): void {
@@ -21,9 +22,18 @@ class LoadScene extends Scene {
 }
 
 class GameScene extends Scene {
+    public cameraDis = 20;
     public Init() {
+        this.onWheel = (e) => {
+            e.preventDefault();
+            if (e.deltaY > 0) {
+                this.cameraDis *= 1.1;
+            } else if (e.deltaY < 0) {
+                this.cameraDis /= 1.1;
+            }
+        };
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
-        this.scene.fog = new THREE.Fog(0xffffff, 1, 5000);
+        this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
         const heights = (() => {
             const data = new Uint8Array(256 * 256);
             for (let i = 0; i < 256 * 256; i++) {
@@ -40,7 +50,7 @@ class GameScene extends Scene {
         groundGeo.computeVertexNormals();
         const tex = this.core.GetTexture("grass").clone();
         tex.needsUpdate = true;
-        tex.repeat.set(20, 20);
+        tex.repeat.set(50, 50);
         tex.wrapS = THREE.RepeatWrapping;
         tex.wrapT = THREE.RepeatWrapping;
         const groundMat = new THREE.MeshPhongMaterial({
@@ -66,7 +76,7 @@ class Player extends Unit {
     private vz: number = 0;
     private rot: THREE.Quaternion = new THREE.Quaternion(0, 0, 0, 1);
     public Init() {
-        this.plane = this.core.GetObject("plane");
+        this.plane = this.core.GetObject("plane2");
         this.AddObject(this.plane);
     }
     public Update() {
@@ -88,12 +98,12 @@ class Player extends Unit {
         }
         if (this.core.IsKeyDown("w")) {
             const q = new THREE.Quaternion();
-            q.setFromAxisAngle(pitchAxis, 0.1);
+            q.setFromAxisAngle(pitchAxis, 0.05);
             this.rot.multiplyQuaternions(q, this.rot);
         }
         if (this.core.IsKeyDown("s")) {
             const q = new THREE.Quaternion();
-            q.setFromAxisAngle(pitchAxis, -0.1);
+            q.setFromAxisAngle(pitchAxis, -0.05);
             this.rot.multiplyQuaternions(q, this.rot);
         }
         const speed = 1;
@@ -108,8 +118,7 @@ class Player extends Unit {
         }
         const v = new THREE.Vector3(0, 0.3, -1);
         v.applyQuaternion(this.rot);
-        const dis = 20;
-        v.multiplyScalar(dis);
+        v.multiplyScalar((this.scene as GameScene).cameraDis);
         this.scene.camera.up.set(up.x, up.y, up.z);
         this.scene.camera.position.set(this.x + v.x, this.y + v.y, this.z + v.z);
         this.scene.camera.lookAt(this.x, this.y, this.z);
