@@ -27,19 +27,25 @@ class GameScene extends Scene {
         const heights = (() => {
             const data = new Uint8Array(256 * 256);
             for (let i = 0; i < 256 * 256; i++) {
-                data[i] = Math.random() * 0;
+                data[i] = Math.random() * 20;
             }
             return data;
         })();
-        const groundGeo = new THREE.PlaneBufferGeometry(1000, 1000, 255, 255);
+        const groundGeo = new THREE.PlaneBufferGeometry(10000, 10000, 255, 255);
         const vertices = groundGeo.attributes.position.array;
         const num = vertices.length;
         for (let i = 0; i < num; i++) {
             groundGeo.attributes.position.setZ(i, heights[i]);
         }
+        groundGeo.computeVertexNormals();
+        const tex = this.core.GetTexture("grass").clone();
+        tex.needsUpdate = true;
+        tex.repeat.set(20, 20);
+        tex.wrapS = THREE.RepeatWrapping;
+        tex.wrapT = THREE.RepeatWrapping;
         const groundMat = new THREE.MeshPhongMaterial({
             color: new THREE.Color(0.6, 0.4, 0.35),
-            map: this.core.GetTexture("grass")});
+            map: tex});
         const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI / 2;
         this.scene.add(ground);
@@ -53,7 +59,7 @@ class GameScene extends Scene {
 class Player extends Unit {
     private plane: THREE.Object3D;
     private x: number = 0;
-    private y: number = 10;
+    private y: number = 30;
     private z: number = 0;
     private vx: number = 0;
     private vy: number = 0;
@@ -97,6 +103,9 @@ class Player extends Unit {
         this.x += this.vx;
         this.y += this.vy;
         this.z += this.vz;
+        if (this.y < 0) {
+            this.y = 0;
+        }
         const v = new THREE.Vector3(0, 0.3, -1);
         v.applyQuaternion(this.rot);
         const dis = 20;
