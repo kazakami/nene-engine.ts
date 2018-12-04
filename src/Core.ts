@@ -477,6 +477,16 @@ class Core {
                 this.activeScene.onMouseClickCallback(e);
             }
         });
+        this.textCanvas.addEventListener("mousedown", (e) => {
+            if (this.activeScene.onMouseDown !== null) {
+                this.activeScene.onMouseDown(e);
+            }
+        });
+        this.textCanvas.addEventListener("mouseup", (e) => {
+            if (this.activeScene.onMouseUp !== null) {
+                this.activeScene.onMouseUp(e);
+            }
+        });
         window.addEventListener("resize", (e) => {
             this.renderer.setPixelRatio(this.ratio);
             if (this.activeScene.onWindowResizeCallback !== null) {

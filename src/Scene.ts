@@ -27,6 +27,8 @@ abstract class Scene {
     public onMouseMoveCallback: (e: MouseEvent) => void = null;
     public onMouseClickCallback: (e: Event) => void = null;
     public onWindowResizeCallback: (e: UIEvent) => void = null;
+    public onMouseUp: (e: MouseEvent) => void = null;
+    public onMouseDown: (e: MouseEvent) => void = null;
     public onWheel: (e: WheelEvent) => void = null;
     public onLoadError: (e: ErrorEvent) => void = null;
     public onTouchStart: (e: TouchEvent) => void = null;
