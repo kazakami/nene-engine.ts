@@ -23,6 +23,16 @@ class LoadScene extends Scene {
 
 class GameScene extends Scene {
     public cameraDis = 20;
+    private preX: number;
+    private preY: number;
+    private nowDown = false;
+    public CameraOffset(): [number, number] {
+        if (this.nowDown) {
+            return [this.core.mouseX - this.preX, this.core.mouseY - this.preY];
+        } else {
+            return [0, 0];
+        }
+    }
     public Init() {
         this.onWheel = (e) => {
             e.preventDefault();
@@ -31,6 +41,17 @@ class GameScene extends Scene {
             } else if (e.deltaY < 0) {
                 this.cameraDis /= 1.1;
             }
+        };
+        this.onMouseUp = (e) => {
+            this.nowDown = false;
+        };
+        this.onMouseDown = (e) => {
+            this.nowDown = true;
+            this.preX = this.core.mouseX;
+            this.preY = this.core.mouseY;
+        };
+        this.onWindowResizeCallback = () => {
+            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
         this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
@@ -106,7 +127,7 @@ class Player extends Unit {
             q.setFromAxisAngle(pitchAxis, -0.05);
             this.rot.multiplyQuaternions(q, this.rot);
         }
-        const speed = 1;
+        const speed = 5;
         this.vx = dir.x * speed;
         this.vy = dir.y * speed;
         this.vz = dir.z * speed;
@@ -116,7 +137,15 @@ class Player extends Unit {
         if (this.y < 0) {
             this.y = 0;
         }
+        const [ox, oy] = (this.scene as GameScene).CameraOffset();
+        const theta = Math.atan2(oy, ox);
+        const d = Math.sqrt(ox * ox + oy * oy);
+        const q2 = new THREE.Quaternion();
+        q2.setFromAxisAngle(
+            new THREE.Vector3(-Math.sin(theta), -Math.cos(theta), 0),
+            d / Math.min(this.core.windowSizeX, this.core.windowSizeY) * Math.PI * 1.1);
         const v = new THREE.Vector3(0, 0.3, -1);
+        v.applyQuaternion(q2);
         v.applyQuaternion(this.rot);
         v.multiplyScalar((this.scene as GameScene).cameraDis);
         this.scene.camera.up.set(up.x, up.y, up.z);
