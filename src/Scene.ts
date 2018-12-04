@@ -24,9 +24,9 @@ abstract class Scene {
     public composer2d: THREE.EffectComposer = null;
     public offScreen: THREE.Sprite;
     public offScreenMat: THREE.SpriteMaterial;
-    public onMouseMoveCallback: (e: MouseEvent) => void = null;
-    public onMouseClickCallback: (e: Event) => void = null;
-    public onWindowResizeCallback: (e: UIEvent) => void = null;
+    public onMouseMove: (e: MouseEvent) => void = null;
+    public onMouseClick: (e: Event) => void = null;
+    public onWindowResize: (e: UIEvent) => void = null;
     public onMouseUp: (e: MouseEvent) => void = null;
     public onMouseDown: (e: MouseEvent) => void = null;
     public onWheel: (e: WheelEvent) => void = null;

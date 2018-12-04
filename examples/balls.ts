@@ -45,10 +45,10 @@ class GameScene extends Scene {
         this.sprt = this.core.MakeSpriteFromTexture("circle");
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
-        this.onMouseClickCallback = () => {
+        this.onMouseClick = () => {
             // this.core.SaveImage("ScreenShot.png");
         };
-        this.onWindowResizeCallback = () => {
+        this.onWindowResize = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
         this.core.PixelRatio = 1 / 1;

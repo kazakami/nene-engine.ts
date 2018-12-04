@@ -468,13 +468,13 @@ class Core {
         this.textCanvas.addEventListener("mousemove", (e) => {
             this.mouseX = e.offsetX - this.windowSizeX / 2;
             this.mouseY = this.windowSizeY / 2 - e.offsetY;
-            if (this.activeScene.onMouseMoveCallback !== null) {
-                this.activeScene.onMouseMoveCallback(e);
+            if (this.activeScene.onMouseMove !== null) {
+                this.activeScene.onMouseMove(e);
             }
         }, false);
         this.textCanvas.addEventListener("click", (e) => {
-            if (this.activeScene.onMouseClickCallback !== null) {
-                this.activeScene.onMouseClickCallback(e);
+            if (this.activeScene.onMouseClick !== null) {
+                this.activeScene.onMouseClick(e);
             }
         });
         this.textCanvas.addEventListener("mousedown", (e) => {
@@ -489,8 +489,8 @@ class Core {
         });
         window.addEventListener("resize", (e) => {
             this.renderer.setPixelRatio(this.ratio);
-            if (this.activeScene.onWindowResizeCallback !== null) {
-                this.activeScene.onWindowResizeCallback(e);
+            if (this.activeScene.onWindowResize !== null) {
+                this.activeScene.onWindowResize(e);
             }
         });
         this.textCanvas.addEventListener("touchstart", (e) => {

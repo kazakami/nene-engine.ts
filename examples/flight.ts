@@ -50,7 +50,7 @@ class GameScene extends Scene {
             this.preX = this.core.mouseX;
             this.preY = this.core.mouseY;
         };
-        this.onWindowResizeCallback = () => {
+        this.onWindowResize = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
