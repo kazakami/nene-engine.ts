@@ -8,7 +8,7 @@ import { TiledTexturedSprite } from "./TiledTexturedSprite";
  * Unitの基底クラス、これを継承して用いる
  * 基本的にコンストラクタ値の受け渡しにのみ用い、Init()に起動時の処理を追加する
  */
-abstract class Unit {
+export abstract class Unit {
     public isAlive: boolean = true;
     public priority: number = 0;
     public core: Core = null;
@@ -110,7 +110,7 @@ abstract class Unit {
     }
 }
 
-class PhysicUnit extends Unit {
+export class PhysicUnit extends Unit {
     public Init() {
         return;
     }
@@ -121,5 +121,3 @@ class PhysicUnit extends Unit {
         return;
     }
 }
-
-export { Unit, PhysicUnit };

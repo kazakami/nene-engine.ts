@@ -11,7 +11,7 @@ import * as THREE from "three";
 import { Scene } from "./Scene";
 import { Base64toBlob, Coalescing } from "./Util";
 
-class CoreOption {
+export class CoreOption {
     public antialias?: boolean;
     public parent?: HTMLElement;
     public windowSizeX?: number;
@@ -24,7 +24,7 @@ class CoreOption {
     }
 }
 
-class Core {
+export class Core {
     public mouseX: number = 0;
     public mouseY: number = 0;
     public windowSizeX: number;
@@ -697,13 +697,9 @@ class Core {
  * @param defaultSceneName 初期シーンの名前
  * @param defaultScene 初期シーン
  */
-function Start(defaultSceneName: string, defaultScene: Scene, option?: CoreOption): Core {
+export function Start(defaultSceneName: string, defaultScene: Scene, option?: CoreOption): Core {
     const modifiedOption = new CoreOption(Coalescing(option, {}));
     const core = new Core(modifiedOption);
     core.Init(defaultSceneName, defaultScene);
     return core;
 }
-
-export { Start };
-export { Core };
-export { CoreOption };

@@ -9,6 +9,7 @@
   "main": "src/nene-engine.ts",
   "scripts": {
     "build": "webpack --verbose",
+    "docs": "typedoc",
     "test": "jest"
   },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
@@ -29,6 +30,7 @@
     "ts-loader": "^5.3.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
+    "typedoc": "^0.13.0",
     "webpack": "^4.26.1",
     "webpack-cli": "^3.1.2"
   }

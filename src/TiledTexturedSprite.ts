@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-class TiledTexturedSprite {
+export class TiledTexturedSprite {
     public tex: THREE.Texture;
     public mat: THREE.SpriteMaterial;
     public sprite: THREE.Sprite;
@@ -27,5 +27,3 @@ class TiledTexturedSprite {
         this.mat.dispose();
     }
 }
-
-export { TiledTexturedSprite };

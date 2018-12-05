@@ -8,7 +8,7 @@ import { PhysicUnit, Unit } from "./Unit";
  * Sceneの基底クラス、これを継承して用いる
  * Init()に起動時の処理を追加する
  */
-abstract class Scene {
+export abstract class Scene {
     public units: Unit[] = [];
     public core: Core = null;
     public scene: THREE.Scene;
@@ -324,5 +324,3 @@ abstract class Scene {
         });
     }
 }
-
-export { Scene };

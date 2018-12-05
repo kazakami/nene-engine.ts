@@ -2,7 +2,7 @@ import * as Cannon from "cannon";
 import * as THREE from "three";
 import { OrientQuaternion, UndefCoalescing } from "./Util";
 
-class CollideData {
+export class CollideData {
     // 多分これが衝突相手
     public body: Cannon.Body;
     // 衝突に関する情報
@@ -24,7 +24,7 @@ class CollideData {
     }
 }
 
-abstract class PhysicObject {
+export abstract class PhysicObject {
     public viewBody: THREE.Object3D;
     public phyBody: Cannon.Body;
     public collideCallBack: (data: CollideData) => void;
@@ -90,7 +90,7 @@ abstract class PhysicObject {
     }
 }
 
-class PhysicSphere extends PhysicObject {
+export class PhysicSphere extends PhysicObject {
     constructor(mass: number, radius: number, name: string = "sphere", obj: THREE.Object3D = null) {
         super(name, mass);
         if (obj === null) {
@@ -109,7 +109,7 @@ class PhysicSphere extends PhysicObject {
     }
 }
 
-class PhysicPlane extends PhysicObject {
+export class PhysicPlane extends PhysicObject {
     constructor(mass: number, name: string = "plane", obj: THREE.Object3D = null) {
         super(name, mass);
         if (obj === null) {
@@ -128,7 +128,7 @@ class PhysicPlane extends PhysicObject {
     }
 }
 
-class PhysicBox extends PhysicObject {
+export class PhysicBox extends PhysicObject {
     constructor(mass: number, width: number, height: number, depth: number,
                 name: string = "box", obj: THREE.Object3D = null) {
         super(name, mass);
@@ -148,7 +148,7 @@ class PhysicBox extends PhysicObject {
     }
 }
 
-class PhysicObjects extends PhysicObject {
+export class PhysicObjects extends PhysicObject {
     constructor(mass: number, name: string = "") {
         super(name, mass);
         this.viewBody = new THREE.Group();
@@ -205,5 +205,3 @@ class PhysicObjects extends PhysicObject {
         return;
     }
 }
-
-export { PhysicObject, PhysicSphere, PhysicPlane, PhysicBox, PhysicObjects };
