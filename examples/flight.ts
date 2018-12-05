@@ -55,14 +55,16 @@ class GameScene extends Scene {
         };
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
         this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
+        const segX = 1024;
+        const segY = 1024;
         const heights = (() => {
-            const data = new Uint8Array(256 * 256);
-            for (let i = 0; i < 256 * 256; i++) {
+            const data = new Uint8Array(segX * segY);
+            for (let i = 0; i < segX * segY; i++) {
                 data[i] = Math.random() * 20;
             }
             return data;
         })();
-        const groundGeo = new THREE.PlaneBufferGeometry(30000, 30000, 255, 255);
+        const groundGeo = new THREE.PlaneBufferGeometry(30000, 30000, segX - 1, segY - 1);
         const vertices = groundGeo.attributes.position.array;
         const num = vertices.length;
         for (let i = 0; i < num; i++) {
