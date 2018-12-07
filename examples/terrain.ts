@@ -30,7 +30,7 @@ class GameScene extends Scene {
         this.scene.add(this.t.GetObject());
         for (let i = 0; i < 100; i++) {
             for (let j = 0; j < 100; j++) {
-                this.t.SetHeight(i, j, Math.random() * 10, false);
+                this.t.SetHeight(i, j, Math.random() * 2, false);
             }
         }
         this.t.ComputeNorm();
