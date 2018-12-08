@@ -26,18 +26,20 @@ class GameScene extends Scene {
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
         this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
         this.t = new Terrain();
-        this.t.MakeGeometry(50, 50, 10, 10, 5, 5);
+        this.t.MakeGeometry(50, 50, 5, 5, 2, 2);
         this.scene.add(this.t.GetObject());
-        for (let i = 0; i < 50; i++) {
-            for (let j = 0; j < 50; j++) {
-                this.t.SetHeight(i, j, Math.random() * 2, false);
-            }
-        }
+        // for (let i = 0; i < 50; i++) {
+        //     for (let j = 0; j < 50; j++) {
+        //         this.t.SetHeight(i, j, Math.random() * 2, false);
+        //     }
+        // }
+        // this.t.ComputeNorm();
+        this.t.SetHeight(2, 2, 5, false);
         this.t.ComputeNorm();
         const light = new THREE.DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
-        this.camera.position.set(50, 50, 50);
+        this.camera.position.set(0, 50, 50);
         this.camera.up.set(0, 1, 0);
         this.camera.lookAt(0, 0, 0);
     }
