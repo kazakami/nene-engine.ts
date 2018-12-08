@@ -26,10 +26,10 @@ class GameScene extends Scene {
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
         this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
         this.t = new Terrain();
-        this.t.MakeGeometry(50, 50, 100, 100);
+        this.t.MakeGeometry(50, 50, 10, 10, 5, 5);
         this.scene.add(this.t.GetObject());
-        for (let i = 0; i < 100; i++) {
-            for (let j = 0; j < 100; j++) {
+        for (let i = 0; i < 50; i++) {
+            for (let j = 0; j < 50; j++) {
                 this.t.SetHeight(i, j, Math.random() * 2, false);
             }
         }
