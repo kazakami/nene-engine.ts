@@ -71,7 +71,6 @@ export class Terrain {
                     this.tiles[index] = [geo, mesh];
                 }
                 this.scene.add(this.tiles[index][1]);
-                //  this.scene.add(new THREE.LineSegments(new THREE.WireframeGeometry(geo)));
             }
         }
     }
@@ -90,8 +89,6 @@ export class Terrain {
      * @param computeNorm 法線を計算しなおすか。デフォルトではtrue
      */
     public SetHeight(width: number, depth: number, height: number, computeNorm: boolean = true): void {
-        // this.geo.attributes.position.setY(y * this.widthSegments + x, height);
-        // this.tiles[0][0].attributes.position.setY(11, 100);
         const widthAllSegments = this.widthTiles * (this.widthSegments - 1) + 1;
         this.heights[depth * widthAllSegments + width] = height;
         if (width % (this.widthSegments - 1) !== 0 && depth % (this.depthSegments - 1) !== 0) {
@@ -156,11 +153,6 @@ export class Terrain {
                 this.SetNormal(i, j, this.normals[index]);
             }
         }
-        // for (let i = 0; i < this.widthSegments * this.depthSegments; i++) {
-        //     this.normals[i].normalize();
-        //     const n = this.normals[i];
-        //     // this.geo.attributes.normal.setXYZ(i, n.x, n.y, n.z);
-        // }
     }
     public GetHeight(width: number, depth: number): number {
         const widthAllSegments = this.widthTiles * (this.widthSegments - 1) + 1;
