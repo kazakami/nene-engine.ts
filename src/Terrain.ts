@@ -134,6 +134,27 @@ export class Terrain {
             const i1 = segD1 * (this.widthSegments + 1) + segW1;
             const i2 = segD2 * (this.widthSegments + 1) + segW2;
             return new Array<[number, number]>([index1, i1], [index2, i2]);
+        } else if (w && !d) {
+            // 奥行方向のみタイル同士の境界線上
+            let tileW = Math.floor(width / this.widthSegments);
+            const tileD = Math.floor(depth / this.depthSegments);
+            if (width === this.widthAllSegments - 1) {
+                tileW--;
+            }
+            // 指定した頂点の属するタイルのインデックス
+            // 以下の2つのタイルの境界に頂点は存在している
+            const index1 = (tileD - 1) * this.widthTiles + tileW;
+            const index2 = tileD * this.widthTiles + tileW;
+            // 幅方向はともに同じ値
+            const segW1 = (width === this.widthAllSegments - 1) ? this.widthSegments : (width % this.widthSegments);
+            const segW2 = (width === this.widthAllSegments - 1) ? this.widthSegments : (width % this.widthSegments);
+            // 幅方向の座標は片方は手前端、もう片方は奥端
+            const segD1 = this.depthSegments;
+            const segD2 = 0;
+            // タイル内での頂点のインデックス
+            const i1 = segD1 * (this.widthSegments + 1) + segW1;
+            const i2 = segD2 * (this.widthSegments + 1) + segW2;
+            return new Array<[number, number]>([index1, i1], [index2, i2]);
         }
         return new Array<[number, number]>();
     }
