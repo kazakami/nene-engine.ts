@@ -19,6 +19,12 @@ export class Terrain {
     private widthAllSegments: number;
     private depthAllSegments: number;
     private numVertices: number;
+    public GetWidthAllSegments(): number {
+        return this.widthAllSegments;
+    }
+    public GetDepthAllSegments(): number {
+        return this.depthAllSegments;
+    }
     /**
      * 地形を生成する(0, 0, 0)を中心とし、y正方向を上とする
      * 幅方向の合計頂点数はwidthSegments * widthTilesとなり、
