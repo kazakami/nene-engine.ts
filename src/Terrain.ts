@@ -82,6 +82,25 @@ export class Terrain {
         return this.scene;
     }
     /**
+     * 指定した頂点からそれの属するタイルインデックスとタイル内の頂点インデックスのタプルの配列を返す
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     */
+    public GetIndex(width: number, depth: number): Array<[number, number]> {
+        if (width % (this.widthSegments - 1) !== 0 && depth % (this.depthSegments - 1) !== 0) {
+            const tileW = Math.floor(width / this.widthSegments);
+            const tileD = Math.floor(depth / this.depthSegments);
+            // 指定した頂点の属するタイルのインデックス
+            const index = tileD * this.widthTiles + tileW;
+            const segW = width % this.widthSegments;
+            const segD = depth % this.depthSegments;
+            // タイル内での頂点のインデックス
+            const i = segD * this.widthSegments + segW;
+            return new Array<[number, number]>([index, i]);
+        }
+        return new Array<[number, number]>();
+    }
+    /**
      * 指定した頂点の高さを設定する
      * @param width 幅方向の座標
      * @param depth 奥行方向の座標
@@ -91,33 +110,21 @@ export class Terrain {
     public SetHeight(width: number, depth: number, height: number, computeNorm: boolean = true): void {
         const widthAllSegments = this.widthTiles * (this.widthSegments - 1) + 1;
         this.heights[depth * widthAllSegments + width] = height;
-        if (width % (this.widthSegments - 1) !== 0 && depth % (this.depthSegments - 1) !== 0) {
-            const tileW = Math.floor(width / this.widthSegments);
-            const tileD = Math.floor(depth / this.depthSegments);
-            // 指定した頂点の属するタイルのインデックス
-            const index = tileD * this.widthTiles + tileW;
-            const segW = width % this.widthSegments;
-            const segD = depth % this.depthSegments;
-            // タイル内での頂点のインデックス
-            const i = segD * this.widthSegments + segW;
-            this.tiles[index][0].attributes.position.setY(i, height);
-        }
+        const i = this.GetIndex(width, depth);
+        i.forEach(([ti, si]) => {
+            this.tiles[ti][0].attributes.position.setY(si, height);
+        });
         if (computeNorm) {
             this.ComputeNorm();
         }
     }
     public SetNormal(width: number, depth: number, normal: THREE.Vector3): void {
-        if (width % (this.widthSegments - 1) !== 0 && depth % (this.depthSegments - 1) !== 0) {
-            const tileW = Math.floor(width / this.widthSegments);
-            const tileD = Math.floor(depth / this.depthSegments);
-            // 指定した頂点の属するタイルのインデックス
-            const index = tileD * this.widthTiles + tileW;
-            const segW = width % this.widthSegments;
-            const segD = depth % this.depthSegments;
-            // タイル内での頂点のインデックス
-            const i = segD * this.widthSegments + segW;
-            this.tiles[index][0].attributes.normal.setXYZ(i, normal.x, normal.y, normal.z);
-        }
+        // const widthAllSegments = this.widthTiles * (this.widthSegments - 1) + 1;
+        // this.normals[depth * widthAllSegments + width] = normal;
+        const i = this.GetIndex(width, depth);
+        i.forEach(([ti, si]) => {
+            this.tiles[ti][0].attributes.normal.setXYZ(si, normal.x, normal.y, normal.z);
+        });
     }
     public ComputeNorm(): void {
         // 全体の頂点数
