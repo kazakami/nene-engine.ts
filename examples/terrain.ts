@@ -45,20 +45,44 @@ class GameScene extends Scene {
 
 class Cameraman extends Unit {
     private pos: THREE.Vector3;
-    private rot: THREE.Quaternion;
+    // 方位角
+    private azimuth: number = Math.PI;
+    // 行俯角
+    private altitude: number = 0;
     public Init(): void {
         this.pos = new THREE.Vector3(0, 20, 50);
-        this.rot = new THREE.Quaternion(0, 0, 0, 1);
     }
     public Update(): void {
-        const dir = new THREE.Vector3(0, 0, 1);
-        dir.applyQuaternion(this.rot);
+        if (this.core.IsKeyDown("ArrowLeft")) {
+            this.azimuth += 0.02;
+        }
+        if (this.core.IsKeyDown("ArrowRight")) {
+            this.azimuth -= 0.02;
+        }
+        if (this.core.IsKeyDown("ArrowDown")) {
+            this.altitude = Math.max(this.altitude - 0.02, - Math.PI / 2);
+        }
+        if (this.core.IsKeyDown("ArrowUp")) {
+            this.altitude = Math.min(this.altitude + 0.02, Math.PI / 2);
+        }
+        if (this.core.IsKeyDown("w")) {
+            this.pos.addScaledVector(new THREE.Vector3(
+                Math.cos(this.altitude) * Math.sin(this.azimuth),
+                Math.sin(this.altitude),
+                Math.cos(this.altitude) * Math.cos(this.azimuth)), 1);
+        }
+        if (this.core.IsKeyDown("s")) {
+            this.pos.addScaledVector(new THREE.Vector3(
+                -Math.cos(this.altitude) * Math.sin(this.azimuth),
+                -Math.sin(this.altitude),
+                -Math.cos(this.altitude) * Math.cos(this.azimuth)), 1);
+        }
         this.scene.camera.position.copy(this.pos);
         this.scene.camera.up.set(0, 1, 0);
         this.scene.camera.lookAt(
-            this.pos.x - dir.x,
-            this.pos.y - dir.y,
-            this.pos.z - dir.z);
+            this.pos.x + Math.cos(this.altitude) * Math.sin(this.azimuth),
+            this.pos.y + Math.sin(this.altitude),
+            this.pos.z + Math.cos(this.altitude) * Math.cos(this.azimuth));
     }
 }
 
