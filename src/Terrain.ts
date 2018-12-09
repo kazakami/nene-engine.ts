@@ -107,24 +107,33 @@ export class Terrain {
             }
             // 指定した頂点の属するタイルのインデックス
             const index = tileD * this.widthTiles + tileW;
-            let segW = 0;
-            let segD = 0;
-            if (width === this.widthAllSegments - 1) {
-                segW = this.widthSegments;
-            } else {
-                segW = width % this.widthSegments;
-            }
-            if (depth === this.depthAllSegments - 1) {
-                segD = this.depthSegments;
-            } else {
-                segD = depth % this.depthSegments;
-            }
+            // 地形の0じゃない方の端なら特殊な処理
+            const segW = (width === this.widthAllSegments - 1) ? this.widthSegments : (width % this.widthSegments);
+            const segD = (depth === this.depthAllSegments - 1) ? this.depthSegments : (depth % this.depthSegments);
             // タイル内での頂点のインデックス
             const i = segD * (this.widthSegments + 1) + segW;
             return new Array<[number, number]>([index, i]);
         } else if (!w && d) {
-            const tileW = Math.floor(width / this.widthSegments);
-            const tileD = Math.floor(depth / this.depthSegments);
+            // 幅方向のみタイル同士の境界線上
+            const tileW = width / this.widthSegments;
+            let tileD = Math.floor(depth / this.depthSegments);
+            if (depth === this.depthAllSegments - 1) {
+                tileD--;
+            }
+            // 指定した頂点の属するタイルのインデックス
+            // 以下の2つのタイルの境界に頂点は存在している
+            const index1 = tileD * this.widthTiles + (tileW - 1);
+            const index2 = tileD * this.widthTiles + tileW;
+            // 幅方向の座標は片方は右端、もう片方は左端
+            const segW1 = this.widthSegments;
+            const segW2 = 0;
+            // 奥行方向はともに同じ値
+            const segD1 = (depth === this.depthAllSegments - 1) ? this.depthSegments : (depth % this.depthSegments);
+            const segD2 = (depth === this.depthAllSegments - 1) ? this.depthSegments : (depth % this.depthSegments);
+            // タイル内での頂点のインデックス
+            const i1 = segD1 * (this.widthSegments + 1) + segW1;
+            const i2 = segD2 * (this.widthSegments + 1) + segW2;
+            return new Array<[number, number]>([index1, i1], [index2, i2]);
         }
         return new Array<[number, number]>();
     }
