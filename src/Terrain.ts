@@ -87,7 +87,13 @@ export class Terrain {
      * @param depth 奥行方向の座標
      */
     public GetIndex(width: number, depth: number): Array<[number, number]> {
-        if (width % (this.widthSegments - 1) !== 0 && depth % (this.depthSegments - 1) !== 0) {
+        const widthAllSegments = this.widthTiles * (this.widthSegments - 1) + 1;
+        const depthAllSegments = this.depthTiles * (this.depthSegments - 1) + 1;
+        // 幅方向がタイル同士の境界線上でない
+        const w = width === 0 || width % (this.widthSegments - 1) !== 0 || width === widthAllSegments - 1;
+        // 奥行方向がタイル同士の境界線上でない
+        const d = depth === 0 || depth % (this.depthSegments - 1) !== 0 || depth === depthAllSegments - 1;
+        if (w && d) {
             const tileW = Math.floor(width / this.widthSegments);
             const tileD = Math.floor(depth / this.depthSegments);
             // 指定した頂点の属するタイルのインデックス
