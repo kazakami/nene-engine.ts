@@ -16,6 +16,9 @@ export class Terrain {
     private depthSegments: number;
     private widthTiles: number;
     private depthTiles: number;
+    private widthAllSegments: number;
+    private depthAllSegments: number;
+    private numVertices: number;
     /**
      * 地形を生成する(0, 0, 0)を中心とし、y正方向を上とする
      * 幅方向の合計頂点数はwidthSegments * widthTilesとなり、
@@ -36,14 +39,16 @@ export class Terrain {
         this.depthSegments = depthSegments;
         this.widthTiles = widthTiles;
         this.depthTiles = depthTiles;
+        this.widthAllSegments = this.widthTiles * (this.widthSegments - 0) + 1;
+        this.depthAllSegments = this.depthTiles * (this.depthSegments - 0) + 1;
         // 全体の頂点数
-        const numVertices =
+        this.numVertices =
             ((this.widthSegments - 0) * this.widthTiles + 1) *
             ((this.depthSegments - 0) * this.depthTiles + 1);
-        this.heights = new Array<number>(numVertices);
-        this.normals = new Array<THREE.Vector3>(numVertices);
+        this.heights = new Array<number>(this.numVertices);
+        this.normals = new Array<THREE.Vector3>(this.numVertices);
         this.tiles = new Array<[THREE.PlaneBufferGeometry, THREE.Mesh]>(this.widthTiles * this.depthTiles);
-        for (let i = 0; i < numVertices; i++) {
+        for (let i = 0; i < this.numVertices; i++) {
             this.heights[i] = 0;
             this.normals[i] = new THREE.Vector3();
         }
@@ -87,22 +92,35 @@ export class Terrain {
      * @param depth 奥行方向の座標
      */
     public GetIndex(width: number, depth: number): Array<[number, number]> {
-        const widthAllSegments = this.widthTiles * (this.widthSegments - 0) + 1;
-        const depthAllSegments = this.depthTiles * (this.depthSegments - 0) + 1;
         // 幅方向がタイル同士の境界線上でない
-        const w = width === 0 || width % (this.widthSegments - 0) !== 0;
+        const w = width === 0 || width % (this.widthSegments - 0) !== 0 || width === this.widthAllSegments - 1;
         // 奥行方向がタイル同士の境界線上でない
-        const d = depth === 0 || depth % (this.depthSegments - 0) !== 0;
+        const d = depth === 0 || depth % (this.depthSegments - 0) !== 0 || depth === this.depthAllSegments - 1;
         if (w && d) {
-            const tileW = Math.floor(width / this.widthSegments);
-            const tileD = Math.floor(depth / this.depthSegments);
-            console.log(tileW, tileD);
+            let tileW = Math.floor(width / this.widthSegments);
+            let tileD = Math.floor(depth / this.depthSegments);
+            if (width === this.widthAllSegments - 1) {
+                tileW--;
+            }
+            if (depth === this.depthAllSegments - 1) {
+                tileD--;
+            }
             // 指定した頂点の属するタイルのインデックス
             const index = tileD * this.widthTiles + tileW;
-            const segW = width % this.widthSegments;
-            const segD = depth % this.depthSegments;
+            let segW = 0;
+            let segD = 0;
+            if (width === this.widthAllSegments - 1) {
+                segW = this.widthSegments;
+            } else {
+                segW = width % this.widthSegments;
+            }
+            if (depth === this.depthAllSegments - 1) {
+                segD = this.depthSegments;
+            } else {
+                segD = depth % this.depthSegments;
+            }
             // タイル内での頂点のインデックス
-            const i = segD * this.widthSegments + segW;
+            const i = segD * (this.widthSegments + 1) + segW;
             return new Array<[number, number]>([index, i]);
         } else if (!w && d) {
             const tileW = Math.floor(width / this.widthSegments);
@@ -118,8 +136,7 @@ export class Terrain {
      * @param computeNorm 法線を計算しなおすか。デフォルトではtrue
      */
     public SetHeight(width: number, depth: number, height: number, computeNorm: boolean = true): void {
-        const widthAllSegments = this.widthTiles * (this.widthSegments - 0) + 1;
-        this.heights[depth * widthAllSegments + width] = height;
+        this.heights[depth * this.widthAllSegments + width] = height;
         const i = this.GetIndex(width, depth);
         i.forEach(([ti, si]) => {
             this.tiles[ti][0].attributes.position.setY(si, height);
@@ -137,42 +154,35 @@ export class Terrain {
         });
     }
     public ComputeNorm(): void {
-        // 全体の頂点数
-        const numVertices =
-            ((this.widthSegments - 0) * this.widthTiles + 1) *
-            ((this.depthSegments - 0) * this.depthTiles + 1);
         // 法線を0に初期化
-        for (let i = 0; i < numVertices; i++) {
+        for (let i = 0; i < this.numVertices; i++) {
             this.normals[i].set(0, 0, 0);
         }
-        const widthAllSegments = this.widthTiles * (this.widthSegments - 0) + 1;
-        const depthAllSegments = this.depthTiles * (this.depthSegments - 0) + 1;
         // 1セグメントの幅と奥行
-        const w = this.width / widthAllSegments;
-        const d = this.depth / depthAllSegments;
+        const w = this.width / this.widthAllSegments;
+        const d = this.depth / this.depthAllSegments;
         // 自身の一つ右と一つ手前とのベクトルから法線を計算し、各頂点にその値を足す
-        for (let i = 0; i < widthAllSegments - 1; i++) {
-            for (let j = 0; j < depthAllSegments - 1; j++) {
+        for (let i = 0; i < this.widthAllSegments - 1; i++) {
+            for (let j = 0; j < this.depthAllSegments - 1; j++) {
                 const h = this.GetHeight(i, j);
                 const a = new THREE.Vector3(w, this.GetHeight(i + 1, j) - h, 0);
                 const b = new THREE.Vector3(0, this.GetHeight(i, j + 1) - h, d);
                 b.cross(a);
-                this.normals[j * widthAllSegments + i].add(b);
-                this.normals[(j + 1) * widthAllSegments + i].add(b);
-                this.normals[j * widthAllSegments + (i + 1)].add(b);
+                this.normals[j * this.widthAllSegments + i].add(b);
+                this.normals[(j + 1) * this.widthAllSegments + i].add(b);
+                this.normals[j * this.widthAllSegments + (i + 1)].add(b);
             }
         }
         // 法線を正規化し、地形のジオメトリに代入
-        for (let i = 0; i < widthAllSegments - 1; i++) {
-            for (let j = 0; j < depthAllSegments - 1; j++) {
-                const index = j * widthAllSegments + i;
+        for (let i = 0; i < this.widthAllSegments - 1; i++) {
+            for (let j = 0; j < this.depthAllSegments - 1; j++) {
+                const index = j * this.widthAllSegments + i;
                 this.normals[index].normalize();
                 this.SetNormal(i, j, this.normals[index]);
             }
         }
     }
     public GetHeight(width: number, depth: number): number {
-        const widthAllSegments = this.widthTiles * (this.widthSegments - 0) + 1;
-        return this.heights[depth * widthAllSegments + width];
+        return this.heights[depth * this.widthAllSegments + width];
     }
 }
