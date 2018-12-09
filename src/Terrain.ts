@@ -137,7 +137,7 @@ export class Terrain {
         } else if (w && !d) {
             // 奥行方向のみタイル同士の境界線上
             let tileW = Math.floor(width / this.widthSegments);
-            const tileD = Math.floor(depth / this.depthSegments);
+            const tileD = depth / this.depthSegments;
             if (width === this.widthAllSegments - 1) {
                 tileW--;
             }
@@ -155,8 +155,31 @@ export class Terrain {
             const i1 = segD1 * (this.widthSegments + 1) + segW1;
             const i2 = segD2 * (this.widthSegments + 1) + segW2;
             return new Array<[number, number]>([index1, i1], [index2, i2]);
+        } else if (!w && !d) {
+            // 幅・奥行方向ともにタイル同士の境界線上
+            const tileW = width / this.widthSegments;
+            const tileD = depth / this.depthSegments;
+            // 指定した頂点の属するタイルのインデックス
+            // 以下の4つのタイルの境界に頂点は存在している
+            const index1 = (tileD - 1) * this.widthTiles + (tileW - 1);
+            const index2 = tileD * this.widthTiles + (tileW - 1);
+            const index3 = (tileD - 1) * this.widthTiles + tileW;
+            const index4 = tileD * this.widthTiles + tileW;
+            const segW1 = this.widthSegments;
+            const segW2 = this.widthSegments;
+            const segW3 = 0;
+            const segW4 = 0;
+            const segD1 = this.depthSegments;
+            const segD2 = 0;
+            const segD3 = this.depthSegments;
+            const segD4 = 0;
+            // タイル内での頂点のインデックス
+            const i1 = segD1 * (this.widthSegments + 1) + segW1;
+            const i2 = segD2 * (this.widthSegments + 1) + segW2;
+            const i3 = segD3 * (this.widthSegments + 1) + segW3;
+            const i4 = segD4 * (this.widthSegments + 1) + segW4;
+            return new Array<[number, number]>([index1, i1], [index2, i2], [index3, i3], [index4, i4]);
         }
-        return new Array<[number, number]>();
     }
     /**
      * 指定した頂点の高さを設定する
