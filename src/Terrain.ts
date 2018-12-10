@@ -201,7 +201,7 @@ export class Terrain {
             this.tiles[ti][0].attributes.position.setY(si, height);
         });
         if (computeNorm) {
-            this.ComputeNorm();
+            this.ComputeAllNorms();
         }
     }
     public SetNormal(width: number, depth: number, normal: THREE.Vector3): void {
@@ -212,14 +212,47 @@ export class Terrain {
             this.tiles[ti][0].attributes.normal.setXYZ(si, normal.x, normal.y, normal.z);
         });
     }
-    public ComputeNorm(): void {
+    public ComputeNorm(w1: number, d1: number, w2: number, d2: number): void {
+        if (w1 > w2 || d1 > d2) {
+            return;
+        }
+        // 指定された範囲内の頂点の法線を0に初期化
+        for (let i = w1; i < w2 - 1; i++) {
+            for (let j = d1; j < d2 - 1; j++) {
+                this.normals[j * this.widthAllSegments + i].set(0, 0, 0);
+            }
+        }
+        // 1セグメントの幅と奥行
+        const w = this.width / (this.widthAllSegments - 1);
+        const d = this.depth / (this.depthAllSegments - 1);
+        for (let i = Math.max(w1 - 1, 0); i < Math.min(w2 - 2, this.widthAllSegments - 1); i++) {
+            for (let j = Math.max(d1 - 1, 0); j < Math.min(d2 - 2, this.depthAllSegments - 1); j++) {
+                const h = this.GetHeight(i, j);
+                const a = new THREE.Vector3(w, this.GetHeight(i + 1, j) - h, 0);
+                const b = new THREE.Vector3(0, this.GetHeight(i, j + 1) - h, d);
+                b.cross(a);
+                this.normals[j * this.widthAllSegments + i].add(b);
+                this.normals[(j + 1) * this.widthAllSegments + i].add(b);
+                this.normals[j * this.widthAllSegments + (i + 1)].add(b);
+            }
+        }
+        // 法線を正規化し、地形のジオメトリに代入
+        for (let i = w1; i < w2 - 1; i++) {
+            for (let j = d1; j < d2 - 1; j++) {
+                const index = j * this.widthAllSegments + i;
+                this.normals[index].normalize();
+                this.SetNormal(i, j, this.normals[index]);
+            }
+        }
+    }
+    public ComputeAllNorms(): void {
         // 法線を0に初期化
         for (let i = 0; i < this.numVertices; i++) {
             this.normals[i].set(0, 0, 0);
         }
         // 1セグメントの幅と奥行
-        const w = this.width / this.widthAllSegments;
-        const d = this.depth / this.depthAllSegments;
+        const w = this.width / (this.widthAllSegments - 1);
+        const d = this.depth / (this.depthAllSegments - 1);
         // 自身の一つ右と一つ手前とのベクトルから法線を計算し、各頂点にその値を足す
         for (let i = 0; i < this.widthAllSegments - 1; i++) {
             for (let j = 0; j < this.depthAllSegments - 1; j++) {
