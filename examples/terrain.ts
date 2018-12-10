@@ -77,6 +77,18 @@ class Cameraman extends Unit {
                 -Math.sin(this.altitude),
                 -Math.cos(this.altitude) * Math.cos(this.azimuth)), 1);
         }
+        if (this.core.IsKeyDown("d")) {
+            this.pos.addScaledVector(new THREE.Vector3(
+                Math.sin(this.azimuth - Math.PI / 2),
+                0,
+                Math.cos(this.azimuth - Math.PI / 2)), 1);
+        }
+        if (this.core.IsKeyDown("a")) {
+            this.pos.addScaledVector(new THREE.Vector3(
+                Math.sin(this.azimuth + Math.PI / 2),
+                0,
+                Math.cos(this.azimuth + Math.PI / 2)), 1);
+        }
         this.scene.camera.position.copy(this.pos);
         this.scene.camera.up.set(0, 1, 0);
         this.scene.camera.lookAt(
