@@ -6,6 +6,7 @@ export class Terrain {
      * これにタイルを追加したり削除したりして効率のいい表示を行う
      */
     private scene: THREE.Scene = new THREE.Scene();
+    private grp: THREE.Group = new THREE.Group();
     private heights: number[];
     private normals: THREE.Vector3[];
     // タイルのジオメトリとそれから生成したMeshのタプルの配列
@@ -58,6 +59,11 @@ export class Terrain {
             this.heights[i] = 0;
             this.normals[i] = new THREE.Vector3();
         }
+        this.MakeMesh();
+    }
+    public MakeMesh(): void {
+        this.scene = new THREE.Scene();
+        this.grp = new THREE.Group();
         const mat = new THREE.MeshPhongMaterial({color: 0x888888});
         const mat2 = new THREE.MeshPhongMaterial({color: 0x880000});
         // タイルを生成
@@ -82,6 +88,7 @@ export class Terrain {
                     this.tiles[index] = [geo, mesh];
                 }
                 this.scene.add(this.tiles[index][1]);
+                this.grp.add(this.tiles[index][1]);
             }
         }
     }
@@ -90,7 +97,9 @@ export class Terrain {
      * このTHREE.Sceneを追加しておけば最適に表示される
      */
     public GetObject(): THREE.Object3D {
-        return this.scene;
+        // return this.scene;
+        // console.log(this.grp);
+        return this.grp;
     }
     /**
      * 指定した頂点からそれの属するタイルインデックスとタイル内の頂点インデックスのタプルの配列を返す
@@ -199,6 +208,7 @@ export class Terrain {
         const i = this.GetIndex(width, depth);
         i.forEach(([ti, si]) => {
             this.tiles[ti][0].attributes.position.setY(si, height);
+            (this.tiles[ti][0].attributes.position as THREE.BufferAttribute).needsUpdate = true;
         });
         if (computeNorm) {
             this.ComputeAllNormals();
@@ -210,6 +220,7 @@ export class Terrain {
         const i = this.GetIndex(width, depth);
         i.forEach(([ti, si]) => {
             this.tiles[ti][0].attributes.normal.setXYZ(si, normal.x, normal.y, normal.z);
+            (this.tiles[ti][0].attributes.normal as THREE.BufferAttribute).needsUpdate = true;
         });
     }
     public ComputeNormal(w1: number, d1: number, w2: number, d2: number): void {
@@ -232,9 +243,13 @@ export class Terrain {
                 const a = new THREE.Vector3(w, this.GetHeight(i + 1, j) - h, 0);
                 const b = new THREE.Vector3(0, this.GetHeight(i, j + 1) - h, d);
                 b.cross(a);
-                if (i >= w1 && i <= w2 && j >= d1 && j <= d2) {
+                if (i >= w1 && i < w2 && j >= d1 && j < d2) {
                     n[j * this.widthAllSegments + i].add(b);
+                }
+                if (i >= w1 && i < w2 && j + 1 >= d1 && j + 1 < d2) {
                     n[(j + 1) * this.widthAllSegments + i].add(b);
+                }
+                if (i + 1 >= w1 && i + 1 < w2 && j >= d1 && j < d2) {
                     n[j * this.widthAllSegments + (i + 1)].add(b);
                 }
             }
