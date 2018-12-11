@@ -35,11 +35,15 @@ class GameScene extends Scene {
         }
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
         // this.t.SetHeight(5, 5, 10, false);
-        // this.t.ComputeNorm();
+        // this.t.ComputeAllNormals();
         const light = new THREE.DirectionalLight("white", 1);
         light.position.set(50, 100, 50);
         this.scene.add(light);
         this.AddUnit(new Cameraman());
+    }
+    public Update() {
+        this.t.SetHeight(20, 20, 10 * Math.sin(this.frame / 10), false);
+        this.t.ComputeNormal(19, 19, 21, 21);
     }
 }
 
