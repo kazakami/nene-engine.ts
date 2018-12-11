@@ -33,7 +33,7 @@ class GameScene extends Scene {
                 this.t.SetHeight(i, j, Math.random() * 2, false);
             }
         }
-        this.t.ComputeNorm(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
+        this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
         // this.t.SetHeight(5, 5, 10, false);
         // this.t.ComputeNorm();
         const light = new THREE.DirectionalLight("white", 1);

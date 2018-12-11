@@ -201,7 +201,7 @@ export class Terrain {
             this.tiles[ti][0].attributes.position.setY(si, height);
         });
         if (computeNorm) {
-            this.ComputeAllNorms();
+            this.ComputeAllNormals();
         }
     }
     public SetNormal(width: number, depth: number, normal: THREE.Vector3): void {
@@ -212,7 +212,7 @@ export class Terrain {
             this.tiles[ti][0].attributes.normal.setXYZ(si, normal.x, normal.y, normal.z);
         });
     }
-    public ComputeNorm(w1: number, d1: number, w2: number, d2: number): void {
+    public ComputeNormal(w1: number, d1: number, w2: number, d2: number): void {
         if (w1 > w2 || d1 > d2) {
             return;
         }
@@ -245,7 +245,7 @@ export class Terrain {
             }
         }
     }
-    public ComputeAllNorms(): void {
+    public ComputeAllNormals(): void {
         // 法線を0に初期化
         for (let i = 0; i < this.numVertices; i++) {
             this.normals[i].set(0, 0, 0);
