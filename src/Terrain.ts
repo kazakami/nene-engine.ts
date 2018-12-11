@@ -216,31 +216,35 @@ export class Terrain {
         if (w1 > w2 || d1 > d2) {
             return;
         }
+        const n = new Array<THREE.Vector3>(this.numVertices);
         // 指定された範囲内の頂点の法線を0に初期化
-        for (let i = w1; i < w2 - 1; i++) {
-            for (let j = d1; j < d2 - 1; j++) {
-                this.normals[j * this.widthAllSegments + i].set(0, 0, 0);
+        for (let i = w1; i < w2; i++) {
+            for (let j = d1; j < d2; j++) {
+                n[j * this.widthAllSegments + i] = new THREE.Vector3(0, 0, 0);
             }
         }
         // 1セグメントの幅と奥行
         const w = this.width / (this.widthAllSegments - 1);
         const d = this.depth / (this.depthAllSegments - 1);
-        for (let i = Math.max(w1 - 1, 0); i < Math.min(w2 - 2, this.widthAllSegments - 1); i++) {
-            for (let j = Math.max(d1 - 1, 0); j < Math.min(d2 - 2, this.depthAllSegments - 1); j++) {
+        for (let i = Math.max(w1 - 1, 0); i < Math.min(w2 + 1, this.widthAllSegments - 1); i++) {
+            for (let j = Math.max(d1 - 1, 0); j < Math.min(d2 + 1, this.depthAllSegments - 1); j++) {
                 const h = this.GetHeight(i, j);
                 const a = new THREE.Vector3(w, this.GetHeight(i + 1, j) - h, 0);
                 const b = new THREE.Vector3(0, this.GetHeight(i, j + 1) - h, d);
                 b.cross(a);
-                this.normals[j * this.widthAllSegments + i].add(b);
-                this.normals[(j + 1) * this.widthAllSegments + i].add(b);
-                this.normals[j * this.widthAllSegments + (i + 1)].add(b);
+                if (i >= w1 && i <= w2 && j >= d1 && j <= d2) {
+                    n[j * this.widthAllSegments + i].add(b);
+                    n[(j + 1) * this.widthAllSegments + i].add(b);
+                    n[j * this.widthAllSegments + (i + 1)].add(b);
+                }
             }
         }
         // 法線を正規化し、地形のジオメトリに代入
-        for (let i = w1; i < w2 - 1; i++) {
-            for (let j = d1; j < d2 - 1; j++) {
+        for (let i = w1; i < w2; i++) {
+            for (let j = d1; j < d2; j++) {
                 const index = j * this.widthAllSegments + i;
-                this.normals[index].normalize();
+                n[index].normalize();
+                this.normals[index].set(n[index].x, n[index].y, n[index].z);
                 this.SetNormal(i, j, this.normals[index]);
             }
         }
@@ -266,8 +270,8 @@ export class Terrain {
             }
         }
         // 法線を正規化し、地形のジオメトリに代入
-        for (let i = 0; i < this.widthAllSegments - 1; i++) {
-            for (let j = 0; j < this.depthAllSegments - 1; j++) {
+        for (let i = 0; i < this.widthAllSegments; i++) {
+            for (let j = 0; j < this.depthAllSegments; j++) {
                 const index = j * this.widthAllSegments + i;
                 this.normals[index].normalize();
                 this.SetNormal(i, j, this.normals[index]);
@@ -276,5 +280,8 @@ export class Terrain {
     }
     public GetHeight(width: number, depth: number): number {
         return this.heights[depth * this.widthAllSegments + width];
+    }
+    public GetNormal(width: number, depth: number): THREE.Vector3 {
+        return this.normals[depth * this.widthAllSegments + width].clone();
     }
 }
