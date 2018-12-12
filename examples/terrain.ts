@@ -80,16 +80,29 @@ class Cameraman extends Unit {
     }
     public Wheel(e: WheelEvent): void {
         e.preventDefault();
-        if (e.deltaY < 0) {
-            this.pos.addScaledVector(new THREE.Vector3(
-                Math.cos(this.altitude) * Math.sin(this.azimuth),
-                Math.sin(this.altitude),
-                Math.cos(this.altitude) * Math.cos(this.azimuth)), 10);
-        } else if (e.deltaY > 0) {
-            this.pos.addScaledVector(new THREE.Vector3(
-                -Math.cos(this.altitude) * Math.sin(this.azimuth),
-                -Math.sin(this.altitude),
-                -Math.cos(this.altitude) * Math.cos(this.azimuth)), 10);
+        const intersects = this.scene.GetIntersects();
+        if (intersects.length !== 0) {
+            const p = intersects[0].point;
+            const d = intersects[0].distance;
+            const dir = new THREE.Vector3().subVectors(p, this.pos).normalize();
+            const step = Math.min(d * 0.9, 10);
+            if (e.deltaY < 0) {
+                this.pos.addScaledVector(dir, step);
+            } else if (e.deltaY > 0) {
+                this.pos.addScaledVector(dir, -step - 0.1);
+            }
+        } else {
+            if (e.deltaY < 0) {
+                this.pos.addScaledVector(new THREE.Vector3(
+                    Math.cos(this.altitude) * Math.sin(this.azimuth),
+                    Math.sin(this.altitude),
+                    Math.cos(this.altitude) * Math.cos(this.azimuth)), 10);
+            } else if (e.deltaY > 0) {
+                this.pos.addScaledVector(new THREE.Vector3(
+                    -Math.cos(this.altitude) * Math.sin(this.azimuth),
+                    -Math.sin(this.altitude),
+                    -Math.cos(this.altitude) * Math.cos(this.azimuth)), 10);
+            }
         }
     }
     public MouseDown(e: MouseEvent): void {
