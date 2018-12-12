@@ -519,6 +519,11 @@ export class Core {
                 this.activeScene.onWheel(e);
             }
         });
+        this.textCanvas.addEventListener("contextmenu", (e) => {
+            if (this.activeScene.onContextmenu !== null) {
+                this.activeScene.onContextmenu(e);
+            }
+        });
         document.addEventListener("keypress", (e) => {
             if (!e.repeat) {
                 this.keyState[e.key] = true;

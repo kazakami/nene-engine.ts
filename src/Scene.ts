@@ -34,6 +34,7 @@ export abstract class Scene {
     public onTouchStart: (e: TouchEvent) => void = null;
     public onTouchMove: (e: TouchEvent) => void = null;
     public onTouchEnd: (e: TouchEvent) => void = null;
+    public onContextmenu: (e: MouseEvent) => void = null;
 
     /**
      * 初期化処理はInit()に記述すべきでコンストラクタはパラメータの受け渡しのみに用いること
