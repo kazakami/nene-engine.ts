@@ -39,6 +39,10 @@ class GameScene extends Scene {
         this.onMouseUp = (e) => {
             this.c.MouseUp(e);
         };
+        this.onWheel = (e) => {
+            this.c.Wheel(e);
+        };
+        this.onContextmenu = (e) => { e.preventDefault(); };
     }
     public Update() {
         return;
@@ -74,14 +78,29 @@ class Cameraman extends Unit {
     public Init(): void {
         this.pos = new THREE.Vector3(0, 20, 50);
     }
-    public MouseDown(e): void {
+    public Wheel(e: WheelEvent): void {
+        e.preventDefault();
+        if (e.deltaY < 0) {
+            this.pos.addScaledVector(new THREE.Vector3(
+                Math.cos(this.altitude) * Math.sin(this.azimuth),
+                Math.sin(this.altitude),
+                Math.cos(this.altitude) * Math.cos(this.azimuth)), 10);
+        } else if (e.deltaY > 0) {
+            this.pos.addScaledVector(new THREE.Vector3(
+                -Math.cos(this.altitude) * Math.sin(this.azimuth),
+                -Math.sin(this.altitude),
+                -Math.cos(this.altitude) * Math.cos(this.azimuth)), 10);
+        }
+    }
+    public MouseDown(e: MouseEvent): void {
+        e.preventDefault();
         const intersects = this.scene.GetIntersects();
         if (intersects.length !== 0) {
             console.log(intersects[0].point);
         }
         return;
     }
-    public MouseUp(e): void {
+    public MouseUp(e: MouseEvent): void {
         return;
     }
     public Update(): void {
