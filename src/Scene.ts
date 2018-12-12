@@ -128,7 +128,7 @@ export abstract class Scene {
         this.raycaster.setFromCamera(position, this.camera);
         const objs = new Array<THREE.Object3D>();
         this.units.filter((u) => u.raycastTarget).forEach((u) => {
-            objs.concat(u.allObject3D);
+            Array.prototype.push.apply(objs, u.allObject3D);
         });
         return this.raycaster.intersectObjects(objs, true);
     }
