@@ -58,9 +58,6 @@ class Ground extends Unit {
             }
         }
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
-        this.onRaycastedCallback = (inters, m) => {
-            inters.forEach((i) => { console.log(i); });
-        };
     }
     public Update() {
         this.t.SetHeight(20, 20, 10 * Math.sin(this.frame / 10), false);
@@ -78,7 +75,10 @@ class Cameraman extends Unit {
         this.pos = new THREE.Vector3(0, 20, 50);
     }
     public MouseDown(e): void {
-        this.scene.Raycast({message: {from: "camera"}});
+        const intersects = this.scene.GetIntersects();
+        if (intersects.length !== 0) {
+            console.log(intersects[0].point);
+        }
         return;
     }
     public MouseUp(e): void {
