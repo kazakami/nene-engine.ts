@@ -18,28 +18,46 @@ class LoadScene extends Scene {
 }
 
 class GameScene extends Scene {
-    private t: Terrain;
+    private g: Ground;
+    private c: Cameraman;
     public Init() {
         this.onWindowResize = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
         this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
+        const light = new THREE.DirectionalLight("white", 1);
+        light.position.set(50, 100, 50);
+        this.scene.add(light);
+        this.c = new Cameraman();
+        this.AddUnit(this.c);
+        this.g = new Ground();
+        this.AddUnit(this.g);
+        this.onMouseDown = (e) => {
+            this.c.MouseDown(e);
+        };
+        this.onMouseUp = (e) => {
+            this.c.MouseUp(e);
+        };
+    }
+    public Update() {
+        return;
+    }
+}
+
+class Ground extends Unit {
+    private t: Terrain;
+    public Init() {
+        this.raycastTarget = true;
         this.t = new Terrain();
         this.t.MakeGeometry(50, 50, 10, 10, 5, 5);
-        this.scene.add(this.t.GetObject());
+        this.AddObject(this.t.GetObject());
         for (let i = 0; i < this.t.GetWidthAllSegments(); i++) {
             for (let j = 0; j < this.t.GetDepthAllSegments(); j++) {
                 this.t.SetHeight(i, j, Math.random() * 2, false);
             }
         }
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
-        // this.t.SetHeight(5, 5, 10, false);
-        // this.t.ComputeAllNormals();
-        const light = new THREE.DirectionalLight("white", 1);
-        light.position.set(50, 100, 50);
-        this.scene.add(light);
-        this.AddUnit(new Cameraman());
     }
     public Update() {
         this.t.SetHeight(20, 20, 10 * Math.sin(this.frame / 10), false);
@@ -55,6 +73,12 @@ class Cameraman extends Unit {
     private altitude: number = 0;
     public Init(): void {
         this.pos = new THREE.Vector3(0, 20, 50);
+    }
+    public MouseDown(e): void {
+        return;
+    }
+    public MouseUp(e): void {
+        return;
     }
     public Update(): void {
         if (this.core.IsKeyDown("ArrowLeft")) {
