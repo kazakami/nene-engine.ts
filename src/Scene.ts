@@ -101,7 +101,7 @@ export abstract class Scene {
      * @param data messageはUnitに対して処理を分岐させるパラメータ、positionはレイキャストを行う画面上の座標で省略時はマウス座標
      */
     public Raycast(data: {message?: object, position?: THREE.Vec2} = {message: null, position: null}): void {
-        if (data.position === null) {
+        if (data.position === null || data.position === undefined) {
             data.position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
                         y: this.core.mouseY / (this.core.windowSizeY / 2)};
         }
