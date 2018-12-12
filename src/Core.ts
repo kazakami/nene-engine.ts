@@ -52,6 +52,8 @@ export class Core {
     private previousTime: number = null;
     private keyState: { [key: string]: boolean } = {};
     private previousKeyState: { [key: string]: boolean } = {};
+    private mouseLeftState: boolean = false;
+    private previousMouseLeftState: boolean = false;
     private ratio: number = 1;
 
     constructor(private option: CoreOption) {
@@ -667,6 +669,7 @@ export class Core {
         for (const key in this.keyState) {
             this.previousKeyState[key] = this.keyState[key];
         }
+        this.previousMouseLeftState = this.mouseLeftState;
     }
 
     private Draw(): void {
