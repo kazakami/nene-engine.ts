@@ -64,8 +64,21 @@ class Ground extends Unit {
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
     }
     public Update() {
-        this.t.SetHeight(20, 20, 10 * Math.sin(this.frame / 10), false);
-        this.t.ComputeNormal(19, 19, 21, 21);
+        if (this.core.IsMouseLeftButtonDown()) {
+            const intersects = this.scene.GetIntersects();
+            if (intersects.length !== 0) {
+                const w = this.t.GetWidth();
+                const d = this.t.GetDepth();
+                const w2 = intersects[0].point.x + w / 2;
+                const d2 = intersects[0].point.z + d / 2;
+                const i = Math.floor(w2 / this.t.GetSegmentWidth());
+                const j = Math.floor(d2 / this.t.GetSegmentDepth());
+                this.t.Raise(i, j, 0.1);
+                this.t.ComputeNormal(
+                    Math.max(0, i - 2), Math.max(0, j - 2),
+                    Math.min(this.t.GetWidthAllSegments(), i + 2), Math.min(this.t.GetDepthAllSegments(), j + 2));
+            }
+        }
     }
 }
 
