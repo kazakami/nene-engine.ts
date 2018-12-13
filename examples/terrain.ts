@@ -83,7 +83,7 @@ class Cameraman extends Unit {
         const intersects = this.scene.GetIntersects();
         if (intersects.length !== 0) {
             const p = intersects[0].point;
-            const d = intersects[0].distance;
+            const d = Math.max(intersects[0].distance - 0.5, 0);
             const dir = new THREE.Vector3().subVectors(p, this.pos).normalize();
             const step = Math.min(d * 0.9, 10);
             if (e.deltaY < 0) {
