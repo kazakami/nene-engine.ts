@@ -74,6 +74,14 @@ export class Core {
         return c;
     }
 
+    public IsMouseLeftButtonDown(): boolean {
+        return this.mouseLeftState;
+    }
+
+    public IsMouseLeftButtonPressing(): boolean {
+        return (!this.previousMouseLeftState) && this.mouseLeftState;
+    }
+
     /**
      * Coreに与えられてるオプションを取得する
      */
@@ -480,11 +488,17 @@ export class Core {
             }
         });
         this.textCanvas.addEventListener("mousedown", (e) => {
+            if (e.button === 0) {
+                this.mouseLeftState = true;
+            }
             if (this.activeScene.onMouseDown !== null) {
                 this.activeScene.onMouseDown(e);
             }
         });
         this.textCanvas.addEventListener("mouseup", (e) => {
+            if (e.button === 0) {
+                this.mouseLeftState = false;
+            }
             if (this.activeScene.onMouseUp !== null) {
                 this.activeScene.onMouseUp(e);
             }
