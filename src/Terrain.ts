@@ -214,6 +214,17 @@ export class Terrain {
             this.ComputeAllNormals();
         }
     }
+    /**
+     * 指定した頂点の高さを指定した値だけ上げる
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     * @param delta 上げるする高さ
+     * @param ComputeNormal 法線を計算しなおすか。デフォルトではtrue
+     */
+    public Raise(width: number, depth: number, delta: number, ComputeNormal: boolean = true): void {
+        const nowHeight = this.GetHeight(width, depth);
+        this.SetHeight(width, depth, nowHeight + delta, ComputeNormal);
+    }
     public SetNormal(width: number, depth: number, normal: THREE.Vector3): void {
         // const widthAllSegments = this.widthTiles * (this.widthSegments - 1) + 1;
         // this.normals[depth * widthAllSegments + width] = normal;
