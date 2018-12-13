@@ -20,6 +20,18 @@ export class Terrain {
     private widthAllSegments: number;
     private depthAllSegments: number;
     private numVertices: number;
+    public GetWidth(): number {
+        return this.width;
+    }
+    public GetDepth(): number {
+        return this.depth;
+    }
+    public GetSegmentWidth(): number {
+        return this.width / (this.widthAllSegments - 1);
+    }
+    public GetSegmentDepth(): number {
+        return this.depth / (this.depthAllSegments - 1);
+    }
     public GetWidthAllSegments(): number {
         return this.widthAllSegments;
     }
