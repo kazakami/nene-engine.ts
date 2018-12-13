@@ -75,6 +75,11 @@ class Cameraman extends Unit {
     private azimuth: number = Math.PI;
     // 行俯角
     private altitude: number = 0;
+    private mouseRightIsDown = false;
+    // マウスの右ボタンが押し下げられた時のマウス座標
+    private mouseRightDownScreenPos: THREE.Vector2 = null;
+    // マウスの右ボタンが押し下げられた時のレイキャスト座標 レイキャストしなかった場合はnull
+    private mouseRightDownWorldPos: THREE.Vector3 = null;
     public Init(): void {
         this.pos = new THREE.Vector3(0, 20, 50);
     }
@@ -107,14 +112,21 @@ class Cameraman extends Unit {
     }
     public MouseDown(e: MouseEvent): void {
         e.preventDefault();
-        const intersects = this.scene.GetIntersects();
-        if (intersects.length !== 0) {
-            console.log(intersects[0].point);
+        if (e.button === 2) {
+            this.mouseRightIsDown = true;
+            this.mouseRightDownScreenPos = new THREE.Vector2(this.core.mouseX, this.core.mouseY);
+            const intersects = this.scene.GetIntersects();
+            if (intersects.length !== 0) {
+                this.mouseRightDownWorldPos = intersects[0].point.clone();
+            } else {
+                this.mouseRightDownWorldPos = null;
+            }
         }
-        return;
     }
     public MouseUp(e: MouseEvent): void {
-        return;
+        if (e.button === 2) {
+            this.mouseRightIsDown = false;
+        }
     }
     public Update(): void {
         if (this.core.IsKeyDown("ArrowLeft")) {
