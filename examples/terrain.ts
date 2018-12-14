@@ -71,13 +71,26 @@ class Ground extends Unit {
                 const d = this.t.GetDepth();
                 const w2 = intersects[0].point.x + w / 2;
                 const d2 = intersects[0].point.z + d / 2;
-                const i = Math.floor(w2 / this.t.GetSegmentWidth());
-                const j = Math.floor(d2 / this.t.GetSegmentDepth());
-                this.t.Raise(i, j, 0.1);
+                const i = Math.round(w2 / this.t.GetSegmentWidth());
+                const j = Math.round(d2 / this.t.GetSegmentDepth());
+                this.t.Raise(i, j, 0.5);
+                this.SafeRaise(i - 1, j, 0.2);
+                this.SafeRaise(i + 1, j, 0.2);
+                this.SafeRaise(i, j - 1, 0.2);
+                this.SafeRaise(i, j + 1, 0.2);
+                this.SafeRaise(i - 1, j - 1, 0.1);
+                this.SafeRaise(i - 1, j + 1, 0.1);
+                this.SafeRaise(i + 1, j - 1, 0.1);
+                this.SafeRaise(i + 1, j + 1, 0.1);
                 this.t.ComputeNormal(
-                    Math.max(0, i - 2), Math.max(0, j - 2),
-                    Math.min(this.t.GetWidthAllSegments(), i + 2), Math.min(this.t.GetDepthAllSegments(), j + 2));
+                    Math.max(0, i - 3), Math.max(0, j - 3),
+                    Math.min(this.t.GetWidthAllSegments(), i + 3), Math.min(this.t.GetDepthAllSegments(), j + 3));
             }
+        }
+    }
+    private SafeRaise(i: number, j: number, delta: number): void {
+        if (i >= 0 && i < this.t.GetWidthAllSegments() && j >= 0 && j < this.t.GetDepthAllSegments()) {
+            this.t.Raise(i, j, delta, false);
         }
     }
 }
