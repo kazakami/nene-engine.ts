@@ -2,10 +2,9 @@ import * as THREE from "three";
 
 export class Terrain {
     /**
-     * 地形の表示用のScene
+     * 地形の表示用のGroup
      * これにタイルを追加したり削除したりして効率のいい表示を行う
      */
-    private scene: THREE.Scene = new THREE.Scene();
     private grp: THREE.Group = new THREE.Group();
     private heights: number[];
     private normals: THREE.Vector3[];
@@ -74,7 +73,6 @@ export class Terrain {
         this.MakeMesh();
     }
     public MakeMesh(): void {
-        this.scene = new THREE.Scene();
         this.grp = new THREE.Group();
         const mat = new THREE.MeshPhongMaterial({color: 0x888888});
         const mat2 = new THREE.MeshPhongMaterial({color: 0x880000});
@@ -99,18 +97,15 @@ export class Terrain {
                     const mesh = new THREE.Mesh(geo, mat);
                     this.tiles[index] = [geo, mesh];
                 }
-                this.scene.add(this.tiles[index][1]);
                 this.grp.add(this.tiles[index][1]);
             }
         }
     }
     /**
-     * 表示用のTHREE.Sceneを返す
+     * 表示用のTHREE.Groupを返す
      * このTHREE.Sceneを追加しておけば最適に表示される
      */
     public GetObject(): THREE.Object3D {
-        // return this.scene;
-        // console.log(this.grp);
         return this.grp;
     }
     /**
@@ -215,7 +210,7 @@ export class Terrain {
      * @param height 設定する高さ
      * @param computeNorm 法線を計算しなおすか。デフォルトではtrue
      */
-    public SetHeight(width: number, depth: number, height: number, computeNorm: boolean = true): void {
+    public SetHeight(width: number, depth: number, height: number, computeNormal: boolean = true): void {
         this.heights[depth * this.widthAllSegments + width] = height;
         const i = this.GetIndex(width, depth);
         i.forEach(([ti, si]) => {
@@ -223,8 +218,24 @@ export class Terrain {
             (this.tiles[ti][0].attributes.position as THREE.BufferAttribute).needsUpdate = true;
             this.tiles[ti][0].computeBoundingSphere();
         });
-        if (computeNorm) {
+        if (computeNormal) {
             this.ComputeAllNormals();
+        }
+    }
+    /**
+     * 範囲内かのチェックを行たうえで指定した頂点の高さを設定する
+     * 範囲内なら返り値はtrue、そうでなければfalse
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     * @param height 設定する高さ
+     * @param ComputeNormal 法線を計算しなおすか。デフォルトではtrue
+     */
+    public SafeSetHeight(width: number, depth: number, height: number, ComputeNormal: boolean = true): boolean {
+        if (width >= 0 && width < this.widthAllSegments && depth >= 0 && depth < this.depthAllSegments) {
+            this.SetHeight(width, depth, height, ComputeNormal);
+            return true;
+        } else {
+            return false;
         }
     }
     /**
@@ -238,14 +249,49 @@ export class Terrain {
         const nowHeight = this.GetHeight(width, depth);
         this.SetHeight(width, depth, nowHeight + delta, ComputeNormal);
     }
+    /**
+     * 範囲内かのチェックを行たうえで指定した頂点の高さを指定した値だけ上げる
+     * 範囲内なら返り値はtrue、そうでなければfalse
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     * @param delta 上げるする高さ
+     * @param ComputeNormal 法線を計算しなおすか。デフォルトではtrue
+     */
+    public SafeRaise(width: number, depth: number, delta: number, ComputeNormal: boolean = true): boolean {
+        if (width >= 0 && width < this.widthAllSegments && depth >= 0 && depth < this.depthAllSegments) {
+            this.Raise(width, depth, delta, ComputeNormal);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
+     * 指定した頂点の法線ベクトルを設定する
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     * @param normal 設定する法線ベクトル。単位化されている必要がある
+     */
     public SetNormal(width: number, depth: number, normal: THREE.Vector3): void {
-        // const widthAllSegments = this.widthTiles * (this.widthSegments - 1) + 1;
-        // this.normals[depth * widthAllSegments + width] = normal;
         const i = this.GetIndex(width, depth);
         i.forEach(([ti, si]) => {
             this.tiles[ti][0].attributes.normal.setXYZ(si, normal.x, normal.y, normal.z);
             (this.tiles[ti][0].attributes.normal as THREE.BufferAttribute).needsUpdate = true;
         });
+    }
+    /**
+     * 範囲内かのチェックを行たうえで指定した頂点の法線ベクトルを設定する
+     * 範囲内なら返り値はtrue、そうでなければfalse
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     * @param normal 設定する法線ベクトル。単位化されている必要がある
+     */
+    public SafeSetNormal(width: number, depth: number, normal: THREE.Vector3): boolean {
+        if (width >= 0 && width < this.widthAllSegments && depth >= 0 && depth < this.depthAllSegments) {
+            this.SetNormal(width, depth, normal);
+            return true;
+        } else {
+            return false;
+        }
     }
     public ComputeNormal(w1: number, d1: number, w2: number, d2: number): void {
         if (w1 > w2 || d1 > d2) {
