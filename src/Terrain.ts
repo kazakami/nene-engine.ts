@@ -221,6 +221,7 @@ export class Terrain {
         i.forEach(([ti, si]) => {
             this.tiles[ti][0].attributes.position.setY(si, height);
             (this.tiles[ti][0].attributes.position as THREE.BufferAttribute).needsUpdate = true;
+            this.tiles[ti][0].computeBoundingSphere();
         });
         if (computeNorm) {
             this.ComputeAllNormals();
