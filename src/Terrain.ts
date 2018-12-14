@@ -6,6 +6,7 @@ export class Terrain {
      * これにタイルを追加したり削除したりして効率のいい表示を行う
      */
     private grp: THREE.Group = new THREE.Group();
+    private mat: THREE.Material;
     private heights: number[];
     private normals: THREE.Vector3[];
     // タイルのジオメトリとそれから生成したMeshのタプルの配列
@@ -47,10 +48,11 @@ export class Terrain {
      * @param depthSegments 1タイルの奥行きの頂点数
      * @param widthTiles タイルの幅方向の数
      * @param depthTiles タイルの奥行方向の数
+     * @param material マテリアル
      */
     public MakeGeometry(width: number, depth: number,
                         widthSegments: number, depthSegments: number,
-                        widthTiles: number, depthTiles: number): void {
+                        widthTiles: number, depthTiles: number, material: THREE.Material = null): void {
         this.width = width;
         this.depth = depth;
         this.widthSegments = widthSegments;
@@ -59,6 +61,11 @@ export class Terrain {
         this.depthTiles = depthTiles;
         this.widthAllSegments = this.widthTiles * (this.widthSegments - 0) + 1;
         this.depthAllSegments = this.depthTiles * (this.depthSegments - 0) + 1;
+        if (material === null || material === undefined) {
+            this.mat = new THREE.MeshPhongMaterial({color: 0x888888});
+        } else {
+            this.mat = material;
+        }
         // 全体の頂点数
         this.numVertices =
             ((this.widthSegments - 0) * this.widthTiles + 1) *
@@ -74,8 +81,6 @@ export class Terrain {
     }
     public MakeMesh(): void {
         this.grp = new THREE.Group();
-        const mat = new THREE.MeshPhongMaterial({color: 0x888888});
-        const mat2 = new THREE.MeshPhongMaterial({color: 0x880000});
         // タイルを生成
         for (let j = 0; j < this.depthTiles; j++) {
             for (let i = 0; i < this.widthTiles; i++) {
@@ -90,13 +95,8 @@ export class Terrain {
                     0,
                     -this.depth / 2 + this.depth / (2 * this.depthTiles) + j * (this.depth / this.depthTiles));
                 const index = j * this.widthTiles + i;
-                if (i === 0 && j === 0) {
-                    const mesh = new THREE.Mesh(geo, mat2);
-                    this.tiles[index] = [geo, mesh];
-                } else {
-                    const mesh = new THREE.Mesh(geo, mat);
-                    this.tiles[index] = [geo, mesh];
-                }
+                const mesh = new THREE.Mesh(geo, this.mat);
+                this.tiles[index] = [geo, mesh];
                 this.grp.add(this.tiles[index][1]);
             }
         }

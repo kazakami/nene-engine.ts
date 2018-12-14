@@ -54,7 +54,7 @@ class Ground extends Unit {
     public Init() {
         this.raycastTarget = true;
         this.t = new Terrain();
-        this.t.MakeGeometry(50, 50, 10, 10, 5, 5);
+        this.t.MakeGeometry(50, 50, 10, 10, 5, 5, new THREE.MeshPhongMaterial({color: 0x448866}));
         this.AddObject(this.t.GetObject());
         for (let i = 0; i < this.t.GetWidthAllSegments(); i++) {
             for (let j = 0; j < this.t.GetDepthAllSegments(); j++) {
