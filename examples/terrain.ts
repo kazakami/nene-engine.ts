@@ -105,6 +105,12 @@ class Cameraman extends Unit {
     private mouseRightDownAzimuth: number;
     // マウスの右ボタンが押し下げられた時の仰俯角
     private mouseRightDownAltitude: number;
+    // マウスの右ボタンが押し下げられた時のカーソルの指した点からカメラ位置への方位角
+    private mouseRightDownCameraAzimuth: number;
+    // マウスの右ボタンが押し下げられた時のカーソルの指した点からカメラ位置へ仰俯角
+    private mouseRightDownCameraAltitude: number;
+    // マウスの右ボタンが押し下げられた時のカーソルの指した点からカメラ位置へ距離
+    private mouseRightDownCameraDistance: number;
     public Init(): void {
         this.pos = new THREE.Vector3(0, 20, 50);
     }
@@ -145,6 +151,12 @@ class Cameraman extends Unit {
             const intersects = this.scene.GetIntersects();
             if (intersects.length !== 0) {
                 this.mouseRightDownWorldPos = intersects[0].point.clone();
+                const cx = this.pos.x - this.mouseRightDownWorldPos.x;
+                const cy = this.pos.y - this.mouseRightDownWorldPos.y;
+                const cz = this.pos.z - this.mouseRightDownWorldPos.z;
+                this.mouseRightDownCameraAzimuth = Math.atan2(cx, cz);
+                this.mouseRightDownCameraAltitude = Math.atan2(cy, Math.sqrt(cx * cx + cz * cz));
+                this.mouseRightDownCameraDistance = intersects[0].distance;
             } else {
                 this.mouseRightDownWorldPos = null;
             }
@@ -156,12 +168,29 @@ class Cameraman extends Unit {
         }
     }
     public Update(): void {
-        if (this.mouseRightIsDown && this.mouseRightDownWorldPos === null) {
+        if (this.mouseRightIsDown) {
             const mouseDeltaX = this.core.mouseX - this.mouseRightDownScreenPos.x;
             const mouseDeltaY = this.core.mouseY - this.mouseRightDownScreenPos.y;
-            this.azimuth = this.mouseRightDownAzimuth - mouseDeltaX / 100;
-            this.altitude
-                = Math.max(Math.min(this.mouseRightDownAltitude + mouseDeltaY / 100, Math.PI / 2), -Math.PI / 2);
+            if (this.mouseRightDownWorldPos === null) {
+                this.azimuth = this.mouseRightDownAzimuth - mouseDeltaX / 100;
+                this.altitude
+                    = Math.max(Math.min(this.mouseRightDownAltitude + mouseDeltaY / 100, Math.PI / 2), -Math.PI / 2);
+            } else {
+                const cAltitude
+                    = Math.max(
+                        Math.min(this.mouseRightDownCameraAltitude - mouseDeltaY / 100, Math.PI / 2),
+                        -Math.PI / 2);
+                const cAzimuth = this.mouseRightDownCameraAzimuth - mouseDeltaX / 100;
+                const v = new THREE.Vector3(
+                    Math.cos(cAltitude) * Math.sin(cAzimuth),
+                    Math.sin(cAltitude),
+                    Math.cos(cAltitude) * Math.cos(cAzimuth));
+                this.pos.copy(this.mouseRightDownWorldPos);
+                this.pos.addScaledVector(v, this.mouseRightDownCameraDistance);
+                this.azimuth = this.mouseRightDownAzimuth - mouseDeltaX / 100;
+                this.altitude
+                    = Math.max(Math.min(this.mouseRightDownAltitude + mouseDeltaY / 100, Math.PI / 2), -Math.PI / 2);
+            }
         }
         if (this.core.IsKeyDown("ArrowLeft")) {
             this.azimuth += 0.02;
