@@ -266,6 +266,40 @@ export class Terrain {
         }
     }
     /**
+     * 指定した頂点の高さを指定された制限の中で指定した値だけ上げる
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     * @param delta 上げるする高さ
+     * @param min 高さの最低値
+     * @param max 高さの最高値
+     * @param ComputeNormal 法線を計算しなおすか。デフォルトではtrue
+     */
+    public LimitedRaise(width: number, depth: number, delta: number,
+                        min: number, max: number, ComputeNormal: boolean = true): void {
+        const nowHeight = this.GetHeight(width, depth);
+        const h = Math.min(Math.max(nowHeight + delta, min), max);
+        this.SetHeight(width, depth, h, ComputeNormal);
+    }
+    /**
+     * 範囲内かのチェックを行たうえで指定した頂点の高さを指定された制限の中で指定した値だけ上げる
+     * 範囲内なら返り値はtrue、そうでなければfalse
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     * @param delta 上げるする高さ
+     * @param min 高さの最低値
+     * @param max 高さの最高値
+     * @param ComputeNormal 法線を計算しなおすか。デフォルトではtrue
+     */
+    public SafeLimitedRaise(width: number, depth: number, delta: number,
+                            min: number, max: number, ComputeNormal: boolean = true): boolean {
+        if (width >= 0 && width < this.widthAllSegments && depth >= 0 && depth < this.depthAllSegments) {
+            this.LimitedRaise(width, depth, delta, min, max, ComputeNormal);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /**
      * 指定した頂点の法線ベクトルを設定する
      * @param width 幅方向の座標
      * @param depth 奥行方向の座標

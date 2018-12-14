@@ -73,15 +73,19 @@ class Ground extends Unit {
                 const d2 = intersects[0].point.z + d / 2;
                 const i = Math.round(w2 / this.t.GetSegmentWidth());
                 const j = Math.round(d2 / this.t.GetSegmentDepth());
-                this.t.Raise(i, j, 0.5);
-                this.t.SafeRaise(i - 1, j, 0.2);
-                this.t.SafeRaise(i + 1, j, 0.2);
-                this.t.SafeRaise(i, j - 1, 0.2);
-                this.t.SafeRaise(i, j + 1, 0.2);
-                this.t.SafeRaise(i - 1, j - 1, 0.1);
-                this.t.SafeRaise(i - 1, j + 1, 0.1);
-                this.t.SafeRaise(i + 1, j - 1, 0.1);
-                this.t.SafeRaise(i + 1, j + 1, 0.1);
+                // 地形を上げるか下げるかの符号
+                const s = (this.core.IsKeyDown("q")) ? -1 : 1;
+                const min = -5;
+                const max = 5;
+                this.t.LimitedRaise(i, j, 0.5 * s, min, max, false);
+                this.t.SafeLimitedRaise(i - 1, j, 0.2 * s, min, max, false);
+                this.t.SafeLimitedRaise(i + 1, j, 0.2 * s, min, max, false);
+                this.t.SafeLimitedRaise(i, j - 1, 0.2 * s, min, max, false);
+                this.t.SafeLimitedRaise(i, j + 1, 0.2 * s, min, max, false);
+                this.t.SafeLimitedRaise(i - 1, j - 1, 0.1 * s, min, max, false);
+                this.t.SafeLimitedRaise(i - 1, j + 1, 0.1 * s, min, max, false);
+                this.t.SafeLimitedRaise(i + 1, j - 1, 0.1 * s, min, max, false);
+                this.t.SafeLimitedRaise(i + 1, j + 1, 0.1 * s, min, max, false);
                 this.t.ComputeNormal(
                     Math.max(0, i - 3), Math.max(0, j - 3),
                     Math.min(this.t.GetWidthAllSegments(), i + 3), Math.min(this.t.GetDepthAllSegments(), j + 3));
