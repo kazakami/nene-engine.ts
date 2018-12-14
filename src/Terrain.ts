@@ -20,21 +20,39 @@ export class Terrain {
     private widthAllSegments: number;
     private depthAllSegments: number;
     private numVertices: number;
+    /**
+     * 地形全体の幅を取得する
+     */
     public GetWidth(): number {
         return this.width;
     }
+    /**
+     * 地形全体の奥行を取得する
+     */
     public GetDepth(): number {
         return this.depth;
     }
+    /**
+     * 1セグメントの幅を取得する
+     */
     public GetSegmentWidth(): number {
         return this.width / (this.widthAllSegments - 1);
     }
+    /**
+     * 1セグメントの奥行を取得する
+     */
     public GetSegmentDepth(): number {
         return this.depth / (this.depthAllSegments - 1);
     }
+    /**
+     * 幅方向のセグメントの数を取得する
+     */
     public GetWidthAllSegments(): number {
         return this.widthAllSegments;
     }
+    /**
+     * 奥行方向のセグメントの数を取得する
+     */
     public GetDepthAllSegments(): number {
         return this.depthAllSegments;
     }
@@ -103,7 +121,7 @@ export class Terrain {
     }
     /**
      * 表示用のTHREE.Groupを返す
-     * このTHREE.Sceneを追加しておけば最適に表示される
+     * このTHREE.Groupを追加しておけば最適に表示される
      */
     public GetObject(): THREE.Object3D {
         return this.grp;
@@ -327,6 +345,13 @@ export class Terrain {
             return false;
         }
     }
+    /**
+     * 指定された範囲内の頂点の法線を計算する
+     * @param w1 小さい側の幅方向の座標
+     * @param d1 小さい側の奥行方向の座標
+     * @param w2 大きい側の幅方向の座標
+     * @param d2 大きい側の奥行方向の座標
+     */
     public ComputeNormal(w1: number, d1: number, w2: number, d2: number): void {
         if (w1 > w2 || d1 > d2) {
             return;
@@ -368,6 +393,9 @@ export class Terrain {
             }
         }
     }
+    /**
+     * 全頂点の法線を計算する
+     */
     public ComputeAllNormals(): void {
         // 法線を0に初期化
         for (let i = 0; i < this.numVertices; i++) {
@@ -397,9 +425,19 @@ export class Terrain {
             }
         }
     }
+    /**
+     * 指定された頂点の高さを取得する
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     */
     public GetHeight(width: number, depth: number): number {
         return this.heights[depth * this.widthAllSegments + width];
     }
+    /**
+     * 指定された頂点の法線ベクトルを取得する
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     */
     public GetNormal(width: number, depth: number): THREE.Vector3 {
         return this.normals[depth * this.widthAllSegments + width].clone();
     }
