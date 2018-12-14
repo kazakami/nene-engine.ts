@@ -94,13 +94,17 @@ class Cameraman extends Unit {
     private pos: THREE.Vector3;
     // 方位角
     private azimuth: number = Math.PI;
-    // 行俯角
+    // 仰俯角
     private altitude: number = 0;
     private mouseRightIsDown = false;
     // マウスの右ボタンが押し下げられた時のマウス座標
     private mouseRightDownScreenPos: THREE.Vector2 = null;
     // マウスの右ボタンが押し下げられた時のレイキャスト座標 レイキャストしなかった場合はnull
     private mouseRightDownWorldPos: THREE.Vector3 = null;
+    // マウスの右ボタンが押し下げられた時の方位角
+    private mouseRightDownAzimuth: number;
+    // マウスの右ボタンが押し下げられた時の仰俯角
+    private mouseRightDownAltitude: number;
     public Init(): void {
         this.pos = new THREE.Vector3(0, 20, 50);
     }
@@ -136,6 +140,8 @@ class Cameraman extends Unit {
         if (e.button === 2) {
             this.mouseRightIsDown = true;
             this.mouseRightDownScreenPos = new THREE.Vector2(this.core.mouseX, this.core.mouseY);
+            this.mouseRightDownAzimuth = this.azimuth;
+            this.mouseRightDownAltitude = this.altitude;
             const intersects = this.scene.GetIntersects();
             if (intersects.length !== 0) {
                 this.mouseRightDownWorldPos = intersects[0].point.clone();
@@ -150,6 +156,13 @@ class Cameraman extends Unit {
         }
     }
     public Update(): void {
+        if (this.mouseRightIsDown && this.mouseRightDownWorldPos === null) {
+            const mouseDeltaX = this.core.mouseX - this.mouseRightDownScreenPos.x;
+            const mouseDeltaY = this.core.mouseY - this.mouseRightDownScreenPos.y;
+            this.azimuth = this.mouseRightDownAzimuth - mouseDeltaX / 100;
+            this.altitude
+                = Math.max(Math.min(this.mouseRightDownAltitude + mouseDeltaY / 100, Math.PI / 2), -Math.PI / 2);
+        }
         if (this.core.IsKeyDown("ArrowLeft")) {
             this.azimuth += 0.02;
         }
