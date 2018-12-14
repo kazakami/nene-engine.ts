@@ -394,6 +394,20 @@ export class Terrain {
         }
     }
     /**
+     * 入力された範囲の内、実在する頂点のみ法線を計算する
+     * @param w1 小さい側の幅方向の座標
+     * @param d1 小さい側の奥行方向の座標
+     * @param w2 大きい側の幅方向の座標
+     * @param d2 大きい側の奥行方向の座標
+     */
+    public SafeComputeNormal(w1: number, d1: number, w2: number, d2: number): void {
+        w1 = Math.max(w1, 0);
+        d1 = Math.max(d1, 0);
+        w2 = Math.min(w2, this.GetWidthAllSegments());
+        d2 = Math.min(d2, this.GetDepthAllSegments());
+        this.ComputeNormal(w1, d1, w2, d2);
+    }
+    /**
      * 全頂点の法線を計算する
      */
     public ComputeAllNormals(): void {

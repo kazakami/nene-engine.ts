@@ -86,9 +86,7 @@ class Ground extends Unit {
                 this.t.SafeLimitedRaise(i - 1, j + 1, 0.1 * s, min, max, false);
                 this.t.SafeLimitedRaise(i + 1, j - 1, 0.1 * s, min, max, false);
                 this.t.SafeLimitedRaise(i + 1, j + 1, 0.1 * s, min, max, false);
-                this.t.ComputeNormal(
-                    Math.max(0, i - 3), Math.max(0, j - 3),
-                    Math.min(this.t.GetWidthAllSegments(), i + 3), Math.min(this.t.GetDepthAllSegments(), j + 3));
+                this.t.SafeComputeNormal(i - 3, j - 3, i + 3, j + 3);
             }
         }
     }
