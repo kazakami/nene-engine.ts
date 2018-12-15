@@ -44,8 +44,14 @@ class GameScene extends Scene {
         };
         this.onContextmenu = (e) => { e.preventDefault(); };
     }
-    public Update() {
-        return;
+    public DrawText() {
+        this.core.ctx.font = "20px serif";
+        this.core.DrawText(
+            "Press mouse left button to raise the terrain.",
+            -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
+        this.core.DrawText(
+            "Press \"q\" and press mouse left button to lower the terrain.",
+            -this.core.windowSizeX / 2, this.core.windowSizeY / 2 - 20);
     }
 }
 
