@@ -52,6 +52,8 @@ export class Core {
     private previousTime: number = null;
     private keyState: { [key: string]: boolean } = {};
     private previousKeyState: { [key: string]: boolean } = {};
+    private mouseLeftState: boolean = false;
+    private previousMouseLeftState: boolean = false;
     private ratio: number = 1;
 
     constructor(private option: CoreOption) {
@@ -70,6 +72,14 @@ export class Core {
         const c = new THREE.EffectComposer(this.renderer);
         c.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
         return c;
+    }
+
+    public IsMouseLeftButtonDown(): boolean {
+        return this.mouseLeftState;
+    }
+
+    public IsMouseLeftButtonPressing(): boolean {
+        return (!this.previousMouseLeftState) && this.mouseLeftState;
     }
 
     /**
@@ -478,11 +488,17 @@ export class Core {
             }
         });
         this.textCanvas.addEventListener("mousedown", (e) => {
+            if (e.button === 0) {
+                this.mouseLeftState = true;
+            }
             if (this.activeScene.onMouseDown !== null) {
                 this.activeScene.onMouseDown(e);
             }
         });
         this.textCanvas.addEventListener("mouseup", (e) => {
+            if (e.button === 0) {
+                this.mouseLeftState = false;
+            }
             if (this.activeScene.onMouseUp !== null) {
                 this.activeScene.onMouseUp(e);
             }
@@ -515,6 +531,11 @@ export class Core {
         this.textCanvas.addEventListener("wheel", (e) => {
             if (this.activeScene.onWheel !== null) {
                 this.activeScene.onWheel(e);
+            }
+        });
+        this.textCanvas.addEventListener("contextmenu", (e) => {
+            if (this.activeScene.onContextmenu !== null) {
+                this.activeScene.onContextmenu(e);
             }
         });
         document.addEventListener("keypress", (e) => {
@@ -667,6 +688,7 @@ export class Core {
         for (const key in this.keyState) {
             this.previousKeyState[key] = this.keyState[key];
         }
+        this.previousMouseLeftState = this.mouseLeftState;
     }
 
     private Draw(): void {

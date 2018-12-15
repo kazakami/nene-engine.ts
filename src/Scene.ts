@@ -34,6 +34,7 @@ export abstract class Scene {
     public onTouchStart: (e: TouchEvent) => void = null;
     public onTouchMove: (e: TouchEvent) => void = null;
     public onTouchEnd: (e: TouchEvent) => void = null;
+    public onContextmenu: (e: MouseEvent) => void = null;
 
     /**
      * 初期化処理はInit()に記述すべきでコンストラクタはパラメータの受け渡しのみに用いること
@@ -98,12 +99,14 @@ export abstract class Scene {
 
     /**
      * レイキャストを行う
+     * raycastTargetがtrueとなっているUnitの3Dオブジェクトが対象
+     * レイキャストに成功した場合UnitのonRaycastCallbackを呼ぶ
      * @param data messageはUnitに対して処理を分岐させるパラメータ、positionはレイキャストを行う画面上の座標で省略時はマウス座標
      */
     public Raycast(data: {message?: object, position?: THREE.Vec2} = {message: null, position: null}): void {
-        if (data.position === null) {
+        if (data.position === null || data.position === undefined) {
             data.position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
-                        y: this.core.mouseY / (this.core.windowSizeY / 2)};
+                             y: this.core.mouseY / (this.core.windowSizeY / 2)};
         }
         this.raycaster.setFromCamera(data.position, this.camera);
         this.units.filter((u) => u.raycastTarget).forEach((u) => {
@@ -112,6 +115,23 @@ export abstract class Scene {
                 u.onRaycastedCallback(intersects, data.message);
             }
         });
+    }
+
+    /**
+     * レイキャストを行いIntersectsを返す。
+     * @param position レイキャストを行う画面上の座標で省略時はマウス座標
+     */
+    public GetIntersects(position: THREE.Vec2 = null): THREE.Intersection[] {
+        if (position === null || position === undefined) {
+            position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
+                        y: this.core.mouseY / (this.core.windowSizeY / 2)};
+        }
+        this.raycaster.setFromCamera(position, this.camera);
+        const objs = new Array<THREE.Object3D>();
+        this.units.filter((u) => u.raycastTarget).forEach((u) => {
+            Array.prototype.push.apply(objs, u.allObject3D);
+        });
+        return this.raycaster.intersectObjects(objs, true);
     }
 
     public Render(): void {

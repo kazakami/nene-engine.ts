@@ -55,14 +55,16 @@ class GameScene extends Scene {
         };
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
         this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
+        const segX = 1024;
+        const segY = 1024;
         const heights = (() => {
-            const data = new Uint8Array(256 * 256);
-            for (let i = 0; i < 256 * 256; i++) {
+            const data = new Uint8Array(segX * segY);
+            for (let i = 0; i < segX * segY; i++) {
                 data[i] = Math.random() * 20;
             }
             return data;
         })();
-        const groundGeo = new THREE.PlaneBufferGeometry(10000, 10000, 255, 255);
+        const groundGeo = new THREE.PlaneBufferGeometry(30000, 30000, segX - 1, segY - 1);
         const vertices = groundGeo.attributes.position.array;
         const num = vertices.length;
         for (let i = 0; i < num; i++) {
@@ -88,6 +90,7 @@ class GameScene extends Scene {
 }
 
 class Player extends Unit {
+    public speed: number = 83 / 60;
     private plane: THREE.Object3D;
     private x: number = 0;
     private y: number = 30;
@@ -127,10 +130,9 @@ class Player extends Unit {
             q.setFromAxisAngle(pitchAxis, -0.05);
             this.rot.multiplyQuaternions(q, this.rot);
         }
-        const speed = 5;
-        this.vx = dir.x * speed;
-        this.vy = dir.y * speed;
-        this.vz = dir.z * speed;
+        this.vx = dir.x * this.speed;
+        this.vy = dir.y * this.speed;
+        this.vz = dir.z * this.speed;
         this.x += this.vx;
         this.y += this.vy;
         this.z += this.vz;
@@ -153,6 +155,14 @@ class Player extends Unit {
         this.scene.camera.lookAt(this.x, this.y, this.z);
         this.plane.position.set(this.x, this.y, this.z);
         this.plane.setRotationFromQuaternion(this.rot);
+    }
+    public DrawText(): void {
+        this.core.DrawText(
+            "SPD " + Math.floor(this.speed * 60 * 3.6) + "km/h",
+            -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
+        this.core.DrawText(
+            "ALT " + Math.floor(this.y) + "m",
+            -this.core.windowSizeX / 2, this.core.windowSizeY / 2 - 50);
     }
 }
 
