@@ -1,6 +1,6 @@
 {
   "name": "nene-engine.ts",
-  "version": "0.1.10",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/kazakami/nene-engine.ts"
