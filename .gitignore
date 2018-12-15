@@ -1,8 +1,6 @@
 node_modules
-dist
 package-lock.json
 launch.json
 .vscode
 coverage
 .DS_Store
-docs
