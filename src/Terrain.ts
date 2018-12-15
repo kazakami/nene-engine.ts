@@ -20,6 +20,45 @@ export class Terrain {
     private widthAllSegments: number;
     private depthAllSegments: number;
     private numVertices: number;
+    // オブジェクトを描画する距離
+    private far: number = 100;
+    // カメラ座標
+    private pos: THREE.Vector3 = new THREE.Vector3();
+    /**
+     * オブジェクトを描画する距離を設定する
+     * @param d 距離
+     */
+    public SetFar(d: number): void {
+        this.far = d;
+    }
+    /**
+     * カメラ位置を設定する
+     * @param p カメラ座標
+     */
+    public SetPos(p: THREE.Vector3): void {
+        this.pos.copy(p);
+        for (let j = 0; j < this.depthTiles; j++) {
+            for (let i = 0; i < this.widthTiles; i++) {
+                const index = j * this.widthTiles + i;
+                // タイルの中心座標
+                const w = -this.width / 2 + this.width / (2 * this.widthTiles) + i * (this.width / this.widthTiles);
+                const d = -this.depth / 2 + this.depth / (2 * this.depthTiles) + j * (this.depth / this.depthTiles);
+                // タイル中心とカメラの距離の2乗　ただし高さは無視
+                const distance2 = Math.pow(this.pos.x - w, 2) + Math.pow(this.pos.z - d, 2);
+                if (distance2 < this.far * this.far) {
+                    if (this.grp.children.indexOf(this.tiles[index][1]) === -1) {
+                        // 視界内でgrpに入っていなければ追加
+                        this.grp.add(this.tiles[index][1]);
+                    }
+                } else {
+                    if (this.grp.children.indexOf(this.tiles[index][1]) !== -1) {
+                        // 視界外でgrpに入っていれば除去
+                        this.grp.remove(this.tiles[index][1]);
+                    }
+                }
+            }
+        }
+    }
     /**
      * 地形全体の幅を取得する
      */

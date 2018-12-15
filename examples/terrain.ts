@@ -61,6 +61,7 @@ class Ground extends Unit {
         this.raycastTarget = true;
         this.t = new Terrain();
         this.t.MakeGeometry(50, 50, 10, 10, 5, 5, new THREE.MeshPhongMaterial({color: 0x448866}));
+        this.t.SetFar(100);
         this.AddObject(this.t.GetObject());
         for (let i = 0; i < this.t.GetWidthAllSegments(); i++) {
             for (let j = 0; j < this.t.GetDepthAllSegments(); j++) {
@@ -70,6 +71,7 @@ class Ground extends Unit {
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
     }
     public Update() {
+        this.t.SetPos(this.scene.camera.position);
         if (this.core.IsMouseLeftButtonDown()) {
             const intersects = this.scene.GetIntersects();
             if (intersects.length !== 0) {
