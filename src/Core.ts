@@ -657,6 +657,14 @@ export class Core {
     }
 
     /**
+     * テキストの色を指定する
+     * @param color 指定する色
+     */
+    public SetTextColor(color: THREE.Color): void {
+        this.ctx.fillStyle = "rgb(" + color.r + ", " + color.g + ", " + color.b + ")";
+    }
+
+    /**
      * 指定した座標に文字列を描画する
      * @param str 描画する文字列
      * @param x X座標
