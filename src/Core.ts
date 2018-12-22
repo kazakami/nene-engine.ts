@@ -649,6 +649,14 @@ export class Core {
     }
 
     /**
+     * テキストのサイズを指定する
+     * @param size ピクセル単位のサイズ
+     */
+    public SetTextSize(size: number): void {
+        this.ctx.font = size.toString() + "px serif";
+    }
+
+    /**
      * 指定した座標に文字列を描画する
      * @param str 描画する文字列
      * @param x X座標
