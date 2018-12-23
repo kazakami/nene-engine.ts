@@ -77,8 +77,8 @@ class GameScene extends Scene {
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
     }
     public DrawText(): void {
-        this.core.ctx.fillStyle = "rgb(200, 200, 200)";
-        this.core.DrawText("fps: " + Math.floor(this.core.fps).toString(),
+        this.core.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
+        this.core.DrawText("fps: " + Math.round(this.core.fps).toString(),
             - this.core.windowSizeX / 2,
             this.core.windowSizeY / 2);
         this.core.DrawText(this.casted.join(), this.core.mouseX, this.core.mouseY);

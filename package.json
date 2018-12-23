@@ -1,6 +1,6 @@
 {
   "name": "nene-engine.ts",
-  "version": "0.1.10",
+  "version": "0.2.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/kazakami/nene-engine.ts"
@@ -9,8 +9,9 @@
   "main": "src/nene-engine.ts",
   "scripts": {
     "build": "webpack --verbose",
-    "docs": "typedoc",
-    "test": "jest"
+    "docs": "rm -rf docs && typedoc",
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
   "license": "MIT",
