@@ -9,15 +9,25 @@ import { TiledTexturedSprite } from "./TiledTexturedSprite";
  * 基本的にコンストラクタ値の受け渡しにのみ用い、Init()に起動時の処理を追加する
  */
 export abstract class Unit {
+    /** このUnitが有効かどうか示す。falseにであった場合、次のsceneのUpdate()の呼ばれたときにsceneから除外される。 */
     public isAlive: boolean = true;
+    /** Update()の呼ばれる優先度。未実装。 */
     public priority: number = 0;
+    /** ゲームエンジンのコアへの参照。 */
     public core: Core = null;
+    /** 所属するシーンへの参照。 */
     public scene: Scene = null;
+    /** Update()の呼ばれた回数。 */
     public frame: number = 0;
+    /** このUnitに紐づけられているすべての3Dオブジェクト。 */
     public allObject3D: THREE.Object3D[] = [];
+    /** このUnitに紐づけられているすべての立体オブジェクト。ただし物理オブジェクトの描画用のオブジェクトを除く。 */
     public objects: THREE.Object3D[] = [];
+    /** このUnitに紐づけられているすべてのスプライト。 */
     public sprites: Array<THREE.Object3D | TiledTexturedSprite> = [];
+    /** このUnitに紐づけられているすべての物理オブジェクト。 */
     public physicObjects: PhysicObject[] = [];
+    /** このUnitがSceneのRaycast関数のターゲットになるか。 */
     public raycastTarget: boolean = false;
     /**
      * raycastされた際に呼ばれるコールバック関数
@@ -25,10 +35,7 @@ export abstract class Unit {
      * messageはScene.Raycastを呼ぶときに付加するメッセージ
      */
     public onRaycastedCallback: (intersections: THREE.Intersection[], message: object) => void = null;
-    constructor() {
-        return;
-    }
-
+    constructor() { return; }
     /**
      * この関数は基本的にオーバーライドすべきでない
      */
@@ -36,11 +43,21 @@ export abstract class Unit {
         this.frame++;
         this.physicObjects.forEach((p) => { p.Update(); });
     }
-    public Update(): void {
-        return;
-    }
+    /**
+     * この関数をオーバーライドし更新時の処理を記述する
+     */
+    public Update(): void { return; }
+    /**
+     * この関数をオーバーライドし文字列描画時の処理を記述する
+     */
     public DrawText(): void { return; }
+    /**
+     * この関数をオーバーライドし初期化時の処理を記述する
+     */
     public Init(): void { return; }
+    /**
+     * この関数をオーバーライドし削除時の処理を記述する
+     */
     public Fin(): void { return; }
     /**
      * sceneにObject3Dを追加し、Unitに紐づける
