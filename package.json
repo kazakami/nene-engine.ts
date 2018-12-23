@@ -10,7 +10,8 @@
   "scripts": {
     "build": "webpack --verbose",
     "docs": "rm -rf docs && typedoc",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
   "license": "MIT",
