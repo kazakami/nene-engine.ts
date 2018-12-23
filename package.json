@@ -9,7 +9,7 @@
   "main": "src/nene-engine.ts",
   "scripts": {
     "build": "webpack --verbose",
-    "docs": "typedoc",
+    "docs": "rm -rf docs && typedoc",
     "test": "jest"
   },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
