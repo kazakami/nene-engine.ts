@@ -29,6 +29,8 @@ export abstract class Unit {
     public physicObjects: PhysicObject[] = [];
     /** このUnitがSceneのRaycast関数のターゲットになるか。 */
     public raycastTarget: boolean = false;
+    /** unitインスタンスを識別するためのID */
+    public id: string = "";
     /**
      * raycastされた際に呼ばれるコールバック関数
      * raycastTargetがtrueに成ってないと対象にならないことに注意
