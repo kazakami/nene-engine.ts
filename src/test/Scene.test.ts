@@ -81,3 +81,43 @@ test("InnerFin() call unit.Fin()", () => {
     expect(unit.finned).toEqual(true);
     expect(scene.units).toEqual([]);
 });
+
+test("unit selector 1", () => {
+    const scene = new TestScene();
+    const u1 = new TestUnit();
+    scene.AddUnit(u1);
+    const units = scene.UnitSelector((u) => u.id === "hoge");
+    expect(units).toEqual([]);
+});
+
+test("unit selector 2", () => {
+    const scene = new TestScene();
+    const u1 = new TestUnit();
+    scene.AddUnit(u1);
+    const u2 = new TestUnit();
+    scene.AddUnit(u2);
+    u2.id = "hoge";
+    const u3 = new TestUnit();
+    scene.AddUnit(u3);
+    const units = scene.UnitSelector((u) => u.id === "hoge");
+    expect(units.length).toBe(1);
+    expect(units[0]).toBe(u2);
+});
+
+test("unit selector 3", () => {
+    const scene = new TestScene();
+    const u1 = new TestUnit();
+    scene.AddUnit(u1);
+    const u2 = new TestUnit();
+    scene.AddUnit(u2);
+    u2.id = "hoge";
+    const u3 = new TestUnit();
+    scene.AddUnit(u3);
+    u3.id = "fuga";
+    const u4 = new TestUnit();
+    scene.AddUnit(u4);
+    const units = scene.UnitSelector((u) => u.id === "hoge" || u.id === "fuga");
+    expect(units.length).toBe(2);
+    expect(units).toContain(u2);
+    expect(units).toContain(u3);
+});

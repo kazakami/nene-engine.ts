@@ -335,3 +335,45 @@ test("MakeSpriteFromTexture", () => {
     const c = new Core({});
     expect(() => { c.MakeSpriteFromTexture("NotExistTexture"); }).toThrow();
 });
+
+test("scene selector 1", () => {
+    const c = new Core({});
+    const s1 = new TestScene();
+    s1.id = "fuga";
+    c.AddScene("TestScene", s1);
+    const scenes = c.SceneSelector((s) => s.id === "hoge");
+    expect(scenes).toEqual([]);
+});
+
+test("scene selector 2", () => {
+    const c = new Core({});
+    const s1 = new TestScene();
+    s1.id = "hoge";
+    c.AddScene("TestScene1", s1);
+    const s2 = new TestScene();
+    s2.id = "fuga";
+    c.AddScene("TestScene2", s2);
+    const scenes = c.SceneSelector((s) => s.id === "hoge");
+    expect(scenes.length).toBe(1);
+    expect(scenes[0]).toBe(s1);
+});
+
+test("scene selector 3", () => {
+    const c = new Core({});
+    const s1 = new TestScene();
+    s1.id = "hoge";
+    c.AddScene("TestScene1", s1);
+    const s2 = new TestScene();
+    s2.id = "fuga";
+    c.AddScene("TestScene2", s2);
+    const s3 = new TestScene();
+    s3.id = "piyo";
+    c.AddScene("TestScene3", s3);
+    const s4 = new TestScene();
+    s4.id = "aaaa";
+    c.AddScene("TestScene4", s4);
+    const scenes = c.SceneSelector((s) => s.id === "hoge" || s.id === "aaaa");
+    // expect(scenes.length).toBe(2);
+    expect(scenes).toContain(s1);
+    expect(scenes).toContain(s4);
+});

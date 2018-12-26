@@ -24,6 +24,7 @@ export abstract class Scene {
     public composer2d: THREE.EffectComposer = null;
     public offScreen: THREE.Sprite;
     public offScreenMat: THREE.SpriteMaterial;
+    public id: string = "";
     public onMouseMove: (e: MouseEvent) => void = null;
     public onMouseClick: (e: Event) => void = null;
     public onWindowResize: (e: UIEvent) => void = null;
@@ -62,6 +63,14 @@ export abstract class Scene {
             u.Update();
         });
         this.physicWorld.step(1 / 60);
+    }
+
+    /**
+     * このシーンに属しているunitインスタンスのうち指定した条件を満たすものの配列を返す
+     * @param filter フィルター関数
+     */
+    public UnitSelector(filter: (u: Unit) => boolean): Unit[] {
+        return this.units.filter(filter);
     }
 
     /**
