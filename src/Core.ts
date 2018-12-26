@@ -9,7 +9,7 @@ import "imports-loader?THREE=three!three/examples/js/shaders/CopyShader.js";
 import "imports-loader?THREE=three!three/examples/js/shaders/FilmShader.js";
 import * as THREE from "three";
 import { Scene } from "./Scene";
-import { Base64toBlob, Coalescing } from "./Util";
+import { AssociativeArrayToArray, Base64toBlob, Coalescing } from "./Util";
 
 export class CoreOption {
     public antialias?: boolean;
@@ -57,6 +57,14 @@ export class Core {
     private ratio: number = 1;
 
     constructor(private option: CoreOption) {
+    }
+
+    /**
+     * 登録されているsceneインスタンスのうち指定した条件を満たすものの配列を返す
+     * @param filter フィルター関数
+     */
+    public SceneSelector(filter: (s: Scene) => boolean): Scene[] {
+        return AssociativeArrayToArray(this.scenes).filter(filter);
     }
 
     get PixelRatio(): number {
