@@ -10,6 +10,8 @@ class LoadScene extends Scene {
         this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball");
         this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle");
         this.core.LoadTexture("resources/images/star.png", "star");
+        this.core.LoadTexture("resources/images/floor.png", "floor");
+        this.core.LoadTexture("resources/images/wall.png", "wall");
         this.core.LoadFile("resources/shaders/sample1.vert", "sample1.vert");
         this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag");
         this.core.LoadFile("resources/shaders/pass1.vert", "pass1.vert");
@@ -52,6 +54,25 @@ class GameScene extends Scene {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
         this.core.PixelRatio = 1 / 1;
+        const floor = new THREE.PlaneBufferGeometry(500, 500);
+        floor.rotateX(-Math.PI / 2);
+        floor.translate(0, -50, 0);
+        const floorTex = this.core.GetTexture("floor");
+        floorTex.repeat.set(10, 10);
+        floorTex.wrapS = THREE.RepeatWrapping;
+        floorTex.wrapT = THREE.RepeatWrapping;
+        const floorMat = new THREE.MeshBasicMaterial({map: floorTex});
+        this.scene.add(new THREE.Mesh(floor, floorMat));
+
+        const wall = new THREE.PlaneBufferGeometry(500, 500);
+        // wall.rotateX(-Math.PI / 2);
+        wall.translate(0, 0, -250);
+        const wallTex = this.core.GetTexture("wall");
+        wallTex.repeat.set(10, 10);
+        wallTex.wrapS = THREE.RepeatWrapping;
+        wallTex.wrapT = THREE.RepeatWrapping;
+        const wallMat = new THREE.MeshBasicMaterial({map: wallTex});
+        this.scene.add(new THREE.Mesh(wall, wallMat));
 
         this.composer = this.core.MakeEffectComposer();
         this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
@@ -63,13 +84,13 @@ class GameScene extends Scene {
             vertexShader: this.core.GetText("pass1.vert"),
         });
         this.composer.addPass(pass);
-        // this.composer = null;
+        this.composer = null;
 
         this.composer2d = this.core.MakeEffectComposer();
         this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
         const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
         this.composer2d.addPass(pass2d);
-        // this.composer2d = null;
+        this.composer2d = null;
     }
     public Update(): void {
         this.casted = [];
