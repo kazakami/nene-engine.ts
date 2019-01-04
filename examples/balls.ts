@@ -5,18 +5,20 @@ class LoadScene extends Scene {
     public Init(): void {
         this.backgroundColor = new THREE.Color(0x887766);
         this.onLoadError = (e) => { console.log(e); };
-        this.core.LoadObjMtl("resources/models/ente progress_export.obj",
-                             "resources/models/ente progress_export.mtl", "ente");
-        this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball");
-        this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle");
-        this.core.LoadTexture("resources/images/star.png", "star");
-        this.core.LoadTexture("resources/images/floor.png", "floor");
-        this.core.LoadTexture("resources/images/wall.png", "wall");
-        this.core.LoadFile("resources/shaders/sample1.vert", "sample1.vert");
-        this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag");
-        this.core.LoadFile("resources/shaders/pass1.vert", "pass1.vert");
-        this.core.LoadFile("resources/shaders/pass1.frag", "pass1.frag");
-        this.core.LoadGLTF("resources/models/octagon.gltf", "oct");
+        Promise.all([
+            this.core.LoadObjMtl("resources/models/ente progress_export.obj",
+                                "resources/models/ente progress_export.mtl", "ente"),
+            this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball"),
+            this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle"),
+            this.core.LoadTexture("resources/images/star.png", "star"),
+            this.core.LoadTexture("resources/images/floor.png", "floor"),
+            this.core.LoadTexture("resources/images/wall.png", "wall"),
+            this.core.LoadFile("resources/shaders/sample1.vert", "sample1.vert"),
+            this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag"),
+            this.core.LoadFile("resources/shaders/pass1.vert", "pass1.vert"),
+            this.core.LoadFile("resources/shaders/pass1.frag", "pass1.frag"),
+            this.core.LoadGLTF("resources/models/octagon.gltf", "oct"),
+        ]).then(() => { console.log("loaded"); });
     }
     public Update(): void {
         if (this.core.IsAllResourcesAvailable()) {
