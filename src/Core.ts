@@ -601,11 +601,14 @@ export class Core {
      * @param sceneName シーンを呼び出すためのキー
      * @param scene 追加するシーン
      */
-    public AddScene(sceneName: string, scene: Scene): void {
-        scene.core = this;
-        this.scenes[sceneName] = scene;
-        scene.InnerInit();
-        scene.Init();
+    public AddScene(sceneName: string, scene: Scene): Promise<{}> {
+        return new Promise((resolve) => {
+            scene.core = this;
+            this.scenes[sceneName] = scene;
+            scene.InnerInit();
+            scene.Init();
+            resolve();
+        });
     }
 
     /**
