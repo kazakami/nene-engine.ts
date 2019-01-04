@@ -180,22 +180,25 @@ export class Core {
      * @param filename テキストファイルのパス
      * @param name テキストファイルを呼び出すキー
      */
-    public LoadFile(filename: string, name: string): void {
-        this.texts[name] = null;
-        this.fileLoader.load(filename,
-            (file) => {
-                if (typeof file === "string") {
-                    this.texts[name] = file;
-                }
-            },
-            null,
-            (e) => {
-                if (this.activeScene.onLoadError !== null) {
-                    this.activeScene.onLoadError(e);
-                } else {
-                    throw e;
-                }
+    public LoadFile(filename: string, name: string): Promise<{}> {
+        return new Promise((resolve) => {
+            this.texts[name] = null;
+            this.fileLoader.load(filename,
+                (file) => {
+                    if (typeof file === "string") {
+                        this.texts[name] = file;
+                        resolve();
+                    }
+                },
+                null,
+                (e) => {
+                    if (this.activeScene.onLoadError !== null) {
+                        this.activeScene.onLoadError(e);
+                    } else {
+                        throw e;
+                    }
             });
+        });
     }
 
     /**
@@ -251,19 +254,22 @@ export class Core {
      * @param filename 画像ファイルのパス
      * @param name 画像を呼び出すキー
      */
-    public LoadTexture(filename: string, name: string): void {
-        this.textures[name] = null;
-        this.textureLoader.load(filename,
-            (tex) => {
-                this.textures[name] = tex;
-            },
-            null,
-            (e) => {
-                if (this.activeScene.onLoadError !== null) {
-                    this.activeScene.onLoadError(e);
-                } else {
-                    throw e;
-                }
+    public LoadTexture(filename: string, name: string): Promise<{}> {
+        return new Promise((resolve) => {
+            this.textures[name] = null;
+            this.textureLoader.load(filename,
+                (tex) => {
+                    this.textures[name] = tex;
+                    resolve();
+                },
+                null,
+                (e) => {
+                    if (this.activeScene.onLoadError !== null) {
+                        this.activeScene.onLoadError(e);
+                    } else {
+                        throw e;
+                    }
+                });
             });
     }
 
@@ -333,20 +339,23 @@ export class Core {
      * @param filename GLTFファイルのパス
      * @param name 3Dモデルを呼び出すためのキー
      */
-    public LoadGLTF(filename: string, name: string): void {
-        this.objects[name] = null;
-        this.gltfLoader.load(filename,
-            (gltf) => {
-                this.objects[name] = gltf.scene;
-            },
-            null,
-            (e) => {
-                if (this.activeScene.onLoadError !== null) {
-                    this.activeScene.onLoadError(e);
-                } else {
-                    throw e;
-                }
-            });
+    public LoadGLTF(filename: string, name: string): Promise<{}> {
+        return new Promise((resolve) => {
+            this.objects[name] = null;
+            this.gltfLoader.load(filename,
+                (gltf) => {
+                    this.objects[name] = gltf.scene;
+                    resolve();
+                },
+                null,
+                (e) => {
+                    if (this.activeScene.onLoadError !== null) {
+                        this.activeScene.onLoadError(e);
+                    } else {
+                        throw e;
+                    }
+                });
+        });
     }
 
     /**
@@ -355,42 +364,45 @@ export class Core {
      * @param mtlFilename MTLファイルのパス
      * @param name 3Dモデルを呼び出すためのキー
      */
-    public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): void {
-        this.objects[name] = null;
-        // ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
-        if (mtlFilename.indexOf("/") !== -1) {
-            this.mtlLoader.setPath(mtlFilename.substr(0, mtlFilename.lastIndexOf("/")) + "/");
-            mtlFilename = mtlFilename.slice(mtlFilename.lastIndexOf("/") + 1);
-        }
-        this.mtlLoader.load(mtlFilename,
-            (mtl) => {
-                mtl.preload();
-                // 上と同様にディレクトリ内を指していたらディレクトリパスとファイル名に分ける
-                if (objFilename.indexOf("/") !== -1) {
-                    this.objLoader.setPath(objFilename.substr(0, objFilename.lastIndexOf("/")) + "/");
-                    objFilename = objFilename.slice(objFilename.lastIndexOf("/") + 1);
-                }
-                this.objLoader.setMaterials(mtl);
-                this.objLoader.load(objFilename,
-                    (grp) => {
-                        this.objects[name] = grp;
-                    },
-                    null,
-                    (e) => {
-                        if (this.activeScene.onLoadError !== null) {
-                            this.activeScene.onLoadError(e);
-                        } else {
-                            throw e;
-                        }
-                    });
-            },
-            null,
-            (e) => {
-                if (this.activeScene.onLoadError !== null) {
-                    this.activeScene.onLoadError(e);
-                } else {
-                    throw e;
-                }
+    public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): Promise<{}> {
+        return new Promise((resolve) => {
+            this.objects[name] = null;
+            // ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
+            if (mtlFilename.indexOf("/") !== -1) {
+                this.mtlLoader.setPath(mtlFilename.substr(0, mtlFilename.lastIndexOf("/")) + "/");
+                mtlFilename = mtlFilename.slice(mtlFilename.lastIndexOf("/") + 1);
+            }
+            this.mtlLoader.load(mtlFilename,
+                (mtl) => {
+                    mtl.preload();
+                    // 上と同様にディレクトリ内を指していたらディレクトリパスとファイル名に分ける
+                    if (objFilename.indexOf("/") !== -1) {
+                        this.objLoader.setPath(objFilename.substr(0, objFilename.lastIndexOf("/")) + "/");
+                        objFilename = objFilename.slice(objFilename.lastIndexOf("/") + 1);
+                    }
+                    this.objLoader.setMaterials(mtl);
+                    this.objLoader.load(objFilename,
+                        (grp) => {
+                            this.objects[name] = grp;
+                            resolve();
+                        },
+                        null,
+                        (e) => {
+                            if (this.activeScene.onLoadError !== null) {
+                                this.activeScene.onLoadError(e);
+                            } else {
+                                throw e;
+                            }
+                        });
+                },
+                null,
+                (e) => {
+                    if (this.activeScene.onLoadError !== null) {
+                        this.activeScene.onLoadError(e);
+                    } else {
+                        throw e;
+                    }
+                });
             });
     }
 
