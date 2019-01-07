@@ -16,11 +16,13 @@ export class CoreOption {
     public parent?: HTMLElement;
     public windowSizeX?: number;
     public windowSizeY?: number;
+    public halfFPS?: boolean;
     constructor(option: CoreOption) {
         this.antialias = Coalescing(option.antialias, true);
         this.parent = Coalescing(option.parent, document.body);
         this.windowSizeX = Coalescing(option.windowSizeX, window.innerWidth);
         this.windowSizeY = Coalescing(option.windowSizeY, window.innerHeight);
+        this.halfFPS = Coalescing(option.halfFPS, false);
     }
 }
 
@@ -32,6 +34,8 @@ export class Core {
     public renderer: THREE.WebGLRenderer;
     public renderTarget: THREE.WebGLRenderTarget;
     public ctx: CanvasRenderingContext2D;
+    public halfFPS: boolean;
+    private frame: number = 0;
     private textureLoader: THREE.TextureLoader;
     private textCanvas: HTMLCanvasElement;
     private canvas: HTMLCanvasElement;
@@ -459,6 +463,7 @@ export class Core {
             antialias: this.option.antialias,
             preserveDrawingBuffer: true,
         });
+        this.halfFPS = this.option.halfFPS;
         this.windowSizeX = this.option.windowSizeX;
         this.windowSizeY = this.option.windowSizeY;
         this.renderTarget = new THREE.WebGLRenderTarget(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio, {
@@ -578,8 +583,11 @@ export class Core {
         this.activeScene.Init();
         const animate = () => {
             requestAnimationFrame(animate);
-            this.Update();
-            this.Draw();
+            this.frame++;
+            if (!this.halfFPS || this.frame % 2 === 0) {
+                this.Update();
+                this.Draw();
+            }
         };
         animate();
     }
