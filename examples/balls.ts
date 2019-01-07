@@ -37,6 +37,7 @@ class GameScene extends Scene {
     public casted: string[];
     public Init(): void {
         this.backgroundColor = new THREE.Color(0x887766);
+        this.physicStep = 1 / 30;
         this.AddUnit(new Board());
         this.AddUnit(new Ball(0, 10, 0));
         this.AddUnit(new Ball(5, 5, 0, true));
@@ -205,4 +206,4 @@ class Board extends Unit {
 }
 
 // ゲームの開始
-Start("init", new LoadScene());
+Start("init", new LoadScene(), {halfFPS: true});
