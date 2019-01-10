@@ -184,7 +184,7 @@ export class Core {
      * @param filename テキストファイルのパス
      * @param name テキストファイルを呼び出すキー
      */
-    public LoadFile(filename: string, name: string): Promise<{}> {
+    public LoadFile(filename: string, name: string): Promise<void> {
         return new Promise((resolve) => {
             this.texts[name] = null;
             this.fileLoader.load(filename,
@@ -258,7 +258,7 @@ export class Core {
      * @param filename 画像ファイルのパス
      * @param name 画像を呼び出すキー
      */
-    public LoadTexture(filename: string, name: string): Promise<{}> {
+    public LoadTexture(filename: string, name: string): Promise<void> {
         return new Promise((resolve) => {
             this.textures[name] = null;
             this.textureLoader.load(filename,
@@ -343,7 +343,7 @@ export class Core {
      * @param filename GLTFファイルのパス
      * @param name 3Dモデルを呼び出すためのキー
      */
-    public LoadGLTF(filename: string, name: string): Promise<{}> {
+    public LoadGLTF(filename: string, name: string): Promise<void> {
         return new Promise((resolve) => {
             this.objects[name] = null;
             this.gltfLoader.load(filename,
@@ -368,7 +368,7 @@ export class Core {
      * @param mtlFilename MTLファイルのパス
      * @param name 3Dモデルを呼び出すためのキー
      */
-    public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): Promise<{}> {
+    public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): Promise<void> {
         return new Promise((resolve) => {
             this.objects[name] = null;
             // ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
@@ -609,7 +609,7 @@ export class Core {
      * @param sceneName シーンを呼び出すためのキー
      * @param scene 追加するシーン
      */
-    public AddScene(sceneName: string, scene: Scene): Promise<{}> {
+    public AddScene(sceneName: string, scene: Scene): Promise<void> {
         return new Promise((resolve) => {
             scene.core = this;
             this.scenes[sceneName] = scene;
@@ -645,36 +645,29 @@ export class Core {
      * 現在描画されてる画像をファイルとして保存する
      * @param filename 保存時のファイル名。デフォルトはscreenshot.png
      */
-    public SaveImage(filename: string = "screenshot.png"): Promise<{}> {
-        return new Promise((resolve) => {
-            const glImage = new Image();
-            const textsImage = new Image();
-            const glImageLoaded = new Promise((glImageResolve) => {
-                glImage.onload = () => {
-                    glImageResolve();
-                };
-            });
-            const textsImageLoaded = new Promise((textsImageResolve) => {
-                textsImage.onload = () => {
-                    textsImageResolve();
-                };
-            });
-            textsImage.src = this.textCanvas.toDataURL("image/png");
-            glImage.src = this.canvas.toDataURL("image/png");
-            Promise.all([glImageLoaded, textsImageLoaded]).then(() => {
-                const tmpCanvas = document.createElement("canvas");
-                tmpCanvas.setAttribute("width", this.windowSizeX.toString());
-                tmpCanvas.setAttribute("height", this.windowSizeY.toString());
-                const context = tmpCanvas.getContext("2d");
-                context.drawImage(glImage, 0, 0);
-                context.drawImage(textsImage, 0, 0);
-                const base64Image = tmpCanvas.toDataURL("image/png");
-                const blob = Base64toBlob(base64Image.split(",")[1], "image/png");
-                this.link.href = URL.createObjectURL(blob);
-                this.link.download = filename;
-                this.link.click();
-                resolve();
-            });
+    public async SaveImage(filename: string = "screenshot.png"): Promise<void> {
+        const glImage = new Image();
+        const textsImage = new Image();
+        const glImageLoaded = new Promise((resolve) => {
+            glImage.onload = () => resolve();
+        });
+        const textsImageLoaded = new Promise((resolve) => {
+            textsImage.onload = () => resolve();
+        });
+        textsImage.src = this.textCanvas.toDataURL("image/png");
+        glImage.src = this.canvas.toDataURL("image/png");
+        Promise.all([glImageLoaded, textsImageLoaded]).then(() => {
+            const tmpCanvas = document.createElement("canvas");
+            tmpCanvas.setAttribute("width", this.windowSizeX.toString());
+            tmpCanvas.setAttribute("height", this.windowSizeY.toString());
+            const context = tmpCanvas.getContext("2d");
+            context.drawImage(glImage, 0, 0);
+            context.drawImage(textsImage, 0, 0);
+            const base64Image = tmpCanvas.toDataURL("image/png");
+            const blob = Base64toBlob(base64Image.split(",")[1], "image/png");
+            this.link.href = URL.createObjectURL(blob);
+            this.link.download = filename;
+            this.link.click();
         });
     }
 
