@@ -17,7 +17,7 @@ export function AssociativeArrayToArray<T>(arr: {[key: string]: T}): T[] {
     return a;
 }
 
-export function Random(range: number) {
+export function Random(range: number): number {
     return Math.random() * 2 * range - range;
 }
 
@@ -48,20 +48,6 @@ export function OrientQuaternion(x: number, y: number, z: number): THREE.Quatern
     const q = new THREE.Quaternion();
     q.setFromAxisAngle(dir, rad);
     return q;
-}
-
-export function FileLoad(url: string, callback: (str: string) => void): void {
-    const request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.addEventListener("load", (event) => {
-        const response = this.response;
-        if (status === "200") {
-            callback(response);
-        } else {
-            console.log("error");
-        }
-    }, false);
-    return;
 }
 
 export function UndefCoalescing<T>(input: T, defaultValue: T): T {
