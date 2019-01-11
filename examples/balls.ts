@@ -4,7 +4,7 @@ import { PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } 
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
         this.backgroundColor = new THREE.Color(0x887766);
-        this.onLoadError = (e) => { console.log(e); };
+        this.onLoadError = (e) => console.log(e);
         await Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                                 "resources/models/ente progress_export.mtl", "ente"),
@@ -20,7 +20,7 @@ class LoadScene extends Scene {
             this.core.LoadGLTF("resources/models/octagon.gltf", "oct"),
         ]);
         console.log("loaded");
-        // オブジェクトenteが読み込まれればシーン遷移
+        // 全てのリソースが読み込まれればシーン遷移
         this.core.AddAndChangeScene("game", new GameScene());
     }
     public DrawText(): void {
@@ -66,7 +66,6 @@ class GameScene extends Scene {
         this.scene.add(new THREE.Mesh(floor, floorMat));
 
         const wall = new THREE.PlaneBufferGeometry(500, 500);
-        // wall.rotateX(-Math.PI / 2);
         wall.translate(0, 0, -250);
         const wallTex = this.core.GetTexture("wall");
         wallTex.repeat.set(10, 10);
