@@ -11,11 +11,34 @@ import * as THREE from "three";
 import { Scene } from "./Scene";
 import { AssociativeArrayToArray, Base64toBlob, Coalescing } from "./Util";
 
+/**
+ * ゲームエンジンのコアに渡すオプション
+ */
 export class CoreOption {
+    /**
+     * アンチエイリアスを有効にするか
+     * 省略時はtrue
+     */
     public antialias?: boolean;
+    /**
+     * キャンパスの親要素
+     * 省略時はdocument.body
+     */
     public parent?: HTMLElement;
+    /**
+     * 画面幅
+     * 省略時はwindow.innerWidth
+     */
     public windowSizeX?: number;
+    /**
+     * 画面高さ
+     * 省略時はwindow.innerHeight
+     */
     public windowSizeY?: number;
+    /**
+     * fpsを半分の30とするか
+     * 省略時はfalse
+     */
     public halfFPS?: boolean;
     constructor(option: CoreOption) {
         this.antialias = Coalescing(option.antialias, true);
@@ -26,10 +49,25 @@ export class CoreOption {
     }
 }
 
+/**
+ * ゲームエンジンのコア
+ */
 export class Core {
+    /**
+     * マウスのx座標
+     */
     public mouseX: number = 0;
+    /**
+     * マウスのy座標
+     */
     public mouseY: number = 0;
+    /**
+     * 画面幅
+     */
     public windowSizeX: number;
+    /**
+     * 画面高さ
+     */
     public windowSizeY: number;
     public renderer: THREE.WebGLRenderer;
     public renderTarget: THREE.WebGLRenderTarget;
@@ -80,16 +118,25 @@ export class Core {
         this.ChangeCanvasSize(this.windowSizeX, this.windowSizeY);
     }
 
+    /**
+     * ゲームエンジンで使用しているTHREE.WebGLRendererを使うTHREE.EffectComposerを生成する
+     */
     public MakeEffectComposer(): THREE.EffectComposer {
         const c = new THREE.EffectComposer(this.renderer);
         c.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
         return c;
     }
 
+    /**
+     * マウス左ボタンが押し下げられているか
+     */
     public IsMouseLeftButtonDown(): boolean {
         return this.mouseLeftState;
     }
 
+    /**
+     * マウス左ボタンがこのフレームに押し下げられたか
+     */
     public IsMouseLeftButtonPressing(): boolean {
         return (!this.previousMouseLeftState) && this.mouseLeftState;
     }
