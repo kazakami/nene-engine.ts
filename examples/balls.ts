@@ -2,10 +2,10 @@ import * as THREE from "three";
 import { PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
-    public Init(): void {
+    public async Init(): Promise<void> {
         this.backgroundColor = new THREE.Color(0x887766);
         this.onLoadError = (e) => { console.log(e); };
-        Promise.all([
+        await Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                                 "resources/models/ente progress_export.mtl", "ente"),
             this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball"),
@@ -18,13 +18,10 @@ class LoadScene extends Scene {
             this.core.LoadFile("resources/shaders/pass1.vert", "pass1.vert"),
             this.core.LoadFile("resources/shaders/pass1.frag", "pass1.frag"),
             this.core.LoadGLTF("resources/models/octagon.gltf", "oct"),
-        ]).then(() => { console.log("loaded"); });
-    }
-    public Update(): void {
-        if (this.core.IsAllResourcesAvailable()) {
-            // オブジェクトenteが読み込まれればシーン遷移
-            this.core.AddAndChangeScene("game", new GameScene());
-        }
+        ]);
+        console.log("loaded");
+        // オブジェクトenteが読み込まれればシーン遷移
+        this.core.AddAndChangeScene("game", new GameScene());
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
