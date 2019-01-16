@@ -35,6 +35,7 @@ class GameScene extends Scene {
     public casted: string[];
     public Init(): void {
         this.backgroundColor = new THREE.Color(0x887766);
+        this.core.renderer.shadowMap.enabled = true;
         this.physicStep = 1 / 30;
         this.AddUnit(new Board());
         this.AddUnit(new Ball(0, 10, 0));
@@ -43,7 +44,21 @@ class GameScene extends Scene {
         this.camera.position.set(0, 15, 15);
         this.camera.lookAt(0, 0, 0);
         const light = new THREE.DirectionalLight("white", 1);
-        light.position.set(50, 100, 50);
+        light.castShadow = true;
+        light.position.set(0, 100, 0);
+        light.shadow.mapSize.width = 2048;
+        light.shadow.mapSize.height = 2048;
+        light.shadow.camera.right = 100;
+        light.shadow.camera.left = -100;
+        light.shadow.camera.top = -100;
+        light.shadow.camera.bottom = 100;
+        light.shadow.camera.near = 0.5;
+        light.shadow.camera.far = 1000;
+        light.castShadow = true;
+        const lightShadowHelper = new THREE.CameraHelper(light.shadow.camera);
+        this.scene.add(lightShadowHelper);
+        const lightHelper = new THREE.DirectionalLightHelper(light);
+        this.scene.add(lightHelper);
         this.scene.add(light);
         this.sprt = this.core.MakeSpriteFromTexture("circle");
         this.sprt.scale.set(100, 100, 1);
@@ -64,7 +79,9 @@ class GameScene extends Scene {
         floorTex.wrapS = THREE.RepeatWrapping;
         floorTex.wrapT = THREE.RepeatWrapping;
         const floorMat = new THREE.MeshBasicMaterial({map: floorTex});
-        this.scene.add(new THREE.Mesh(floor, floorMat));
+        const floorMesh = new THREE.Mesh(floor, floorMat);
+        floorMesh.receiveShadow = true;
+        this.scene.add(floorMesh);
 
         const wall = new THREE.PlaneBufferGeometry(500, 500);
         wall.translate(0, 0, -250);
@@ -73,7 +90,9 @@ class GameScene extends Scene {
         wallTex.wrapS = THREE.RepeatWrapping;
         wallTex.wrapT = THREE.RepeatWrapping;
         const wallMat = new THREE.MeshBasicMaterial({map: wallTex});
-        this.scene.add(new THREE.Mesh(wall, wallMat));
+        const wallMesh = new THREE.Mesh(wall, wallMat);
+        wallMesh.receiveShadow = true;
+        this.scene.add(wallMesh);
 
         this.composer = this.core.MakeEffectComposer();
         this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
@@ -153,6 +172,7 @@ class Ball extends Unit {
         } else {
             this.ball = new PhysicSphere(1, 1, "ball", this.core.GetObject("ball"));
         }
+        this.ball.viewBody.castShadow = true;
         this.ball.position.set(this.x, this.y, this.z);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
@@ -190,6 +210,7 @@ class Board extends Unit {
         this.floor = new PhysicObjects(0, "floor");
         this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json", new THREE.MeshLambertMaterial({color: 0xffffff, map: this.core.GetTexture("tile")}));
+        this.floor.viewBody.receiveShadow = true;
         this.AddPhysicObject(this.floor);
         this.onRaycastedCallback = (ints, message) => {
             (this.scene as GameScene).casted.push("Board");
