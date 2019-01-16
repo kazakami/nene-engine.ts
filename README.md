@@ -7,7 +7,7 @@
 
 ![NENE ENGINE!!](./logo.png)
 
-Game engine written by TypeScript for browser!
+Game engine written in TypeScript for browser!
 
 Three.js is used for graphic library and Cannon.js is used for physical simulation.
 
