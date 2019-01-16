@@ -158,21 +158,30 @@ export class PhysicObjects extends PhysicObject {
     }
     public AddBox(width: number, height: number, depth: number,
                   x: number, y: number, z: number,
-                  addMesh: boolean = false): void {
+                  addMesh: boolean = false,
+                  material: THREE.Material = null): void {
         if (addMesh) {
-            const geo = new THREE.BoxGeometry(width, height, depth);
-            const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.position.set(x, y, z);
-            this.viewBody.add(mesh);
-            geo.dispose();
-            mat.dispose();
+            if (material === null) {
+                const geo = new THREE.BoxGeometry(width, height, depth);
+                const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(x, y, z);
+                this.viewBody.add(mesh);
+                geo.dispose();
+                mat.dispose();
+            } else {
+                const geo = new THREE.BoxGeometry(width, height, depth);
+                const mesh = new THREE.Mesh(geo, material);
+                mesh.position.set(x, y, z);
+                this.viewBody.add(mesh);
+                geo.dispose();
+            }
         }
         this.phyBody.addShape(new Cannon.Box(new Cannon.Vec3(width / 2, height / 2, depth / 2))
         , new Cannon.Vec3(x, y, z));
         return;
     }
-    public AddShapeFromJSON(filename: string): void {
+    public AddShapeFromJSON(filename: string, mat: THREE.Material = null): void {
         const loader = new THREE.FileLoader();
         loader.load(filename, (res) => {
             if (typeof res !== "string") {
@@ -190,7 +199,7 @@ export class PhysicObjects extends PhysicObject {
                             const x = UndefCoalescing<number>(obj.x, 0);
                             const y = UndefCoalescing<number>(obj.y, 0);
                             const z = UndefCoalescing<number>(obj.z, 0);
-                            this.AddBox(width, height, depth, x, y, z, addMesh);
+                            this.AddBox(width, height, depth, x, y, z, addMesh, mat);
                             break;
                         }
                         default: {
