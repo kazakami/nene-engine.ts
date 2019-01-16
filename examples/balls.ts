@@ -13,6 +13,7 @@ class LoadScene extends Scene {
             this.core.LoadTexture("resources/images/star.png", "star"),
             this.core.LoadTexture("resources/images/floor.png", "floor"),
             this.core.LoadTexture("resources/images/wall.png", "wall"),
+            this.core.LoadTexture("resources/images/tile.png", "tile"),
             this.core.LoadFile("resources/shaders/sample1.vert", "sample1.vert"),
             this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag"),
             this.core.LoadFile("resources/shaders/pass1.vert", "pass1.vert"),
@@ -188,7 +189,7 @@ class Board extends Unit {
         this.raycastTarget = true;
         this.floor = new PhysicObjects(0, "floor");
         this.floor.position.set(0, -10, 0);
-        this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json");
+        this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json", new THREE.MeshLambertMaterial({color: 0xffffff, map: this.core.GetTexture("tile")}));
         this.AddPhysicObject(this.floor);
         this.onRaycastedCallback = (ints, message) => {
             (this.scene as GameScene).casted.push("Board");
