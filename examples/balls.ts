@@ -75,7 +75,6 @@ class GameScene extends Scene {
         const floor = new THREE.PlaneBufferGeometry(500, 500);
         floor.rotateX(-Math.PI / 2);
         floor.translate(0, -30, 0);
-        // const floor2 = new THREE.BoxBufferGeometry
         const floorTex = this.core.GetTexture("floor");
         floorTex.repeat.set(10, 10);
         floorTex.wrapS = THREE.RepeatWrapping;
@@ -210,14 +209,10 @@ class Board extends Unit {
     public Init(): void {
         this.raycastTarget = true;
         this.floor = new PhysicObjects(0, "floor");
-        // console.log(this.floor.viewBody.children);
         this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON(
             this.core.GetText("board"),
             new THREE.MeshPhongMaterial({map: this.core.GetTexture("tile")}));
-        // console.log(this.floor.viewBody.children.length);
-        // console.log(this.floor.viewBody.children);
-        // console.log(this.floor.viewBody.children[0]);
         const hoge = new THREE.Group();
         console.log(hoge.children);
         hoge.add(new THREE.Mesh());
@@ -225,13 +220,7 @@ class Board extends Unit {
         this.floor.viewBody.children.forEach((o) => {
             o.receiveShadow = true;
             o.castShadow = true;
-            console.log("h");
         });
-        // for (const mesh of (this.floor.viewBody as THREE.Group).children) {
-        //     console.log("h");
-        //     mesh.receiveShadow = true;
-        //     mesh.castShadow = true;
-        // }
         this.AddPhysicObject(this.floor);
         this.onRaycastedCallback = (ints, message) => {
             (this.scene as GameScene).casted.push("Board");
@@ -247,37 +236,3 @@ class Board extends Unit {
 
 // ゲームの開始
 Start("init", new LoadScene(), {halfFPS: true});
-// const hoge = new THREE.Group();
-// console.log(hoge.children);
-// hoge.add(new THREE.Mesh());
-// console.log(hoge.children);
-/*
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(800, 600);
-renderer.shadowMap.enabled = true;
-document.body.appendChild(renderer.domElement);
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(this.fov, 800 / 600, 0.1, 5000);
-camera.position.set(0, 15, 15);
-camera.lookAt(0, 0, 0);
-const light = new THREE.DirectionalLight("white", 1);
-light.castShadow = true;
-light.position.set(0, 100, 0);
-light.shadow.mapSize.width = 2048;
-light.shadow.mapSize.height = 2048;
-light.shadow.camera.right = 100;
-light.shadow.camera.left = -100;
-light.shadow.camera.top = -100;
-light.shadow.camera.bottom = 100;
-light.shadow.camera.near = 0.5;
-light.shadow.camera.far = 1000;
-light.castShadow = true;
-const floorGeo = new THREE.PlaneBufferGeometry(500, 500);
-floorGeo.rotateX(-Math.PI / 2);
-floorGeo.translate(0, -50, 0);
-const frame = () => {
-    requestAnimationFrame(frame);
-    renderer.render(scene, camera);
-};
-frame();
-// */

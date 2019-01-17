@@ -152,7 +152,6 @@ export class PhysicObjects extends PhysicObject {
     constructor(mass: number, name: string = "") {
         super(name, mass);
         this.viewBody = new THREE.Group();
-        // console.log(this.viewBody.children);
     }
     public Update(): void {
         this.Sync();
@@ -166,7 +165,6 @@ export class PhysicObjects extends PhysicObject {
                 const geo = new THREE.BoxBufferGeometry(width, height, depth);
                 const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
                 const mesh = new THREE.Mesh(geo, mat);
-                // mesh.receiveShadow = true;
                 mesh.position.set(x, y, z);
                 this.viewBody.add(mesh);
                 geo.dispose();
@@ -174,7 +172,6 @@ export class PhysicObjects extends PhysicObject {
             } else {
                 const geo = new THREE.BoxBufferGeometry(width, height, depth);
                 const mesh = new THREE.Mesh(geo, material);
-                // mesh.receiveShadow = true;
                 mesh.position.set(x, y, z);
                 this.viewBody.add(mesh);
                 geo.dispose();
