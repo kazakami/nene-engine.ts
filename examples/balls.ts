@@ -56,10 +56,6 @@ class GameScene extends Scene {
         light.shadow.camera.bottom = 50;
         light.shadow.camera.near = 50;
         light.shadow.camera.far = 300;
-        const lightShadowHelper = new THREE.CameraHelper(light.shadow.camera);
-        this.scene.add(lightShadowHelper);
-        const lightHelper = new THREE.DirectionalLightHelper(light);
-        this.scene.add(lightHelper);
         this.scene.add(light);
         this.sprt = this.core.MakeSpriteFromTexture("circle");
         this.sprt.scale.set(100, 100, 1);
