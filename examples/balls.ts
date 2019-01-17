@@ -172,6 +172,7 @@ class Ball extends Unit {
             this.ball = new PhysicSphere(1, 1, "ball", mesh);
         } else {
             this.ball = new PhysicSphere(1, 1, "ball", this.core.GetObject("ball"));
+            this.ball.viewBody.children.forEach((o) => o.castShadow = true)
         }
         this.ball.viewBody.castShadow = true;
         this.ball.position.set(this.x, this.y, this.z);
@@ -213,10 +214,6 @@ class Board extends Unit {
         this.floor.AddShapeFromJSON(
             this.core.GetText("board"),
             new THREE.MeshPhongMaterial({map: this.core.GetTexture("tile")}));
-        const hoge = new THREE.Group();
-        console.log(hoge.children);
-        hoge.add(new THREE.Mesh());
-        console.log(hoge.children);
         this.floor.viewBody.children.forEach((o) => {
             o.receiveShadow = true;
             o.castShadow = true;
