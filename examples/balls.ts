@@ -18,6 +18,7 @@ class LoadScene extends Scene {
             this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag"),
             this.core.LoadFile("resources/shaders/pass1.vert", "pass1.vert"),
             this.core.LoadFile("resources/shaders/pass1.frag", "pass1.frag"),
+            this.core.LoadFile("resources/jsons/FloorPhysic.json", "board"),
             this.core.LoadGLTF("resources/models/octagon.gltf", "oct"),
         ]);
         console.log("loaded");
@@ -45,16 +46,16 @@ class GameScene extends Scene {
         this.camera.lookAt(0, 0, 0);
         const light = new THREE.DirectionalLight("white", 1);
         light.castShadow = true;
+        light.shadow.bias = -0.001;
         light.position.set(0, 100, 0);
         light.shadow.mapSize.width = 2048;
         light.shadow.mapSize.height = 2048;
-        light.shadow.camera.right = 100;
-        light.shadow.camera.left = -100;
-        light.shadow.camera.top = -100;
-        light.shadow.camera.bottom = 100;
-        light.shadow.camera.near = 0.5;
-        light.shadow.camera.far = 1000;
-        light.castShadow = true;
+        light.shadow.camera.right = 50;
+        light.shadow.camera.left = -50;
+        light.shadow.camera.top = -50;
+        light.shadow.camera.bottom = 50;
+        light.shadow.camera.near = 50;
+        light.shadow.camera.far = 300;
         const lightShadowHelper = new THREE.CameraHelper(light.shadow.camera);
         this.scene.add(lightShadowHelper);
         const lightHelper = new THREE.DirectionalLightHelper(light);
@@ -209,12 +210,28 @@ class Board extends Unit {
     public Init(): void {
         this.raycastTarget = true;
         this.floor = new PhysicObjects(0, "floor");
+        // console.log(this.floor.viewBody.children);
         this.floor.position.set(0, -10, 0);
-        this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json", new THREE.MeshPhongMaterial({map: this.core.GetTexture("tile")}));
-        for (const mesh of this.floor.viewBody.children) {
-            mesh.receiveShadow = true;
-            mesh.castShadow = true;
-        }
+        this.floor.AddShapeFromJSON(
+            this.core.GetText("board"),
+            new THREE.MeshPhongMaterial({map: this.core.GetTexture("tile")}));
+        // console.log(this.floor.viewBody.children.length);
+        // console.log(this.floor.viewBody.children);
+        // console.log(this.floor.viewBody.children[0]);
+        const hoge = new THREE.Group();
+        console.log(hoge.children);
+        hoge.add(new THREE.Mesh());
+        console.log(hoge.children);
+        this.floor.viewBody.children.forEach((o) => {
+            o.receiveShadow = true;
+            o.castShadow = true;
+            console.log("h");
+        });
+        // for (const mesh of (this.floor.viewBody as THREE.Group).children) {
+        //     console.log("h");
+        //     mesh.receiveShadow = true;
+        //     mesh.castShadow = true;
+        // }
         this.AddPhysicObject(this.floor);
         this.onRaycastedCallback = (ints, message) => {
             (this.scene as GameScene).casted.push("Board");
@@ -230,6 +247,10 @@ class Board extends Unit {
 
 // ゲームの開始
 Start("init", new LoadScene(), {halfFPS: true});
+// const hoge = new THREE.Group();
+// console.log(hoge.children);
+// hoge.add(new THREE.Mesh());
+// console.log(hoge.children);
 /*
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(800, 600);

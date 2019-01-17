@@ -152,6 +152,7 @@ export class PhysicObjects extends PhysicObject {
     constructor(mass: number, name: string = "") {
         super(name, mass);
         this.viewBody = new THREE.Group();
+        // console.log(this.viewBody.children);
     }
     public Update(): void {
         this.Sync();
@@ -165,7 +166,7 @@ export class PhysicObjects extends PhysicObject {
                 const geo = new THREE.BoxBufferGeometry(width, height, depth);
                 const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
                 const mesh = new THREE.Mesh(geo, mat);
-                mesh.receiveShadow = true;
+                // mesh.receiveShadow = true;
                 mesh.position.set(x, y, z);
                 this.viewBody.add(mesh);
                 geo.dispose();
@@ -173,7 +174,7 @@ export class PhysicObjects extends PhysicObject {
             } else {
                 const geo = new THREE.BoxBufferGeometry(width, height, depth);
                 const mesh = new THREE.Mesh(geo, material);
-                mesh.receiveShadow = true;
+                // mesh.receiveShadow = true;
                 mesh.position.set(x, y, z);
                 this.viewBody.add(mesh);
                 geo.dispose();
@@ -183,36 +184,29 @@ export class PhysicObjects extends PhysicObject {
         , new Cannon.Vec3(x, y, z));
         return;
     }
-    public AddShapeFromJSON(filename: string, mat: THREE.Material = null): void {
-        const loader = new THREE.FileLoader();
-        loader.load(filename, (res) => {
-            if (typeof res !== "string") {
-                throw new Error("file is binary.");
-            }
-            const objs = JSON.parse(res);
-            objs.forEach((obj) => {
-                if ("type" in obj) {
-                    switch (obj.type) {
-                        case "box": {
-                            const addMesh = UndefCoalescing<boolean>(obj.addMesh, false);
-                            const width = UndefCoalescing<number>(obj.width, 1);
-                            const height = UndefCoalescing<number>(obj.height, 1);
-                            const depth = UndefCoalescing<number>(obj.depth, 1);
-                            const x = UndefCoalescing<number>(obj.x, 0);
-                            const y = UndefCoalescing<number>(obj.y, 0);
-                            const z = UndefCoalescing<number>(obj.z, 0);
-                            this.AddBox(width, height, depth, x, y, z, addMesh, mat);
-                            break;
-                        }
-                        default: {
-                            throw new Error(obj.type + " is unknown");
-                        }
+    public AddShapeFromJSON(data: string, mat: THREE.Material = null): void {
+        const objs = JSON.parse(data);
+        objs.forEach((obj) => {
+            if ("type" in obj) {
+                switch (obj.type) {
+                    case "box": {
+                        const addMesh = UndefCoalescing<boolean>(obj.addMesh, false);
+                        const width = UndefCoalescing<number>(obj.width, 1);
+                        const height = UndefCoalescing<number>(obj.height, 1);
+                        const depth = UndefCoalescing<number>(obj.depth, 1);
+                        const x = UndefCoalescing<number>(obj.x, 0);
+                        const y = UndefCoalescing<number>(obj.y, 0);
+                        const z = UndefCoalescing<number>(obj.z, 0);
+                        this.AddBox(width, height, depth, x, y, z, addMesh, mat);
+                        break;
                     }
-                } else {
-                    throw new Error("type is needed");
+                    default: {
+                        throw new Error(obj.type + " is unknown");
+                    }
                 }
-            });
+            } else {
+                throw new Error("type is needed");
+            }
         });
-        return;
-    }
+}
 }
