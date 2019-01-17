@@ -73,12 +73,13 @@ class GameScene extends Scene {
         this.core.PixelRatio = 1 / 1;
         const floor = new THREE.PlaneBufferGeometry(500, 500);
         floor.rotateX(-Math.PI / 2);
-        floor.translate(0, -50, 0);
+        floor.translate(0, -30, 0);
+        // const floor2 = new THREE.BoxBufferGeometry
         const floorTex = this.core.GetTexture("floor");
         floorTex.repeat.set(10, 10);
         floorTex.wrapS = THREE.RepeatWrapping;
         floorTex.wrapT = THREE.RepeatWrapping;
-        const floorMat = new THREE.MeshBasicMaterial({map: floorTex});
+        const floorMat = new THREE.MeshPhongMaterial({map: floorTex});
         const floorMesh = new THREE.Mesh(floor, floorMat);
         floorMesh.receiveShadow = true;
         this.scene.add(floorMesh);
@@ -89,7 +90,7 @@ class GameScene extends Scene {
         wallTex.repeat.set(10, 10);
         wallTex.wrapS = THREE.RepeatWrapping;
         wallTex.wrapT = THREE.RepeatWrapping;
-        const wallMat = new THREE.MeshBasicMaterial({map: wallTex});
+        const wallMat = new THREE.MeshPhongMaterial({map: wallTex});
         const wallMesh = new THREE.Mesh(wall, wallMat);
         wallMesh.receiveShadow = true;
         this.scene.add(wallMesh);
@@ -209,8 +210,11 @@ class Board extends Unit {
         this.raycastTarget = true;
         this.floor = new PhysicObjects(0, "floor");
         this.floor.position.set(0, -10, 0);
-        this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json", new THREE.MeshLambertMaterial({color: 0xffffff, map: this.core.GetTexture("tile")}));
-        this.floor.viewBody.receiveShadow = true;
+        this.floor.AddShapeFromJSON("resources/jsons/FloorPhysic.json", new THREE.MeshPhongMaterial({map: this.core.GetTexture("tile")}));
+        for (const mesh of this.floor.viewBody.children) {
+            mesh.receiveShadow = true;
+            mesh.castShadow = true;
+        }
         this.AddPhysicObject(this.floor);
         this.onRaycastedCallback = (ints, message) => {
             (this.scene as GameScene).casted.push("Board");
@@ -226,3 +230,33 @@ class Board extends Unit {
 
 // ゲームの開始
 Start("init", new LoadScene(), {halfFPS: true});
+/*
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(800, 600);
+renderer.shadowMap.enabled = true;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(this.fov, 800 / 600, 0.1, 5000);
+camera.position.set(0, 15, 15);
+camera.lookAt(0, 0, 0);
+const light = new THREE.DirectionalLight("white", 1);
+light.castShadow = true;
+light.position.set(0, 100, 0);
+light.shadow.mapSize.width = 2048;
+light.shadow.mapSize.height = 2048;
+light.shadow.camera.right = 100;
+light.shadow.camera.left = -100;
+light.shadow.camera.top = -100;
+light.shadow.camera.bottom = 100;
+light.shadow.camera.near = 0.5;
+light.shadow.camera.far = 1000;
+light.castShadow = true;
+const floorGeo = new THREE.PlaneBufferGeometry(500, 500);
+floorGeo.rotateX(-Math.PI / 2);
+floorGeo.translate(0, -50, 0);
+const frame = () => {
+    requestAnimationFrame(frame);
+    renderer.render(scene, camera);
+};
+frame();
+// */

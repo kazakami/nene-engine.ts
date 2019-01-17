@@ -162,16 +162,18 @@ export class PhysicObjects extends PhysicObject {
                   material: THREE.Material = null): void {
         if (addMesh) {
             if (material === null) {
-                const geo = new THREE.BoxGeometry(width, height, depth);
+                const geo = new THREE.BoxBufferGeometry(width, height, depth);
                 const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
                 const mesh = new THREE.Mesh(geo, mat);
+                mesh.receiveShadow = true;
                 mesh.position.set(x, y, z);
                 this.viewBody.add(mesh);
                 geo.dispose();
                 mat.dispose();
             } else {
-                const geo = new THREE.BoxGeometry(width, height, depth);
+                const geo = new THREE.BoxBufferGeometry(width, height, depth);
                 const mesh = new THREE.Mesh(geo, material);
+                mesh.receiveShadow = true;
                 mesh.position.set(x, y, z);
                 this.viewBody.add(mesh);
                 geo.dispose();
