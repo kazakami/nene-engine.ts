@@ -68,28 +68,40 @@ class GameScene extends Scene {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
         this.core.PixelRatio = 1 / 1;
-        const floor = new THREE.PlaneBufferGeometry(500, 500);
-        floor.rotateX(-Math.PI / 2);
-        floor.translate(0, -30, 0);
+        // 床
+        const floorGeo = new THREE.PlaneBufferGeometry(500, 500);
+        floorGeo.rotateX(-Math.PI / 2);
+        floorGeo.translate(0, -30, 0);
         const floorTex = this.core.GetTexture("floor");
         floorTex.repeat.set(10, 10);
         floorTex.wrapS = THREE.RepeatWrapping;
         floorTex.wrapT = THREE.RepeatWrapping;
         const floorMat = new THREE.MeshPhongMaterial({map: floorTex});
-        const floorMesh = new THREE.Mesh(floor, floorMat);
+        const floorMesh = new THREE.Mesh(floorGeo, floorMat);
         floorMesh.receiveShadow = true;
         this.scene.add(floorMesh);
-
-        const wall = new THREE.PlaneBufferGeometry(500, 500);
-        wall.translate(0, 0, -250);
+        // 奥の壁
+        const wallGeo1 = new THREE.PlaneBufferGeometry(500, 500);
+        wallGeo1.translate(0, 0, -150);
         const wallTex = this.core.GetTexture("wall");
         wallTex.repeat.set(10, 10);
         wallTex.wrapS = THREE.RepeatWrapping;
         wallTex.wrapT = THREE.RepeatWrapping;
-        const wallMat = new THREE.MeshPhongMaterial({map: wallTex});
-        const wallMesh = new THREE.Mesh(wall, wallMat);
-        wallMesh.receiveShadow = true;
-        this.scene.add(wallMesh);
+        const wallMat = new THREE.MeshBasicMaterial({map: wallTex});
+        const wallMesh1 = new THREE.Mesh(wallGeo1, wallMat);
+        this.scene.add(wallMesh1);
+        // 右の壁
+        const wallGeo2 = new THREE.PlaneBufferGeometry(500, 500);
+        wallGeo2.rotateY(-Math.PI / 2);
+        wallGeo2.translate(150, 0, 0);
+        const wallMesh2 = new THREE.Mesh(wallGeo2, wallMat);
+        this.scene.add(wallMesh2);
+        // 左の壁
+        const wallGeo3 = new THREE.PlaneBufferGeometry(500, 500);
+        wallGeo3.rotateY(Math.PI / 2);
+        wallGeo3.translate(-150, 0, 0);
+        const wallMesh3 = new THREE.Mesh(wallGeo3, wallMat);
+        this.scene.add(wallMesh3);
 
         this.composer = this.core.MakeEffectComposer();
         this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
