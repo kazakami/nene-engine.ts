@@ -1,6 +1,19 @@
 import * as THREE from "three";
 
 /**
+ * 与えられたObject3Dが子孫として持つ全てのMeshに対して処理を行う
+ * @param obj Object3D
+ * @param func Meshに対して行う処理
+ */
+export function EachMesh(obj: THREE.Object3D, func: (mesh: THREE.Mesh) => void): void {
+    if ((obj as THREE.Mesh).isMesh) {
+        return func(obj as THREE.Mesh);
+    } else {
+        return obj.children.forEach((o) => EachMesh(o, func));
+    }
+}
+
+/**
  * 連想配列の全ての要素がNullでもUndefinedでもなければtrueを返す
  * @param arr 調べる連想配列
  */
