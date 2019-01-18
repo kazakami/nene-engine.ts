@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } from "../src/nene-engine";
+import { EachMesh, PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
@@ -180,9 +180,11 @@ class Ball extends Unit {
             this.ball = new PhysicSphere(1, 1, "ball", mesh);
         } else {
             this.ball = new PhysicSphere(1, 1, "ball", this.core.GetObject("ball"));
-            this.ball.viewBody.children.forEach((o) => o.castShadow = true)
         }
-        this.ball.viewBody.castShadow = true;
+        EachMesh(this.ball.viewBody, (m) => {
+            m.castShadow = true;
+            m.receiveShadow = true;
+        });
         this.ball.position.set(this.x, this.y, this.z);
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
@@ -222,9 +224,9 @@ class Board extends Unit {
         this.floor.AddShapeFromJSON(
             this.core.GetText("board"),
             new THREE.MeshPhongMaterial({map: this.core.GetTexture("tile")}));
-        this.floor.viewBody.children.forEach((o) => {
-            o.receiveShadow = true;
-            o.castShadow = true;
+        EachMesh(this.floor.viewBody, (m) => {
+            m.castShadow = true;
+            m.receiveShadow = true;
         });
         this.AddPhysicObject(this.floor);
         this.onRaycastedCallback = (ints, message) => {
