@@ -60,10 +60,6 @@ class GameScene extends Scene {
         this.sprt = this.core.MakeSpriteFromTexture("circle");
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
-        this.onMouseClick = async () => {
-            await this.core.SaveImage("ScreenShot.png");
-            console.log("Image Saved");
-        };
         this.onWindowResize = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
@@ -125,12 +121,21 @@ class GameScene extends Scene {
         this.casted = [];
         this.Raycast();
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
+        if (this.core.IsKeyPressing("p")) {
+            (async () => {
+                await this.core.SaveImage();
+                console.log("save screenshot");
+            })();
+        }
     }
     public DrawText(): void {
         this.core.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
         this.core.DrawText("fps: " + Math.round(this.core.fps).toString(),
-            - this.core.windowSizeX / 2,
+            -this.core.windowSizeX / 2,
             this.core.windowSizeY / 2);
+        this.core.DrawText("Press p to save screenshot.",
+            -this.core.windowSizeX / 2,
+            this.core.windowSizeY / 2 - 50);
         this.core.DrawText(this.casted.join(), this.core.mouseX, this.core.mouseY);
     }
 }
