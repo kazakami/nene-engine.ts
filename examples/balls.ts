@@ -166,6 +166,7 @@ class Particle extends Unit {
 
 class Ball extends Unit {
     public ball: PhysicSphere;
+    private shaderMat: THREE.ShaderMaterial;
     constructor(private x = 0, private y = 0, private z = 0, private shaded = false) {
         super();
     }
@@ -173,15 +174,15 @@ class Ball extends Unit {
         this.raycastTarget = true;
         if (this.shaded) {
             const geo = new THREE.SphereBufferGeometry(1, 10, 10);
-            const mat = new THREE.ShaderMaterial({
+            this.shaderMat = new THREE.ShaderMaterial({
                 fragmentShader: this.core.GetText("sample1.frag"),
                 uniforms: {
                     // hoge: {value: 0.5},
                 },
                 vertexShader: this.core.GetText("sample1.vert"),
             });
-            mat.uniforms.hoge = {value: 0.0};
-            const mesh = new THREE.Mesh(geo, mat);
+            this.shaderMat.uniforms.hoge = {value: 0.0};
+            const mesh = new THREE.Mesh(geo, this.shaderMat);
             this.ball = new PhysicSphere(1, 1, "ball", mesh);
         } else {
             this.ball = new PhysicSphere(1, 1, "ball", this.core.GetObject("ball"));
@@ -210,6 +211,9 @@ class Ball extends Unit {
             this.ball.velocity.set(0, 0, 0);
             this.ball.quaternion.set(0, 0, 0, 1);
             this.ball.angularVelocity.set(0, 0, 0);
+        }
+        if (this.shaded) {
+            this.shaderMat.uniforms.time = {value: this.frame};
         }
     }
     public DrawText(): void {
