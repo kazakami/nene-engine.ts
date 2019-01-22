@@ -93,7 +93,7 @@
 								<li class="tsd-kind-function"><a href="index.html#base64toblob" class="tsd-kind-icon">Base64to<wbr>Blob</a></li>
 								<li class="tsd-kind-function"><a href="index.html#booleantostring" class="tsd-kind-icon">Boolean<wbr>ToString</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="index.html#coalescing" class="tsd-kind-icon">Coalescing</a></li>
-								<li class="tsd-kind-function"><a href="index.html#fileload" class="tsd-kind-icon">File<wbr>Load</a></li>
+								<li class="tsd-kind-function"><a href="index.html#eachmesh" class="tsd-kind-icon">Each<wbr>Mesh</a></li>
 								<li class="tsd-kind-function tsd-has-type-parameter"><a href="index.html#nullcoalescing" class="tsd-kind-icon">Null<wbr>Coalescing</a></li>
 								<li class="tsd-kind-function"><a href="index.html#orientquaternion" class="tsd-kind-icon">Orient<wbr>Quaternion</a></li>
 								<li class="tsd-kind-function"><a href="index.html#random" class="tsd-kind-icon">Random</a></li>
@@ -117,9 +117,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L3">Util.ts:3</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L20">Util.ts:20</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>連想配列の全ての要素がNullでもUndefinedでもなければtrueを返す</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -130,6 +135,9 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>arr: <span class="tsd-signature-type">object</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>調べる連想配列</p>
+									</div>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-index-signature">
 											<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">T</span></h5>
@@ -151,9 +159,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L12">Util.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L33">Util.ts:33</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>連想配列を配列にする</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -164,6 +177,9 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>arr: <span class="tsd-signature-type">object</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>連想配列</p>
+									</div>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-index-signature">
 											<h5><span class="tsd-signature-symbol">[</span>key: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">T</span></h5>
@@ -185,16 +201,27 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L28">Util.ts:28</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L61">Util.ts:61</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Base64形式のデータからBlobを生成する</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>base64: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Base64形式のデータ</p>
+									</div>
 								</li>
 								<li>
 									<h5>type: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>ファイル形式</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Blob</span></h4>
@@ -211,13 +238,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L91">Util.ts:91</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L135">Util.ts:135</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>真偽値を文字列に変換する</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>b: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>文字列に変換する真偽値</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -234,9 +269,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L83">Util.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L123">Util.ts:123</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>NullもしくはUndefined合体関数</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -247,9 +287,15 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>input: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>入力</p>
+									</div>
 								</li>
 								<li>
 									<h5>defaultValue: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>NullもしくはUndefinedの場合に返すデフォルト値</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -257,36 +303,47 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-function">
-					<a name="fileload" class="tsd-anchor"></a>
-					<h3>File<wbr>Load</h3>
+					<a name="eachmesh" class="tsd-anchor"></a>
+					<h3>Each<wbr>Mesh</h3>
 					<ul class="tsd-signatures tsd-kind-function">
-						<li class="tsd-signature tsd-kind-icon">File<wbr>Load<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, callback<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">Each<wbr>Mesh<span class="tsd-signature-symbol">(</span>obj<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">THREE.Object3D</span>, func<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L53">Util.ts:53</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L8">Util.ts:8</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>与えられたObject3Dが子孫として持つ全てのMeshに対して処理を行う</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>url: <span class="tsd-signature-type">string</span></h5>
+									<h5>obj: <span class="tsd-signature-type">THREE.Object3D</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Object3D</p>
+									</div>
 								</li>
 								<li>
-									<h5>callback: <span class="tsd-signature-type">function</span></h5>
+									<h5>func: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Meshに対して行う処理</p>
+									</div>
 									<ul class="tsd-parameters">
 										<li class="tsd-parameter-siganture">
 											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
-												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>str<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>mesh<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">THREE.Mesh</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 											</ul>
 											<ul class="tsd-descriptions">
 												<li class="tsd-description">
 													<h4 class="tsd-parameters-title">Parameters</h4>
 													<ul class="tsd-parameters">
 														<li>
-															<h5>str: <span class="tsd-signature-type">string</span></h5>
+															<h5>mesh: <span class="tsd-signature-type">THREE.Mesh</span></h5>
 														</li>
 													</ul>
 													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -310,9 +367,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L75">Util.ts:75</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L110">Util.ts:110</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Null合体関数</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -323,9 +385,15 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>input: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>入力</p>
+									</div>
 								</li>
 								<li>
 									<h5>defaultValue: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Nullの場合に返すデフォルト値</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -342,19 +410,33 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L42">Util.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L81">Util.ts:81</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>(0, 1, 0)向いていたものを指定した方向へ向けるための四元数を返す</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>x: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>指定する方向のx座標</p>
+									</div>
 								</li>
 								<li>
 									<h5>y: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>指定する方向のy座標</p>
+									</div>
 								</li>
 								<li>
 									<h5>z: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>指定する方向のz座標</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">THREE.Quaternion</span></h4>
@@ -371,13 +453,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L20">Util.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L45">Util.ts:45</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>[-range, range]の間の一様分布乱数</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>range: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>範囲</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -394,9 +484,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L24">Util.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L52">Util.ts:52</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>ランダムな色を返す</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">THREE.Color</span></h4>
 						</li>
 					</ul>
@@ -411,7 +506,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L738">Core.ts:738</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L805">Core.ts:805</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -452,9 +547,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Util.ts#L67">Util.ts:67</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Util.ts#L97">Util.ts:97</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Undefined合体関数</p>
+								</div>
+							</div>
 							<h4 class="tsd-type-parameters-title">Type parameters</h4>
 							<ul class="tsd-type-parameters">
 								<li>
@@ -465,9 +565,15 @@
 							<ul class="tsd-parameters">
 								<li>
 									<h5>input: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>入力</p>
+									</div>
 								</li>
 								<li>
 									<h5>defaultValue: <span class="tsd-signature-type">T</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Undefinedの場合に返すデフォルト値</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">T</span></h4>
@@ -553,7 +659,7 @@
 						<a href="index.html#coalescing" class="tsd-kind-icon">Coalescing</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="index.html#fileload" class="tsd-kind-icon">File<wbr>Load</a>
+						<a href="index.html#eachmesh" class="tsd-kind-icon">Each<wbr>Mesh</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="index.html#nullcoalescing" class="tsd-kind-icon">Null<wbr>Coalescing</a>

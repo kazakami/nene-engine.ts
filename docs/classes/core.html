@@ -62,6 +62,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>ゲームエンジンのコア</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -84,6 +91,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="core.html#ctx" class="tsd-kind-icon">ctx</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="core.html#halffps" class="tsd-kind-icon">halfFPS</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="core.html#mousex" class="tsd-kind-icon">mouseX</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="core.html#mousey" class="tsd-kind-icon">mouseY</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="core.html#rendertarget" class="tsd-kind-icon">render<wbr>Target</a></li>
@@ -136,6 +144,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#makespritefromtexture" class="tsd-kind-icon">Make<wbr>Sprite<wbr>From<wbr>Texture</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#removescene" class="tsd-kind-icon">Remove<wbr>Scene</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#saveimage" class="tsd-kind-icon">Save<wbr>Image</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#sceneselector" class="tsd-kind-icon">Scene<wbr>Selector</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#settextcolor" class="tsd-kind-icon">Set<wbr>Text<wbr>Color</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="core.html#settextsize" class="tsd-kind-icon">Set<wbr>Text<wbr>Size</a></li>
 							</ul>
@@ -155,7 +164,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L57">Core.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L99">Core.ts:99</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -177,7 +186,17 @@
 					<div class="tsd-signature tsd-kind-icon">ctx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">CanvasRenderingContext2D</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L34">Core.ts:34</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L74">Core.ts:74</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="halffps" class="tsd-anchor"></a>
+					<h3>halfFPS</h3>
+					<div class="tsd-signature tsd-kind-icon">halfFPS<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L75">Core.ts:75</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -187,9 +206,14 @@
 					<div class="tsd-signature tsd-kind-icon">mouseX<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L28">Core.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L59">Core.ts:59</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>マウスのx座標</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="mousey" class="tsd-anchor"></a>
@@ -197,9 +221,14 @@
 					<div class="tsd-signature tsd-kind-icon">mouseY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> =&nbsp;0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L29">Core.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L63">Core.ts:63</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>マウスのy座標</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="rendertarget" class="tsd-anchor"></a>
@@ -207,7 +236,7 @@
 					<div class="tsd-signature tsd-kind-icon">render<wbr>Target<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">THREE.WebGLRenderTarget</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L33">Core.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L73">Core.ts:73</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -217,7 +246,7 @@
 					<div class="tsd-signature tsd-kind-icon">renderer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">THREE.WebGLRenderer</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L32">Core.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L72">Core.ts:72</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -227,9 +256,14 @@
 					<div class="tsd-signature tsd-kind-icon">window<wbr>SizeX<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L30">Core.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L67">Core.ts:67</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>画面幅</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="windowsizey" class="tsd-anchor"></a>
@@ -237,9 +271,14 @@
 					<div class="tsd-signature tsd-kind-icon">window<wbr>SizeY<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L31">Core.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L71">Core.ts:71</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>画面高さ</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -255,7 +294,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L62">Core.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L112">Core.ts:112</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -263,7 +302,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L66">Core.ts:66</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L116">Core.ts:116</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -286,7 +325,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L682">Core.ts:682</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L749">Core.ts:749</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -306,7 +345,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L596">Core.ts:596</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L671">Core.ts:671</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -343,7 +382,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L584">Core.ts:584</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L659">Core.ts:659</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -380,7 +419,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L127">Core.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L186">Core.ts:186</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -417,7 +456,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L572">Core.ts:572</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L647">Core.ts:647</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -449,7 +488,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L674">Core.ts:674</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L741">Core.ts:741</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -498,7 +537,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L112">Core.ts:112</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L171">Core.ts:171</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -521,7 +560,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L162">Core.ts:162</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L221">Core.ts:221</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -545,7 +584,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L393">Core.ts:393</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L464">Core.ts:464</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -576,7 +615,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L426">Core.ts:426</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L497">Core.ts:497</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -600,7 +639,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L88">Core.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L147">Core.ts:147</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -622,7 +661,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L233">Core.ts:233</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L295">Core.ts:295</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -653,7 +692,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L218">Core.ts:218</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L280">Core.ts:280</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -677,7 +716,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L286">Core.ts:286</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L351">Core.ts:351</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -708,7 +747,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L312">Core.ts:312</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L377">Core.ts:377</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -732,7 +771,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L437">Core.ts:437</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L508">Core.ts:508</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -758,7 +797,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L412">Core.ts:412</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L483">Core.ts:483</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -780,7 +819,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L153">Core.ts:153</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L212">Core.ts:212</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -802,7 +841,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L204">Core.ts:204</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L266">Core.ts:266</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -824,7 +863,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L273">Core.ts:273</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L338">Core.ts:338</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -846,7 +885,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L104">Core.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L163">Core.ts:163</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -877,7 +916,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L96">Core.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L155">Core.ts:155</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -908,9 +947,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L77">Core.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L133">Core.ts:133</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>マウス左ボタンが押し下げられているか</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
@@ -925,9 +969,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L81">Core.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L140">Core.ts:140</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>マウス左ボタンがこのフレームに押し下げられたか</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
@@ -942,7 +991,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L405">Core.ts:405</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L476">Core.ts:476</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -973,7 +1022,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L197">Core.ts:197</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L259">Core.ts:259</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1004,7 +1053,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L266">Core.ts:266</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L331">Core.ts:331</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1029,13 +1078,13 @@
 					<a name="loadfile" class="tsd-anchor"></a>
 					<h3>Load<wbr>File</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">Load<wbr>File<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">Load<wbr>File<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L175">Core.ts:175</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L234">Core.ts:234</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1058,7 +1107,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1066,13 +1115,13 @@
 					<a name="loadgltf" class="tsd-anchor"></a>
 					<h3>LoadGLTF</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">LoadGLTF<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">LoadGLTF<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L328">Core.ts:328</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L393">Core.ts:393</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1095,7 +1144,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1103,13 +1152,13 @@
 					<a name="loadobjmtl" class="tsd-anchor"></a>
 					<h3>Load<wbr>Obj<wbr>Mtl</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">Load<wbr>Obj<wbr>Mtl<span class="tsd-signature-symbol">(</span>objFilename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, mtlFilename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">Load<wbr>Obj<wbr>Mtl<span class="tsd-signature-symbol">(</span>objFilename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, mtlFilename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L350">Core.ts:350</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L418">Core.ts:418</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1138,7 +1187,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1146,13 +1195,13 @@
 					<a name="loadtexture" class="tsd-anchor"></a>
 					<h3>Load<wbr>Texture</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">Load<wbr>Texture<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">Load<wbr>Texture<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L246">Core.ts:246</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L308">Core.ts:308</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1175,7 +1224,7 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1189,9 +1238,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L71">Core.ts:71</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L124">Core.ts:124</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>ゲームエンジンで使用しているTHREE.WebGLRendererを使うTHREE.EffectComposerを生成する</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">THREE.EffectComposer</span></h4>
 						</li>
 					</ul>
@@ -1206,7 +1260,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L300">Core.ts:300</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L365">Core.ts:365</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1244,7 +1298,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L605">Core.ts:605</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L680">Core.ts:680</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1269,13 +1323,13 @@
 					<a name="saveimage" class="tsd-anchor"></a>
 					<h3>Save<wbr>Image</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">Save<wbr>Image<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">Save<wbr>Image<span class="tsd-signature-symbol">(</span>filename<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L617">Core.ts:617</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L692">Core.ts:692</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1292,7 +1346,56 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="sceneselector" class="tsd-anchor"></a>
+					<h3>Scene<wbr>Selector</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">Scene<wbr>Selector<span class="tsd-signature-symbol">(</span>filter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">function</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L108">Core.ts:108</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>登録されているsceneインスタンスのうち指定した条件を満たすものの配列を返す</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>filter: <span class="tsd-signature-type">function</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>フィルター関数</p>
+									</div>
+									<ul class="tsd-parameters">
+										<li class="tsd-parameter-siganture">
+											<ul class="tsd-signatures tsd-kind-type-literal tsd-is-not-exported">
+												<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>s<span class="tsd-signature-symbol">: </span><a href="scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+											</ul>
+											<ul class="tsd-descriptions">
+												<li class="tsd-description">
+													<h4 class="tsd-parameters-title">Parameters</h4>
+													<ul class="tsd-parameters">
+														<li>
+															<h5>s: <a href="scene.html" class="tsd-signature-type">Scene</a></h5>
+														</li>
+													</ul>
+													<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="scene.html" class="tsd-signature-type">Scene</a><span class="tsd-signature-symbol">[]</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -1306,7 +1409,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L663">Core.ts:663</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L730">Core.ts:730</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1337,7 +1440,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c7250eb/src/Core.ts#L655">Core.ts:655</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Core.ts#L722">Core.ts:722</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1383,6 +1486,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="core.html#ctx" class="tsd-kind-icon">ctx</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="core.html#halffps" class="tsd-kind-icon">halfFPS</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="core.html#mousex" class="tsd-kind-icon">mouseX</a>
@@ -1511,6 +1617,9 @@
 								<a href="core.html#saveimage" class="tsd-kind-icon">Save<wbr>Image</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="core.html#sceneselector" class="tsd-kind-icon">Scene<wbr>Selector</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="core.html#settextcolor" class="tsd-kind-icon">Set<wbr>Text<wbr>Color</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -1581,7 +1690,7 @@
 						<a href="../index.html#coalescing" class="tsd-kind-icon">Coalescing</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="../index.html#fileload" class="tsd-kind-icon">File<wbr>Load</a>
+						<a href="../index.html#eachmesh" class="tsd-kind-icon">Each<wbr>Mesh</a>
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="../index.html#nullcoalescing" class="tsd-kind-icon">Null<wbr>Coalescing</a>
