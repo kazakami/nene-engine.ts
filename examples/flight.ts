@@ -3,21 +3,26 @@ import { Scene, Start, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init() {
-        this.core.LoadObjMtl("resources/models/ente progress_export.obj",
-                             "resources/models/ente progress_export.mtl", "ente");
-        this.core.LoadObjMtl("resources/models/progress_export.obj", "resources/models/progress_export.mtl", "plane");
-        this.core.LoadGLTF("resources/models/progress.glb", "plane2");
-        this.core.LoadTexture("resources/images/grass.png", "grass");
+        this.backgroundColor = new THREE.Color(0x778899);
+        Promise.all([
+            this.core.LoadObjMtl("resources/models/ente progress_export.obj",
+                                "resources/models/ente progress_export.mtl", "ente"),
+            this.core.LoadObjMtl("resources/models/progress_export.obj",
+                                 "resources/models/progress_export.mtl", "plane"),
+            this.core.LoadGLTF("resources/models/progress.glb", "plane2"),
+            this.core.LoadTexture("resources/images/grass.png", "grass"),
+        ])
+        .then(() => this.core.AddScene("game", new GameScene()))
+        .then(() => this.core.ChangeScene("game"))
+        .catch(() => console.log("err"));
     }
     public Update(): void {
-        if (this.core.IsAllResourcesAvailable()) {
-            // オブジェクトenteが読み込まれればシーン遷移
-            this.core.AddAndChangeScene("game", new GameScene());
-        }
+        return;
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
         this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
+        this.core.DrawText(this.frame.toString(), 0, 100);
     }
 }
 

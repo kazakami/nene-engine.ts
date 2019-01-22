@@ -158,50 +158,52 @@ export class PhysicObjects extends PhysicObject {
     }
     public AddBox(width: number, height: number, depth: number,
                   x: number, y: number, z: number,
-                  addMesh: boolean = false): void {
+                  addMesh: boolean = false,
+                  material: THREE.Material = null): void {
         if (addMesh) {
-            const geo = new THREE.BoxGeometry(width, height, depth);
-            const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.position.set(x, y, z);
-            this.viewBody.add(mesh);
-            geo.dispose();
-            mat.dispose();
+            if (material === null) {
+                const geo = new THREE.BoxBufferGeometry(width, height, depth);
+                const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(x, y, z);
+                this.viewBody.add(mesh);
+                geo.dispose();
+                mat.dispose();
+            } else {
+                const geo = new THREE.BoxBufferGeometry(width, height, depth);
+                const mesh = new THREE.Mesh(geo, material);
+                mesh.position.set(x, y, z);
+                this.viewBody.add(mesh);
+                geo.dispose();
+            }
         }
         this.phyBody.addShape(new Cannon.Box(new Cannon.Vec3(width / 2, height / 2, depth / 2))
         , new Cannon.Vec3(x, y, z));
         return;
     }
-    public AddShapeFromJSON(filename: string): void {
-        const loader = new THREE.FileLoader();
-        loader.load(filename, (res) => {
-            if (typeof res !== "string") {
-                throw new Error("file is binary.");
-            }
-            const objs = JSON.parse(res);
-            objs.forEach((obj) => {
-                if ("type" in obj) {
-                    switch (obj.type) {
-                        case "box": {
-                            const addMesh = UndefCoalescing<boolean>(obj.addMesh, false);
-                            const width = UndefCoalescing<number>(obj.width, 1);
-                            const height = UndefCoalescing<number>(obj.height, 1);
-                            const depth = UndefCoalescing<number>(obj.depth, 1);
-                            const x = UndefCoalescing<number>(obj.x, 0);
-                            const y = UndefCoalescing<number>(obj.y, 0);
-                            const z = UndefCoalescing<number>(obj.z, 0);
-                            this.AddBox(width, height, depth, x, y, z, addMesh);
-                            break;
-                        }
-                        default: {
-                            throw new Error(obj.type + " is unknown");
-                        }
+    public AddShapeFromJSON(data: string, mat: THREE.Material = null): void {
+        const objs = JSON.parse(data);
+        objs.forEach((obj) => {
+            if ("type" in obj) {
+                switch (obj.type) {
+                    case "box": {
+                        const addMesh = UndefCoalescing<boolean>(obj.addMesh, false);
+                        const width = UndefCoalescing<number>(obj.width, 1);
+                        const height = UndefCoalescing<number>(obj.height, 1);
+                        const depth = UndefCoalescing<number>(obj.depth, 1);
+                        const x = UndefCoalescing<number>(obj.x, 0);
+                        const y = UndefCoalescing<number>(obj.y, 0);
+                        const z = UndefCoalescing<number>(obj.z, 0);
+                        this.AddBox(width, height, depth, x, y, z, addMesh, mat);
+                        break;
                     }
-                } else {
-                    throw new Error("type is needed");
+                    default: {
+                        throw new Error(obj.type + " is unknown");
+                    }
                 }
-            });
+            } else {
+                throw new Error("type is needed");
+            }
         });
-        return;
-    }
+}
 }
