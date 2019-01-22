@@ -11,27 +11,69 @@ import * as THREE from "three";
 import { Scene } from "./Scene";
 import { AssociativeArrayToArray, Base64toBlob, Coalescing } from "./Util";
 
+/**
+ * ゲームエンジンのコアに渡すオプション
+ */
 export class CoreOption {
+    /**
+     * アンチエイリアスを有効にするか
+     * 省略時はtrue
+     */
     public antialias?: boolean;
+    /**
+     * キャンパスの親要素
+     * 省略時はdocument.body
+     */
     public parent?: HTMLElement;
+    /**
+     * 画面幅
+     * 省略時はwindow.innerWidth
+     */
     public windowSizeX?: number;
+    /**
+     * 画面高さ
+     * 省略時はwindow.innerHeight
+     */
     public windowSizeY?: number;
+    /**
+     * fpsを半分の30とするか
+     * 省略時はfalse
+     */
+    public halfFPS?: boolean;
     constructor(option: CoreOption) {
         this.antialias = Coalescing(option.antialias, true);
         this.parent = Coalescing(option.parent, document.body);
         this.windowSizeX = Coalescing(option.windowSizeX, window.innerWidth);
         this.windowSizeY = Coalescing(option.windowSizeY, window.innerHeight);
+        this.halfFPS = Coalescing(option.halfFPS, false);
     }
 }
 
+/**
+ * ゲームエンジンのコア
+ */
 export class Core {
+    /**
+     * マウスのx座標
+     */
     public mouseX: number = 0;
+    /**
+     * マウスのy座標
+     */
     public mouseY: number = 0;
+    /**
+     * 画面幅
+     */
     public windowSizeX: number;
+    /**
+     * 画面高さ
+     */
     public windowSizeY: number;
     public renderer: THREE.WebGLRenderer;
     public renderTarget: THREE.WebGLRenderTarget;
     public ctx: CanvasRenderingContext2D;
+    public halfFPS: boolean;
+    private frame: number = 0;
     private textureLoader: THREE.TextureLoader;
     private textCanvas: HTMLCanvasElement;
     private canvas: HTMLCanvasElement;
@@ -76,16 +118,25 @@ export class Core {
         this.ChangeCanvasSize(this.windowSizeX, this.windowSizeY);
     }
 
+    /**
+     * ゲームエンジンで使用しているTHREE.WebGLRendererを使うTHREE.EffectComposerを生成する
+     */
     public MakeEffectComposer(): THREE.EffectComposer {
         const c = new THREE.EffectComposer(this.renderer);
         c.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
         return c;
     }
 
+    /**
+     * マウス左ボタンが押し下げられているか
+     */
     public IsMouseLeftButtonDown(): boolean {
         return this.mouseLeftState;
     }
 
+    /**
+     * マウス左ボタンがこのフレームに押し下げられたか
+     */
     public IsMouseLeftButtonPressing(): boolean {
         return (!this.previousMouseLeftState) && this.mouseLeftState;
     }
@@ -180,22 +231,25 @@ export class Core {
      * @param filename テキストファイルのパス
      * @param name テキストファイルを呼び出すキー
      */
-    public LoadFile(filename: string, name: string): void {
-        this.texts[name] = null;
-        this.fileLoader.load(filename,
-            (file) => {
-                if (typeof file === "string") {
-                    this.texts[name] = file;
-                }
-            },
-            null,
-            (e) => {
-                if (this.activeScene.onLoadError !== null) {
-                    this.activeScene.onLoadError(e);
-                } else {
-                    throw e;
-                }
+    public LoadFile(filename: string, name: string): Promise<void> {
+        return new Promise((resolve) => {
+            this.texts[name] = null;
+            this.fileLoader.load(filename,
+                (file) => {
+                    if (typeof file === "string") {
+                        this.texts[name] = file;
+                        resolve();
+                    }
+                },
+                null,
+                (e) => {
+                    if (this.activeScene.onLoadError !== null) {
+                        this.activeScene.onLoadError(e);
+                    } else {
+                        throw e;
+                    }
             });
+        });
     }
 
     /**
@@ -251,19 +305,22 @@ export class Core {
      * @param filename 画像ファイルのパス
      * @param name 画像を呼び出すキー
      */
-    public LoadTexture(filename: string, name: string): void {
-        this.textures[name] = null;
-        this.textureLoader.load(filename,
-            (tex) => {
-                this.textures[name] = tex;
-            },
-            null,
-            (e) => {
-                if (this.activeScene.onLoadError !== null) {
-                    this.activeScene.onLoadError(e);
-                } else {
-                    throw e;
-                }
+    public LoadTexture(filename: string, name: string): Promise<void> {
+        return new Promise((resolve) => {
+            this.textures[name] = null;
+            this.textureLoader.load(filename,
+                (tex) => {
+                    this.textures[name] = tex;
+                    resolve();
+                },
+                null,
+                (e) => {
+                    if (this.activeScene.onLoadError !== null) {
+                        this.activeScene.onLoadError(e);
+                    } else {
+                        throw e;
+                    }
+                });
             });
     }
 
@@ -333,20 +390,23 @@ export class Core {
      * @param filename GLTFファイルのパス
      * @param name 3Dモデルを呼び出すためのキー
      */
-    public LoadGLTF(filename: string, name: string): void {
-        this.objects[name] = null;
-        this.gltfLoader.load(filename,
-            (gltf) => {
-                this.objects[name] = gltf.scene;
-            },
-            null,
-            (e) => {
-                if (this.activeScene.onLoadError !== null) {
-                    this.activeScene.onLoadError(e);
-                } else {
-                    throw e;
-                }
-            });
+    public LoadGLTF(filename: string, name: string): Promise<void> {
+        return new Promise((resolve) => {
+            this.objects[name] = null;
+            this.gltfLoader.load(filename,
+                (gltf) => {
+                    this.objects[name] = gltf.scene;
+                    resolve();
+                },
+                null,
+                (e) => {
+                    if (this.activeScene.onLoadError !== null) {
+                        this.activeScene.onLoadError(e);
+                    } else {
+                        throw e;
+                    }
+                });
+        });
     }
 
     /**
@@ -355,42 +415,45 @@ export class Core {
      * @param mtlFilename MTLファイルのパス
      * @param name 3Dモデルを呼び出すためのキー
      */
-    public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): void {
-        this.objects[name] = null;
-        // ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
-        if (mtlFilename.indexOf("/") !== -1) {
-            this.mtlLoader.setPath(mtlFilename.substr(0, mtlFilename.lastIndexOf("/")) + "/");
-            mtlFilename = mtlFilename.slice(mtlFilename.lastIndexOf("/") + 1);
-        }
-        this.mtlLoader.load(mtlFilename,
-            (mtl) => {
-                mtl.preload();
-                // 上と同様にディレクトリ内を指していたらディレクトリパスとファイル名に分ける
-                if (objFilename.indexOf("/") !== -1) {
-                    this.objLoader.setPath(objFilename.substr(0, objFilename.lastIndexOf("/")) + "/");
-                    objFilename = objFilename.slice(objFilename.lastIndexOf("/") + 1);
-                }
-                this.objLoader.setMaterials(mtl);
-                this.objLoader.load(objFilename,
-                    (grp) => {
-                        this.objects[name] = grp;
-                    },
-                    null,
-                    (e) => {
-                        if (this.activeScene.onLoadError !== null) {
-                            this.activeScene.onLoadError(e);
-                        } else {
-                            throw e;
-                        }
-                    });
-            },
-            null,
-            (e) => {
-                if (this.activeScene.onLoadError !== null) {
-                    this.activeScene.onLoadError(e);
-                } else {
-                    throw e;
-                }
+    public LoadObjMtl(objFilename: string, mtlFilename: string, name: string): Promise<void> {
+        return new Promise((resolve) => {
+            this.objects[name] = null;
+            // ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
+            if (mtlFilename.indexOf("/") !== -1) {
+                this.mtlLoader.setPath(mtlFilename.substr(0, mtlFilename.lastIndexOf("/")) + "/");
+                mtlFilename = mtlFilename.slice(mtlFilename.lastIndexOf("/") + 1);
+            }
+            this.mtlLoader.load(mtlFilename,
+                (mtl) => {
+                    mtl.preload();
+                    // 上と同様にディレクトリ内を指していたらディレクトリパスとファイル名に分ける
+                    if (objFilename.indexOf("/") !== -1) {
+                        this.objLoader.setPath(objFilename.substr(0, objFilename.lastIndexOf("/")) + "/");
+                        objFilename = objFilename.slice(objFilename.lastIndexOf("/") + 1);
+                    }
+                    this.objLoader.setMaterials(mtl);
+                    this.objLoader.load(objFilename,
+                        (grp) => {
+                            this.objects[name] = grp;
+                            resolve();
+                        },
+                        null,
+                        (e) => {
+                            if (this.activeScene.onLoadError !== null) {
+                                this.activeScene.onLoadError(e);
+                            } else {
+                                throw e;
+                            }
+                        });
+                },
+                null,
+                (e) => {
+                    if (this.activeScene.onLoadError !== null) {
+                        this.activeScene.onLoadError(e);
+                    } else {
+                        throw e;
+                    }
+                });
             });
     }
 
@@ -447,6 +510,7 @@ export class Core {
             antialias: this.option.antialias,
             preserveDrawingBuffer: true,
         });
+        this.halfFPS = this.option.halfFPS;
         this.windowSizeX = this.option.windowSizeX;
         this.windowSizeY = this.option.windowSizeY;
         this.renderTarget = new THREE.WebGLRenderTarget(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio, {
@@ -566,8 +630,11 @@ export class Core {
         this.activeScene.Init();
         const animate = () => {
             requestAnimationFrame(animate);
-            this.Update();
-            this.Draw();
+            this.frame++;
+            if (!this.halfFPS || this.frame % 2 === 0) {
+                this.Update();
+                this.Draw();
+            }
         };
         animate();
     }
@@ -622,12 +689,18 @@ export class Core {
      * 現在描画されてる画像をファイルとして保存する
      * @param filename 保存時のファイル名。デフォルトはscreenshot.png
      */
-    public SaveImage(filename: string = "screenshot.png"): void {
+    public async SaveImage(filename: string = "screenshot.png"): Promise<void> {
         const glImage = new Image();
         const textsImage = new Image();
-        let glImageLoaded = false;
-        let textsImageLoaded = false;
-        const drawAndSave = () => {
+        const glImagePromise = new Promise((resolve) => {
+            glImage.onload = () => resolve();
+        });
+        const textsImagePromise = new Promise((resolve) => {
+            textsImage.onload = () => resolve();
+        });
+        textsImage.src = this.textCanvas.toDataURL("image/png");
+        glImage.src = this.canvas.toDataURL("image/png");
+        return Promise.all([glImagePromise, textsImagePromise]).then(() => {
             const tmpCanvas = document.createElement("canvas");
             tmpCanvas.setAttribute("width", this.windowSizeX.toString());
             tmpCanvas.setAttribute("height", this.windowSizeY.toString());
@@ -639,21 +712,7 @@ export class Core {
             this.link.href = URL.createObjectURL(blob);
             this.link.download = filename;
             this.link.click();
-        };
-        glImage.onload = () => {
-            glImageLoaded = true;
-            if (glImageLoaded && textsImageLoaded) {
-                drawAndSave();
-            }
-        };
-        textsImage.onload = () => {
-            textsImageLoaded = true;
-            if (glImageLoaded && textsImageLoaded) {
-                drawAndSave();
-            }
-        };
-        textsImage.src = this.textCanvas.toDataURL("image/png");
-        glImage.src = this.canvas.toDataURL("image/png");
+        });
     }
 
     /**

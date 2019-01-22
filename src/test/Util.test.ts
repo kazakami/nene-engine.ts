@@ -1,6 +1,7 @@
+import * as THREE from "three";
 import {
     AllIsNotNullOrUndefined, AssociativeArrayToArray, BooleanToString, Coalescing,
-    NullCoalescing, RandomColor, UndefCoalescing,
+    EachMesh, NullCoalescing, RandomColor, UndefCoalescing,
 } from "../Util";
 
 test("undefine coalescing 1", () => {
@@ -66,4 +67,52 @@ test("AssociativeArrayToArray 2", () => {
     arr.hoge = "hoge";
     arr.fuga = "fuga";
     expect(AssociativeArrayToArray(arr)).toEqual(["hoge", "fuga"]);
+});
+test("EachMesh 1", () => {
+    const mesh1 = new THREE.Mesh();
+    mesh1.name = "hoge";
+    expect(mesh1.name).toEqual("hoge");
+    EachMesh(mesh1, (m) => m.name = "fuga");
+    expect(mesh1.name).toEqual("fuga");
+});
+test("EachMesh 2", () => {
+    const mesh1 = new THREE.Mesh();
+    mesh1.name = "hoge";
+    const mesh2 = new THREE.Mesh();
+    mesh2.name = "hoge";
+    expect(mesh1.name).toEqual("hoge");
+    expect(mesh2.name).toEqual("hoge");
+    const group1 = new THREE.Group();
+    group1.name = "piyo";
+    group1.add(mesh1, mesh2);
+    expect(group1.name).toEqual("piyo");
+    EachMesh(group1, (m) => m.name = "fuga");
+    expect(mesh1.name).toEqual("fuga");
+    expect(mesh2.name).toEqual("fuga");
+    expect(group1.name).toEqual("piyo");
+});
+test("EachMesh 3", () => {
+    const mesh1 = new THREE.Mesh();
+    mesh1.name = "hoge";
+    const mesh2 = new THREE.Mesh();
+    mesh2.name = "hoge";
+    const mesh3 = new THREE.Mesh();
+    mesh3.name = "hoge";
+    expect(mesh1.name).toEqual("hoge");
+    expect(mesh2.name).toEqual("hoge");
+    expect(mesh3.name).toEqual("hoge");
+    const group1 = new THREE.Group();
+    group1.name = "piyo";
+    group1.add(mesh1, mesh2);
+    const group2 = new THREE.Group();
+    group2.name = "piyo";
+    group2.add(group1, mesh3);
+    expect(group1.name).toEqual("piyo");
+    expect(group2.name).toEqual("piyo");
+    EachMesh(group2, (m) => m.name = "fuga");
+    expect(mesh1.name).toEqual("fuga");
+    expect(mesh2.name).toEqual("fuga");
+    expect(mesh3.name).toEqual("fuga");
+    expect(group1.name).toEqual("piyo");
+    expect(group2.name).toEqual("piyo");
 });

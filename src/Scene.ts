@@ -25,6 +25,7 @@ export abstract class Scene {
     public offScreen: THREE.Sprite;
     public offScreenMat: THREE.SpriteMaterial;
     public id: string = "";
+    public physicStep: number = 1 / 60;
     public onMouseMove: (e: MouseEvent) => void = null;
     public onMouseClick: (e: Event) => void = null;
     public onWindowResize: (e: UIEvent) => void = null;
@@ -62,7 +63,7 @@ export abstract class Scene {
             u.InnerUpdate();
             u.Update();
         });
-        this.physicWorld.step(1 / 60);
+        this.physicWorld.step(this.physicStep);
     }
 
     /**
