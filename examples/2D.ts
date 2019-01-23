@@ -35,9 +35,6 @@ class GameScene extends Scene {
         this.onMouseClick = () => {
             // this.core.SaveImage("ScreenShot.png");
         };
-        this.onWindowResize = () => {
-            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
-        };
     }
     public Update(): void {
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
@@ -131,4 +128,7 @@ class Fire extends Unit {
 // ゲームの開始
 Start("init", new LoadScene(), {
     antialias: true,
+    parent: document.getElementById("screen"),
+    windowSizeX: 640,
+    windowSizeY: 480,
 });

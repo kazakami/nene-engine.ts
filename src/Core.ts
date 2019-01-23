@@ -186,6 +186,8 @@ export class Core {
     public ChangeCanvasSize(x: number, y: number): void {
         this.windowSizeX = x;
         this.windowSizeY = y;
+        this.div.setAttribute("style",
+            "width: " + this.windowSizeX.toString() + "px; height: " + this.windowSizeY.toString() + "px;");
         this.renderer.setPixelRatio(this.ratio);
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
         this.renderTarget.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
@@ -525,6 +527,8 @@ export class Core {
         this.gltfLoader = new THREE.GLTFLoader(this.loadingManager);
         this.div = document.createElement("div");
         this.div.setAttribute("position", "relative");
+        this.div.setAttribute("style",
+            "width: " + this.windowSizeX.toString() + "px; height: " + this.windowSizeY.toString() + "px;");
         this.canvas = this.renderer.domElement;
         this.canvas.setAttribute("style", "position: absolute;");
         this.renderer.setPixelRatio(this.ratio);
