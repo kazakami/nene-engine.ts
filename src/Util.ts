@@ -6,7 +6,7 @@ import * as THREE from "three";
  * @param min 最小値
  * @param max 最大値
  */
-export function Limit(input: number, min: number, max: number): number {
+export function Clamp(input: number, min: number, max: number): number {
     return Math.min(max, Math.max(min, input));
 }
 
