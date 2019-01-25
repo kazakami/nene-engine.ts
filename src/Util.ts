@@ -1,6 +1,16 @@
 import * as THREE from "three";
 
 /**
+ * 入力された値inputを[min, max]の範囲に丸める
+ * @param input 丸める入力
+ * @param min 最小値
+ * @param max 最大値
+ */
+export function Limit(input: number, min: number, max: number): number {
+    return Math.min(max, Math.max(min, input));
+}
+
+/**
  * 与えられたObject3Dが子孫として持つ全てのMeshに対して処理を行う
  * @param obj Object3D
  * @param func Meshに対して行う処理
