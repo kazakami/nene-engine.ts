@@ -1,3 +1,4 @@
+export * from "./Collider2D";
 export * from "./Core";
 export * from "./PhysicObject";
 export * from "./Scene";
