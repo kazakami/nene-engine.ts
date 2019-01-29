@@ -61,6 +61,6 @@ test("Add and remove PhysicObject in physicObjects", () => {
     const p = new PhysicSphere(1, 1);
     unit.AddPhysicObject(p);
     expect(unit.physicObjects.indexOf(p)).not.toBe(-1);
-    unit.RemovePhysicOnject(p);
+    unit.RemovePhysicObject(p);
     expect(unit.physicObjects.indexOf(p)).toBe(-1);
 });

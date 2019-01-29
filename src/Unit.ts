@@ -121,7 +121,7 @@ export abstract class Unit {
      * 指定した物理オブジェクトを削除する
      * @param p 削除する物理オブジェクト
      */
-    public RemovePhysicOnject(p: PhysicObject): void {
+    public RemovePhysicObject(p: PhysicObject): void {
         this.physicObjects = this.physicObjects.filter((pobj) => p !== pobj);
         this.allObject3D = this.allObject3D.filter((obj) => obj !== p.viewBody);
         this.scene.physicWorld.remove(p.phyBody);
