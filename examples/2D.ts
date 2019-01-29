@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Random, RandomColor, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
+import { Clamp, Random, RandomColor, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init(): void {
@@ -102,6 +102,8 @@ class Chara extends Unit {
             this.jumpingVel = 5;
             this.jumpingHeight += this.jumpingVel;
         }
+        this.x = Clamp(this.x, -300, 300);
+        this.y = Clamp(this.y, -200, 200);
         this.tts.sprite.position.set(this.x, this.y + this.jumpingHeight, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
     }
