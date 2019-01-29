@@ -9,9 +9,11 @@ div#screen {
     overflow: hidden;
 }
 .center{
-    position: absolute;
-    left: 50%;
-    -webkit-transform: translateX(-50%);
-    transform: translateX(-50%);
+    width: 640px;
+    margin: auto;
     padding: 20px;
+}
+.center2{
+    display: flex;
+    justify-content: center;
 }
