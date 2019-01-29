@@ -1,3 +1,17 @@
 body {
     margin: 0px;
 }
+div#screen {
+    width: 640px;
+    height: 480px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.center{
+    position: absolute;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    padding: 20px;
+}
