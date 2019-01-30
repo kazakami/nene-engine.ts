@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { Figure } from "./Collider2D";
 import { Core } from "./Core";
 import { PhysicObject } from "./PhysicObject";
 import { Scene } from "./Scene";
@@ -24,7 +25,7 @@ export abstract class Unit {
     /** このUnitに紐づけられているすべての立体オブジェクト。ただし物理オブジェクトの描画用のオブジェクトを除く。 */
     public objects: THREE.Object3D[] = [];
     /** このUnitに紐づけられているすべてのスプライト。 */
-    public sprites: Array<THREE.Object3D | TiledTexturedSprite> = [];
+    public sprites: Array<THREE.Object3D | TiledTexturedSprite | Figure> = [];
     /** このUnitに紐づけられているすべての物理オブジェクト。 */
     public physicObjects: PhysicObject[] = [];
     /** このUnitがSceneのRaycast関数のターゲットになるか。 */
@@ -76,10 +77,14 @@ export abstract class Unit {
      * 追加されたObject3DはこのUnitの削除時に自動でシーンから除外される
      * @param o 追加するObject3D
      */
-    public AddSprite(o: THREE.Object3D | TiledTexturedSprite): void {
+    public AddSprite(o: THREE.Object3D | TiledTexturedSprite | Figure): void {
         this.sprites.push(o);
         if ("isTiledTexturedSprite" in o) {
             this.scene.scene2d.add(o.sprite);
+        } else if (o instanceof Figure) {
+            if (o.helper) {
+                this.scene.scene2d.add(o.helper);
+            }
         } else {
             this.scene.scene2d.add(o);
         }
@@ -108,11 +113,15 @@ export abstract class Unit {
      * 指定したObjectをscene2dから削除
      * @param o 削除するObject3D
      */
-    public RemoveSprite(o: THREE.Object3D | TiledTexturedSprite): void {
+    public RemoveSprite(o: THREE.Object3D | TiledTexturedSprite | Figure): void {
         this.sprites = this.sprites.filter((spr) => o !== spr);
         if ("isTiledTexturedSprite" in o) {
             this.scene.scene2d.remove(o.sprite);
             o.Dispose();
+        } else if (o instanceof Figure) {
+            if (o.helper) {
+                this.scene.scene2d.remove(o.helper);
+            }
         } else {
             this.scene.scene2d.remove(o);
         }
