@@ -614,13 +614,13 @@ export class Core {
                 this.activeScene.onContextmenu(e);
             }
         });
-        document.addEventListener("keypress", (e) => {
+        document.addEventListener("keydown", (e) => {
             if (!e.repeat) {
-                this.keyState[e.key] = true;
+                this.keyState[e.code] = true;
             }
         });
         document.addEventListener("keyup", (e) => {
-            this.keyState[e.key] = false;
+            this.keyState[e.code] = false;
         });
         window.addEventListener("blur", (e) => {
             for (const key in this.keyState) {

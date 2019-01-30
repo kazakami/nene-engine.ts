@@ -115,22 +115,22 @@ class Player extends Unit {
         up.applyQuaternion(this.rot);
         const pitchAxis = new THREE.Vector3(1, 0, 0);
         pitchAxis.applyQuaternion(this.rot);
-        if (this.core.IsKeyDown("a")) {
+        if (this.core.IsKeyDown("KeyA")) {
             const q = new THREE.Quaternion();
             q.setFromAxisAngle(dir, -0.1);
             this.rot.multiplyQuaternions(q, this.rot);
         }
-        if (this.core.IsKeyDown("d")) {
+        if (this.core.IsKeyDown("KeyD")) {
             const q = new THREE.Quaternion();
             q.setFromAxisAngle(dir, 0.1);
             this.rot.multiplyQuaternions(q, this.rot);
         }
-        if (this.core.IsKeyDown("w")) {
+        if (this.core.IsKeyDown("KeyW")) {
             const q = new THREE.Quaternion();
             q.setFromAxisAngle(pitchAxis, 0.05);
             this.rot.multiplyQuaternions(q, this.rot);
         }
-        if (this.core.IsKeyDown("s")) {
+        if (this.core.IsKeyDown("KeyS")) {
             const q = new THREE.Quaternion();
             q.setFromAxisAngle(pitchAxis, -0.05);
             this.rot.multiplyQuaternions(q, this.rot);

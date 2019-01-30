@@ -38,7 +38,7 @@ class GameScene extends Scene {
     }
     public Update(): void {
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
-        if (this.core.IsKeyPressing("q")) {
+        if (this.core.IsKeyPressing("KeyQ")) {
             this.AddUnit(new Fire(this.core.mouseX, this.core.mouseY));
         }
     }
@@ -66,26 +66,26 @@ class Chara extends Unit {
     }
     public Update(): void {
         this.tts.SetTile(0, 0);
-        if (this.core.IsKeyDown("w")) {
+        if (this.core.IsKeyDown("KeyW")) {
             this.y += 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("s")) {
+        if (this.core.IsKeyDown("KeyS")) {
             this.y -= 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("d")) {
+        if (this.core.IsKeyDown("KeyD")) {
             this.x += 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("a")) {
+        if (this.core.IsKeyDown("KeyA")) {
             this.x -= 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("k")) {
+        if (this.core.IsKeyDown("KeyK")) {
             this.tts.SetTile(1, 0);
-            if (this.core.IsKeyDown("a") || this.core.IsKeyDown("s") ||
-                this.core.IsKeyDown("d") || this.core.IsKeyDown("w")) {
+            if (this.core.IsKeyDown("KeyA") || this.core.IsKeyDown("KeyS") ||
+                this.core.IsKeyDown("KeyD") || this.core.IsKeyDown("KeyW")) {
                     this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2 + 1, 0);
             }
         }
@@ -98,7 +98,7 @@ class Chara extends Unit {
                 this.jumpingVel = 0;
             }
         }
-        if (this.core.IsKeyDown("j") && this.jumpingHeight === 0) {
+        if (this.core.IsKeyDown("KeyJ") && this.jumpingHeight === 0) {
             this.jumpingVel = 5;
             this.jumpingHeight += this.jumpingVel;
         }

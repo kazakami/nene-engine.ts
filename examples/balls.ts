@@ -121,7 +121,7 @@ class GameScene extends Scene {
         this.casted = [];
         this.Raycast();
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
-        if (this.core.IsKeyPressing("p")) {
+        if (this.core.IsKeyPressing("KeyP")) {
             (async () => {
                 await this.core.SaveImage();
                 console.log("save screenshot");

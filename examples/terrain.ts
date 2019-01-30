@@ -82,7 +82,7 @@ class Ground extends Unit {
                 const i = Math.round(w2 / this.t.GetSegmentWidth());
                 const j = Math.round(d2 / this.t.GetSegmentDepth());
                 // 地形を上げるか下げるかの符号
-                const s = (this.core.IsKeyDown("q")) ? -1 : 1;
+                const s = (this.core.IsKeyDown("KeyQ")) ? -1 : 1;
                 const min = -5;
                 const max = 5;
                 this.t.LimitedRaise(i, j, 0.5 * s, min, max, false);
@@ -214,25 +214,25 @@ class Cameraman extends Unit {
         if (this.core.IsKeyDown("ArrowUp")) {
             this.altitude = Math.min(this.altitude + 0.02, Math.PI / 2);
         }
-        if (this.core.IsKeyDown("w")) {
+        if (this.core.IsKeyDown("KeyW")) {
             this.pos.addScaledVector(new THREE.Vector3(
                 Math.cos(this.altitude) * Math.sin(this.azimuth),
                 Math.sin(this.altitude),
                 Math.cos(this.altitude) * Math.cos(this.azimuth)), 1);
         }
-        if (this.core.IsKeyDown("s")) {
+        if (this.core.IsKeyDown("KeyS")) {
             this.pos.addScaledVector(new THREE.Vector3(
                 -Math.cos(this.altitude) * Math.sin(this.azimuth),
                 -Math.sin(this.altitude),
                 -Math.cos(this.altitude) * Math.cos(this.azimuth)), 1);
         }
-        if (this.core.IsKeyDown("d")) {
+        if (this.core.IsKeyDown("KeyD")) {
             this.pos.addScaledVector(new THREE.Vector3(
                 Math.sin(this.azimuth - Math.PI / 2),
                 0,
                 Math.cos(this.azimuth - Math.PI / 2)), 1);
         }
-        if (this.core.IsKeyDown("a")) {
+        if (this.core.IsKeyDown("KeyA")) {
             this.pos.addScaledVector(new THREE.Vector3(
                 Math.sin(this.azimuth + Math.PI / 2),
                 0,
