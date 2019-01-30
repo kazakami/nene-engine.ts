@@ -331,19 +331,9 @@ export abstract class Scene {
 
     private DeleteUnits(units: Unit[]): void {
         units.forEach((u) => {
-            u.objects.forEach((o) => { this.scene.remove(o); });
-            u.sprites.forEach((s) => {
-                if ("isTiledTexturedSprite" in s) {
-                    this.scene2d.remove(s.sprite);
-                    s.Dispose();
-                } else {
-                    this.scene2d.remove(s);
-                }
-            });
-            u.physicObjects.forEach((p) => {
-                this.scene.remove(p.viewBody);
-                this.physicWorld.remove(p.phyBody);
-            });
+            u.objects.forEach((o) => this.scene.remove(o));
+            u.sprites.forEach((s) => u.RemoveSprite(s));
+            u.physicObjects.forEach((p) => u.RemovePhysicObject(p));
             u.Fin();
             u.objects = [];
             u.allObject3D = [];
