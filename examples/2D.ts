@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Clamp, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
+import { Clamp, Figure, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init(): void {
@@ -35,10 +35,6 @@ class GameScene extends Scene {
         this.onMouseClick = () => {
             // this.core.SaveImage("ScreenShot.png");
         };
-        const rec = new Rectangle(20, 10, 30, 40);
-        rec.GenerateHelper();
-        console.log(rec.helper);
-        this.scene2d.add(rec.helper);
     }
     public Update(): void {
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
@@ -56,7 +52,8 @@ class Chara extends Unit {
     private shadow: THREE.Sprite;
     private jumpingHeight = 0;
     private jumpingVel = 0;
-    constructor(private x, private y) { super(); }
+    private figure: Figure;
+    constructor(private x: number, private y: number) { super(); }
     public Init(): void {
         this.tts = new TiledTexturedSprite(this.core.GetTexture("knight"));
         this.tts.SetTileNumber(5, 1);
@@ -65,6 +62,9 @@ class Chara extends Unit {
         this.shadow = this.core.MakeSpriteFromTexture("shadow");
         this.shadow.scale.set(32, 16, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
+        this.figure = new Rectangle(this.x, this.y, 64, 64);
+        this.figure.GenerateHelper();
+        this.AddSprite(this.figure);
         this.AddSprite(this.tts);
         this.AddSprite(this.shadow);
     }
@@ -108,6 +108,9 @@ class Chara extends Unit {
         }
         this.x = Clamp(this.x, -300, 300);
         this.y = Clamp(this.y, -200, 200);
+        this.figure.x = this.x;
+        this.figure.y = this.y + this.jumpingHeight;
+        this.figure.SyncHelper();
         this.tts.sprite.position.set(this.x, this.y + this.jumpingHeight, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
     }
