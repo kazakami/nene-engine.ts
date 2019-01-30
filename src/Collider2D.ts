@@ -4,6 +4,8 @@ export abstract class Figure {
     public x: number;
     public y: number;
     public helper: THREE.Object3D;
+    public GenerateHelper(): void { return; }
+    public SyncHelper(): void { return; }
 }
 
 export class Point extends Figure {
