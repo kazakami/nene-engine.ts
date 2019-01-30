@@ -1,6 +1,9 @@
+import * as THREE from "three";
+
 export abstract class Figure {
     public x: number;
     public y: number;
+    public helper: THREE.Object3D;
 }
 
 export class Point extends Figure {
@@ -30,6 +33,25 @@ export class Rectangle extends Figure {
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+    public GenerateHelper(): void {
+        const mat = new THREE.LineBasicMaterial({color: 0x0000ff});
+        const geo = new THREE.Geometry();
+        geo.vertices.push(
+            new THREE.Vector3(this.width / 2, this.height / 2, 0),
+            new THREE.Vector3(-this.width / 2, this.height / 2, 0),
+            new THREE.Vector3(-this.width / 2, -this.height / 2, 0),
+            new THREE.Vector3(this.width / 2, -this.height / 2, 0),
+            new THREE.Vector3(this.width / 2, this.height / 2, 0),
+        );
+        this.helper = new THREE.Line(geo, mat);
+        geo.dispose();
+        mat.dispose();
+        this.SyncHelper();
+    }
+    public SyncHelper(): void {
+        // TODO widthとheightの変更に対応
+        this.helper.position.set(this.x, this.y, 2);
     }
 }
 
