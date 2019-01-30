@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Clamp, Random, RandomColor, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
+import { Clamp, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init(): void {
@@ -35,6 +35,10 @@ class GameScene extends Scene {
         this.onMouseClick = () => {
             // this.core.SaveImage("ScreenShot.png");
         };
+        const rec = new Rectangle(20, 10, 30, 40);
+        rec.GenerateHelper();
+        console.log(rec.helper);
+        this.scene2d.add(rec.helper);
     }
     public Update(): void {
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
