@@ -44,6 +44,8 @@ class GameScene extends Scene {
     }
     public DrawText(): void {
         this.core.DrawText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
+        this.core.DrawText(Math.round(this.core.fps).toString(),
+            -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
     }
 }
 
@@ -136,7 +138,6 @@ class Fire extends Unit {
 
 // ゲームの開始
 Start("init", new LoadScene(), {
-    antialias: true,
     parent: document.getElementById("screen"),
     windowSizeX: 640,
     windowSizeY: 480,
