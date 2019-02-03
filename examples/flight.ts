@@ -39,6 +39,11 @@ class GameScene extends Scene {
         }
     }
     public Init() {
+        const worker = new Worker("dist/flightWorker.js");
+        worker.onmessage = (event) => {
+            console.log(event.data);
+        };
+        worker.postMessage("piyo");
         this.onWheel = (e) => {
             e.preventDefault();
             if (e.deltaY > 0) {
