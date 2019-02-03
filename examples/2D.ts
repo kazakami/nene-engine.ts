@@ -120,7 +120,7 @@ class Chara extends Unit {
 
 class Fire extends Unit {
     private tts: TiledTexturedSprite;
-    constructor(private x, private y) { super(); }
+    constructor(private x: number, private y: number) { super(); }
     public Init(): void {
         this.tts = new TiledTexturedSprite(this.core.GetTexture("fires"));
         this.tts.SetTileNumber(4, 1);
