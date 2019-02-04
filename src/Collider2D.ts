@@ -2,6 +2,7 @@ import * as THREE from "three";
 
 export abstract class Figure {
     public helper: THREE.Object3D;
+    public onCollideCallback: (figure: Figure) => void = null;
     protected helperGenerated = false;
     private mX: number;
     private mY: number;
