@@ -68,19 +68,23 @@ class GameScene extends Scene {
                 this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
                 const segX = 1024;
                 const segY = 1024;
-                const heights = event.data as Uint8Array;
-                console.log("hoge");
-                const groundGeo = new THREE.PlaneBufferGeometry(30000, 30000, segX - 1, segY - 1);
+                // const heights = event.data as Uint8Array;
+                // const groundGeo = new THREE.PlaneBufferGeometry(30000, 30000, segX - 1, segY - 1);
+                // const vertices = groundGeo.attributes.position.array;
+                // const num = vertices.length;
+                // for (let i = 0; i < num; i++) {
+                //     groundGeo.attributes.position.setZ(i, heights[i]);
+                // }
+                // groundGeo.computeVertexNormals();
+                const groundGeo = new THREE.PlaneBufferGeometry(1, 1, segX - 1, segY - 1);
+                groundGeo.attributes.position.array = event.data.position;
+                groundGeo.attributes.position.count = event.data.positionCount;
+                groundGeo.attributes.normal.array = event.data.normal;
+                groundGeo.attributes.normal.count = event.data.normalCount;
+                groundGeo.attributes.uv.array = event.data.uv;
+                groundGeo.attributes.uv.count = event.data.uvCount;
                 console.log(groundGeo);
-                const s = groundGeo.attributes.normal;
-                console.log("fuga");
-                const vertices = groundGeo.attributes.position.array;
-                const num = vertices.length;
-                for (let i = 0; i < num; i++) {
-                    groundGeo.attributes.position.setZ(i, heights[i]);
-                }
-                console.log("piyo");
-                groundGeo.computeVertexNormals();
+                groundGeo.computeBoundingSphere();
                 const tex = this.core.GetTexture("grass").clone();
                 tex.needsUpdate = true;
                 tex.repeat.set(50, 50);
