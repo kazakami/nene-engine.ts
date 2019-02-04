@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { Scene, Start, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
-    public Init() {
+    public Init(): Promise<void> {
         this.backgroundColor = new THREE.Color(0x778899);
         Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
@@ -12,9 +12,12 @@ class LoadScene extends Scene {
             this.core.LoadGLTF("resources/models/progress.glb", "plane2"),
             this.core.LoadTexture("resources/images/grass.png", "grass"),
         ])
+        .then(() => console.log("i"))
         .then(() => this.core.AddScene("game", new GameScene()))
+        .then(() => console.log("i2"))
         .then(() => this.core.ChangeScene("game"))
         .catch(() => console.log("err"));
+        return;
     }
     public Update(): void {
         return;
@@ -38,64 +41,67 @@ class GameScene extends Scene {
             return [0, 0];
         }
     }
-    public Init() {
-        const worker = new Worker("dist/flightWorker.js");
-        worker.onmessage = (event) => {
-            console.log(event.data);
-        };
-        worker.postMessage("piyo");
-        this.onWheel = (e) => {
-            e.preventDefault();
-            if (e.deltaY > 0) {
-                this.cameraDis *= 1.1;
-            } else if (e.deltaY < 0) {
-                this.cameraDis /= 1.1;
-            }
-        };
-        this.onMouseUp = (e) => {
-            this.nowDown = false;
-        };
-        this.onMouseDown = (e) => {
-            this.nowDown = true;
-            this.preX = this.core.mouseX;
-            this.preY = this.core.mouseY;
-        };
-        this.onWindowResize = () => {
-            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
-        };
-        this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
-        this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
-        const segX = 1024;
-        const segY = 1024;
-        const heights = (() => {
-            const data = new Uint8Array(segX * segY);
-            for (let i = 0; i < segX * segY; i++) {
-                data[i] = Math.random() * 20;
-            }
-            return data;
-        })();
-        const groundGeo = new THREE.PlaneBufferGeometry(30000, 30000, segX - 1, segY - 1);
-        const vertices = groundGeo.attributes.position.array;
-        const num = vertices.length;
-        for (let i = 0; i < num; i++) {
-            groundGeo.attributes.position.setZ(i, heights[i]);
-        }
-        groundGeo.computeVertexNormals();
-        const tex = this.core.GetTexture("grass").clone();
-        tex.needsUpdate = true;
-        tex.repeat.set(50, 50);
-        tex.wrapS = THREE.RepeatWrapping;
-        tex.wrapT = THREE.RepeatWrapping;
-        const groundMat = new THREE.MeshPhongMaterial({
-            color: new THREE.Color(0.6, 0.4, 0.35),
-            map: tex});
-        const ground = new THREE.Mesh(groundGeo, groundMat);
-        ground.rotation.x = -Math.PI / 2;
-        this.scene.add(ground);
-        this.AddUnit(new Player());
-        const light = new THREE.DirectionalLight("white", 1);
-        light.position.set(50, 100, 50);
-        this.scene.add(light);
+    public Init(): Promise<void> {
+        return new Promise((resolve) => {
+            const worker = new Worker("dist/flightWorker.js");
+            worker.addEventListener("message", (event) => {
+                this.onWheel = (e) => {
+                    e.preventDefault();
+                    if (e.deltaY > 0) {
+                        this.cameraDis *= 1.1;
+                    } else if (e.deltaY < 0) {
+                        this.cameraDis /= 1.1;
+                    }
+                };
+                this.onMouseUp = (e) => {
+                    this.nowDown = false;
+                };
+                this.onMouseDown = (e) => {
+                    this.nowDown = true;
+                    this.preX = this.core.mouseX;
+                    this.preY = this.core.mouseY;
+                };
+                this.onWindowResize = () => {
+                    this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+                };
+                this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
+                this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
+                const segX = 1024;
+                const segY = 1024;
+                const heights = event.data as Uint8Array;
+                console.log("hoge");
+                const groundGeo = new THREE.PlaneBufferGeometry(30000, 30000, segX - 1, segY - 1);
+                console.log(groundGeo);
+                const s = groundGeo.attributes.normal;
+                console.log("fuga");
+                const vertices = groundGeo.attributes.position.array;
+                const num = vertices.length;
+                for (let i = 0; i < num; i++) {
+                    groundGeo.attributes.position.setZ(i, heights[i]);
+                }
+                console.log("piyo");
+                groundGeo.computeVertexNormals();
+                const tex = this.core.GetTexture("grass").clone();
+                tex.needsUpdate = true;
+                tex.repeat.set(50, 50);
+                tex.wrapS = THREE.RepeatWrapping;
+                tex.wrapT = THREE.RepeatWrapping;
+                const groundMat = new THREE.MeshPhongMaterial({
+                    color: new THREE.Color(0.6, 0.4, 0.35),
+                    map: tex});
+                const ground = new THREE.Mesh(groundGeo, groundMat);
+                ground.rotation.x = -Math.PI / 2;
+                this.scene.add(ground);
+                this.AddUnit(new Player());
+                const light = new THREE.DirectionalLight("white", 1);
+                light.position.set(50, 100, 50);
+                this.scene.add(light);
+                console.log("end webworker");
+                resolve();
+            });
+            console.log("start web worker");
+            worker.postMessage("piyo");
+        });
     }
 }
 
