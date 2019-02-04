@@ -660,11 +660,11 @@ export class Core {
      * @param sceneName シーンを呼び出すためのキー
      * @param scene 追加するシーン
      */
-    public AddScene(sceneName: string, scene: Scene): void {
+    public async AddScene(sceneName: string, scene: Scene): Promise<void> {
         scene.core = this;
         this.scenes[sceneName] = scene;
         scene.InnerInit();
-        scene.Init();
+        await scene.Init();
     }
 
     /**
