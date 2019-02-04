@@ -1,4 +1,4 @@
-import { Circle, collideTest, Point, Rectangle } from "../Collider2D";
+import { Circle, collide, collideTest, Figure, Point, Rectangle } from "../Collider2D";
 
 test("point and point 1", () => {
     expect(collideTest(new Point(10, 20), new Point(10, 20))).toBeTruthy();
@@ -57,4 +57,23 @@ test("rectangle and rectangle 2", () => {
 });
 test("rectangle and rectangle 3", () => {
     expect(collideTest(new Rectangle(10, 20, 30, 30), new Rectangle(15, 25, 1, 1))).toBeTruthy();
+});
+
+test("collide", () => {
+    let c1 = "";
+    let c2 = "";
+    let c3 = "";
+    const rec1 = new Rectangle(10, 20, 1, 20);
+    rec1.name = "rec1";
+    rec1.onCollideCallback = (f: Figure) => c1 += f.name;
+    const rec2 = new Rectangle(15, 25, 20, 1);
+    rec2.name = "rec2";
+    rec2.onCollideCallback = (f: Figure) => c2 += f.name;
+    const rec3 = new Rectangle(100, 200, 1, 2);
+    rec3.name = "rec3";
+    rec3.onCollideCallback = (f: Figure) => c3 += f.name;
+    collide([rec1, rec2, rec3]);
+    expect(c1).toEqual("rec2");
+    expect(c2).toEqual("rec1");
+    expect(c3).toEqual("");
 });

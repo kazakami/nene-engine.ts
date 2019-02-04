@@ -135,6 +135,9 @@ export function collide(figures: Figure[]): void {
                 if (figures[i].onCollideCallback) {
                     figures[i].onCollideCallback(figures[j]);
                 }
+                if (figures[j].onCollideCallback) {
+                    figures[j].onCollideCallback(figures[i]);
+                }
             }
         }
     }
