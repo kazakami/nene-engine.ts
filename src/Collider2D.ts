@@ -1,10 +1,19 @@
 import * as THREE from "three";
 
 export abstract class Figure {
-    public x: number;
-    public y: number;
     public helper: THREE.Object3D;
-    public GenerateHelper(): void { return; }
+    protected helperGenerated = false;
+    private mX: number;
+    private mY: number;
+    public get x(): number { return this.mX; }
+    public set x(x: number) { this.mX = x; }
+    public get y(): number { return this.mY; }
+    public set y(y: number) { this.mY = y; }
+    /**
+     * 当たり判定の範囲を表示するmeshを生成する
+     * @param color 線の色。初期値は0xffffff
+     */
+    public GenerateHelper(color?: THREE.Color): void { this.helperGenerated = true; }
     public SyncHelper(): void { return; }
 }
 
@@ -17,7 +26,9 @@ export class Point extends Figure {
 }
 
 export class Circle extends Figure {
-    public radius: number;
+    private mRadius: number;
+    public get radius(): number { return this.mRadius; }
+    public set radius(radius: number) { this.mRadius = radius; }
     constructor(x: number, y: number, raduis: number) {
         super();
         this.x = x;
@@ -27,8 +38,22 @@ export class Circle extends Figure {
 }
 
 export class Rectangle extends Figure {
-    public width: number;
-    public height: number;
+    private mWidth: number;
+    private mHeight: number;
+    public get width(): number { return this.mWidth; }
+    public set width(width: number) {
+        if (this.helperGenerated) {
+            this.GenerateHelper();
+        }
+        this.mWidth = width;
+    }
+    public get height(): number { return this.mHeight; }
+    public set height(height: number) {
+        if (this.helperGenerated) {
+            this.GenerateHelper();
+        }
+        this.mHeight = height;
+    }
     constructor(x: number, y: number, width: number, height: number) {
         super();
         this.x = x;
@@ -36,8 +61,9 @@ export class Rectangle extends Figure {
         this.width = width;
         this.height = height;
     }
-    public GenerateHelper(): void {
-        const mat = new THREE.LineBasicMaterial({color: 0x0000ff});
+    public GenerateHelper(color: THREE.Color = new THREE.Color(0xffffff)): void {
+        super.GenerateHelper();
+        const mat = new THREE.LineBasicMaterial({color: color});
         const geo = new THREE.Geometry();
         geo.vertices.push(
             new THREE.Vector3(this.width / 2, this.height / 2, 0),
@@ -52,7 +78,6 @@ export class Rectangle extends Figure {
         this.SyncHelper();
     }
     public SyncHelper(): void {
-        // TODO widthとheightの変更に対応
         this.helper.position.set(this.x, this.y, 2);
     }
 }
