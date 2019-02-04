@@ -125,3 +125,16 @@ export function collideTest(f1: Figure, f2: Figure): boolean {
         throw Error("unknown collide: " + f1);
     }
 }
+
+export function collide(figures: Figure[]): void {
+    const length = figures.length;
+    for (let i = 0; i < length - 1; i++) {
+        for (let j = i + 1; j < length; j++) {
+            if (collideTest(figures[i], figures[j])) {
+                if (figures[i].onCollideCallback) {
+                    figures[i].onCollideCallback(figures[j]);
+                }
+            }
+        }
+    }
+}
