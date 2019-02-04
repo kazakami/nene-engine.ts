@@ -1,6 +1,7 @@
 import * as THREE from "three";
 
 export abstract class Figure {
+    public name: string = "";
     public helper: THREE.Object3D;
     public onCollideCallback: (figure: Figure) => void = null;
     protected helperGenerated = false;
