@@ -1,5 +1,6 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
+import { collide, Figure } from "./Collider2D";
 import { Core } from "./Core";
 import { PhysicBox, PhysicObject, PhysicPlane, PhysicSphere } from "./PhysicObject";
 import { PhysicUnit, Unit } from "./Unit";
@@ -26,6 +27,7 @@ export abstract class Scene {
     public offScreenMat: THREE.SpriteMaterial;
     public id: string = "";
     public physicStep: number = 1 / 60;
+    public colliders: Figure[] = [];
     public onMouseMove: (e: MouseEvent) => void = null;
     public onMouseClick: (e: Event) => void = null;
     public onWindowResize: (e: UIEvent) => void = null;
@@ -64,6 +66,7 @@ export abstract class Scene {
             u.Update();
         });
         this.physicWorld.step(this.physicStep);
+        collide(this.colliders);
     }
 
     /**
@@ -334,6 +337,7 @@ export abstract class Scene {
             u.objects.forEach((o) => this.scene.remove(o));
             u.sprites.forEach((s) => u.RemoveSprite(s));
             u.physicObjects.forEach((p) => u.RemovePhysicObject(p));
+            u.colliders.forEach((f) => u.RemoveCollider(f));
             u.Fin();
             u.objects = [];
             u.allObject3D = [];

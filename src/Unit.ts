@@ -28,6 +28,8 @@ export abstract class Unit {
     public sprites: Array<THREE.Object3D | TiledTexturedSprite | Figure> = [];
     /** このUnitに紐づけられているすべての物理オブジェクト。 */
     public physicObjects: PhysicObject[] = [];
+    /** このUnitに紐づけられているすべての2次元当たり判定用の図形。 */
+    public colliders: Figure[] = [];
     /** このUnitがSceneのRaycast関数のターゲットになるか。 */
     public raycastTarget: boolean = false;
     /** unitインスタンスを識別するためのID */
@@ -101,6 +103,16 @@ export abstract class Unit {
         this.allObject3D.push(p.viewBody);
     }
     /**
+     * sceneに当たり判定用の図形を登録し、このUnitに紐づける
+     * 追加された図形はこのUnitの削除時に自動でシーンから除外される
+     * 追加された図形は毎フレーム当たり判定が行われ、当たっているとonCollideCallbackが呼ばれる
+     * @param f 追加する当たり判定用の図形
+     */
+    public AddCollider(f: Figure): void {
+        this.colliders.push(f);
+        this.scene.colliders.push(f);
+    }
+    /**
      * 指定したObject3Dをsceneから削除
      * @param o 削除するObject3D
      */
@@ -135,6 +147,14 @@ export abstract class Unit {
         this.allObject3D = this.allObject3D.filter((obj) => obj !== p.viewBody);
         this.scene.physicWorld.remove(p.phyBody);
         this.scene.scene.remove(p.viewBody);
+    }
+    /**
+     * 指定した当たり判定用の図形を削除する
+     * @param f 削除する当たり判定用の図形
+     */
+    public RemoveCollider(f: Figure): void {
+        this.colliders = this.colliders.filter((fig) => f !== fig);
+        this.scene.colliders = this.scene.colliders.filter((fig) => f !== fig);
     }
 }
 
