@@ -54,7 +54,7 @@ class Chara extends Unit {
     private shadow: THREE.Sprite;
     private jumpingHeight = 0;
     private jumpingVel = 0;
-    private figure: Figure;
+    private collide: Figure;
     constructor(private x: number, private y: number) { super(); }
     public Init(): void {
         this.tts = new TiledTexturedSprite(this.core.GetTexture("knight"));
@@ -64,9 +64,11 @@ class Chara extends Unit {
         this.shadow = this.core.MakeSpriteFromTexture("shadow");
         this.shadow.scale.set(32, 16, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
-        this.figure = new Rectangle(this.x, this.y, 64, 64);
-        this.figure.GenerateHelper();
-        this.AddSprite(this.figure);
+        this.collide = new Rectangle(this.x, this.y, 64, 64);
+        this.collide.onCollideCallback = (f) => console.log(f.name);
+        this.collide.GenerateHelper();
+        this.AddCollider(this.collide);
+        this.AddSprite(this.collide);
         this.AddSprite(this.tts);
         this.AddSprite(this.shadow);
     }
@@ -110,15 +112,16 @@ class Chara extends Unit {
         }
         this.x = Clamp(this.x, -300, 300);
         this.y = Clamp(this.y, -200, 200);
-        this.figure.x = this.x;
-        this.figure.y = this.y + this.jumpingHeight;
-        this.figure.SyncHelper();
+        this.collide.x = this.x;
+        this.collide.y = this.y + this.jumpingHeight;
+        this.collide.SyncHelper();
         this.tts.sprite.position.set(this.x, this.y + this.jumpingHeight, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
     }
 }
 
 class Fire extends Unit {
+    public collide: Figure;
     private tts: TiledTexturedSprite;
     constructor(private x: number, private y: number) { super(); }
     public Init(): void {
@@ -126,6 +129,11 @@ class Fire extends Unit {
         this.tts.SetTileNumber(4, 1);
         this.tts.sprite.scale.set(32, 32, 1);
         this.tts.sprite.position.set(this.x, this.y, 1);
+        this.collide = new Rectangle(this.x, this.y, 32, 32);
+        this.collide.name = "fire";
+        this.collide.GenerateHelper();
+        this.AddCollider(this.collide);
+        this.AddSprite(this.collide);
         this.AddSprite(this.tts);
     }
     public Update(): void {
