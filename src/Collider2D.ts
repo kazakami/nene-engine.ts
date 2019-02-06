@@ -127,6 +127,10 @@ export function collideTest(f1: Figure, f2: Figure): boolean {
     }
 }
 
+/**
+ * 与えられた図形の配列の要素同士の当たり判定を行い、当たっていればonCollideCallbackを呼ぶ
+ * @param figures 当たり判定を行う図形の配列
+ */
 export function collide(figures: Figure[]): void {
     const length = figures.length;
     for (let i = 0; i < length - 1; i++) {
@@ -137,6 +141,28 @@ export function collide(figures: Figure[]): void {
                 }
                 if (figures[j].onCollideCallback) {
                     figures[j].onCollideCallback(figures[i]);
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 図形のグループを2つ与え、グループ1とグループ2の間で当たっている図形があればonCollideCallbackよ呼ぶ
+ * @param figures1 図形のグループ1
+ * @param figures2 図形のグループ2
+ */
+export function collide2(figures1: Figure[], figures2: Figure[]) {
+    const l1 = figures1.length;
+    const l2 = figures2.length;
+    for (let i = 0; i < l1; i++) {
+        for (let j = 0; j < l2; j++) {
+            if (collideTest(figures1[i], figures2[j])) {
+                if (figures1[i].onCollideCallback) {
+                    figures1[i].onCollideCallback(figures2[j]);
+                }
+                if (figures2[j].onCollideCallback) {
+                    figures2[j].onCollideCallback(figures1[i]);
                 }
             }
         }
