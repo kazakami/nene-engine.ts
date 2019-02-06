@@ -66,7 +66,6 @@ class Chara extends Unit {
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
         this.collide = new Rectangle(this.x, this.y, 64, 64);
         this.collide.onCollideCallback = (f) => console.log(f.name);
-        this.collide.GenerateHelper();
         this.AddCollider(this.collide);
         this.AddSprite(this.collide);
         this.AddSprite(this.tts);
@@ -131,7 +130,6 @@ class Fire extends Unit {
         this.tts.sprite.position.set(this.x, this.y, 1);
         this.collide = new Rectangle(this.x, this.y, 32, 32);
         this.collide.name = "fire";
-        this.collide.GenerateHelper();
         this.AddCollider(this.collide);
         this.AddSprite(this.collide);
         this.AddSprite(this.tts);

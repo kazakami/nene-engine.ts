@@ -84,9 +84,10 @@ export abstract class Unit {
         if ("isTiledTexturedSprite" in o) {
             this.scene.scene2d.add(o.sprite);
         } else if (o instanceof Figure) {
-            if (o.helper) {
-                this.scene.scene2d.add(o.helper);
+            if (!o.helper) {
+                o.GenerateHelper();
             }
+            this.scene.scene2d.add(o.helper);
         } else {
             this.scene.scene2d.add(o);
         }
