@@ -8,9 +8,19 @@ export abstract class Figure {
     private mX: number;
     private mY: number;
     public get x(): number { return this.mX; }
-    public set x(x: number) { this.mX = x; }
+    public set x(x: number) {
+        this.mX = x;
+        if (this.helperGenerated) {
+            this.SyncHelper();
+        }
+    }
     public get y(): number { return this.mY; }
-    public set y(y: number) { this.mY = y; }
+    public set y(y: number) {
+        this.mY = y;
+        if (this.helperGenerated) {
+            this.SyncHelper();
+        }
+    }
     /**
      * 当たり判定の範囲を表示するmeshを生成する
      * @param color 線の色。初期値は0xffffff
@@ -25,17 +35,62 @@ export class Point extends Figure {
         this.x = x;
         this.y = y;
     }
+    public GenerateHelper(color: THREE.Color = new THREE.Color(0xffffff)): void {
+        super.GenerateHelper();
+        const mat = new THREE.PointsMaterial({color: color});
+        const geo = new THREE.Geometry();
+        geo.vertices.push(new THREE.Vector3(0, 0, 0));
+        this.helper = new THREE.Points(geo, mat);
+        geo.dispose();
+        mat.dispose();
+        this.SyncHelper();
+    }
+    public SyncHelper(): void {
+        this.helper.position.set(this.x, this.y, 2);
+    }
 }
 
 export class Circle extends Figure {
     private mRadius: number;
+    private mSegments: number = 16;
+    public get segments(): number { return this.mSegments; }
+    public set segments(segments: number) {
+        this.mSegments = segments;
+        if (this.helperGenerated) {
+            this.GenerateHelper();
+        }
+    }
     public get radius(): number { return this.mRadius; }
-    public set radius(radius: number) { this.mRadius = radius; }
+    public set radius(radius: number) {
+        this.mRadius = radius;
+        if (this.helperGenerated) {
+            this.GenerateHelper();
+        }
+    }
     constructor(x: number, y: number, raduis: number) {
         super();
         this.x = x;
         this.y = y;
         this.radius = raduis;
+    }
+    public GenerateHelper(color: THREE.Color = new THREE.Color(0xffffff)): void {
+        super.GenerateHelper();
+        const mat = new THREE.LineBasicMaterial({color: color});
+        const geo = new THREE.Geometry();
+        for (let i = 0; i < this.mSegments + 1; i++) {
+            geo.vertices.push(
+                new THREE.Vector3(
+                    this.mRadius * Math.cos(2 * Math.PI * (i / this.mSegments)),
+                    this.mRadius * Math.sin(2 * Math.PI * (i / this.mSegments)),
+                    0));
+        }
+        this.helper = new THREE.Line(geo, mat);
+        geo.dispose();
+        mat.dispose();
+        this.SyncHelper();
+    }
+    public SyncHelper(): void {
+        this.helper.position.set(this.x, this.y, 2);
     }
 }
 
@@ -44,17 +99,17 @@ export class Rectangle extends Figure {
     private mHeight: number;
     public get width(): number { return this.mWidth; }
     public set width(width: number) {
+        this.mWidth = width;
         if (this.helperGenerated) {
             this.GenerateHelper();
         }
-        this.mWidth = width;
     }
     public get height(): number { return this.mHeight; }
     public set height(height: number) {
+        this.mHeight = height;
         if (this.helperGenerated) {
             this.GenerateHelper();
         }
-        this.mHeight = height;
     }
     constructor(x: number, y: number, width: number, height: number) {
         super();

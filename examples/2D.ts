@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Clamp, Figure, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
+import { Circle, Clamp, Figure, Point, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init(): void {
@@ -128,7 +128,9 @@ class Fire extends Unit {
         this.tts.SetTileNumber(4, 1);
         this.tts.sprite.scale.set(32, 32, 1);
         this.tts.sprite.position.set(this.x, this.y, 1);
-        this.collide = new Rectangle(this.x, this.y, 32, 32);
+        // this.collide = new Rectangle(this.x, this.y, 32, 32);
+        this.collide = new Circle(this.x, this.y, 16);
+        // this.collide = new Point(this.x, this.y);
         this.collide.name = "fire";
         this.AddCollider(this.collide);
         this.AddSprite(this.collide);
