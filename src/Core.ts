@@ -802,7 +802,6 @@ export class Core {
     }
 
     private Draw(): void {
-        this.offScreenSprite.scale.set(this.windowSizeX, this.windowSizeY, 1);
         this.activeScene.Render();
         this.renderer.render(this.offScreenScene, this.offScreenCamera);
         this.activeScene.InnerDrawText();
