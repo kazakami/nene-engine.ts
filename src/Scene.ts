@@ -25,6 +25,7 @@ export abstract class Scene {
     public composer2d: THREE.EffectComposer = null;
     public offScreen: THREE.Sprite;
     public offScreenMat: THREE.SpriteMaterial;
+    public renderTarget: THREE.WebGLRenderTarget;
     public id: string = "";
     public physicStep: number = 1 / 60;
     public colliders: Figure[] = [];
@@ -151,25 +152,32 @@ export abstract class Scene {
         this.core.ctx.clearRect(0, 0, this.core.windowSizeX, this.core.windowSizeY);
         this.core.renderer.setClearColor(this.backgroundColor);
         if (this.composer === null) {
-            this.core.renderer.render(this.scene, this.camera , this.core.renderTarget);
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
+            this.core.renderer.render(this.scene, this.camera , this.core.renderTarget);
             this.offScreenMat.map = this.core.renderTarget.texture;
         } else {
-            this.composer.render();
             // 3D用のシーンでcomposerを使っていればcomposerの結果出力バッファを用いる
+            this.composer.render();
             this.offScreenMat.map = this.composer.readBuffer.texture;
         }
         // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
         this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         if (this.composer2d === null) {
-            this.core.renderer.render(this.scene2d, this.camera2d);
+            // this.core.offScreenRenderTargetに描画し、その結果をthis.core.offScreenMat.mapに設定する
+            this.core.renderer.render(this.scene2d, this.camera2d, this.renderTarget);
+            this.core.offScreenMat.map = this.renderTarget.texture;
         } else {
-            // 最終のpassのrenderToScreenをtrueにしてrenderした後、renderToScreenを元に戻す
-            const num = this.composer2d.passes.length;
-            const before = this.composer2d.passes[num - 1].renderToScreen;
-            this.composer2d.passes[num - 1].renderToScreen = true;
+            // omposerの結果出力バッファをthis.core.offScreenMat.mapに設定する
             this.composer2d.render();
-            this.composer2d.passes[num - 1].renderToScreen = before;
+            this.core.offScreenMat.map = this.composer2d.readBuffer.texture;
+        }
+    }
+
+    public RenderedTexture(): THREE.Texture {
+        if (this.composer2d === null) {
+            return this.renderTarget.texture;
+        } else {
+            return this.composer2d.readBuffer.texture;
         }
     }
 
@@ -216,6 +224,11 @@ export abstract class Scene {
         this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         this.offScreen.position.set(0, 0, 1);
         this.scene2d.add(this.offScreen);
+        this.renderTarget = new THREE.WebGLRenderTarget(
+            this.core.windowSizeX * this.core.PixelRatio, this.core.windowSizeY * this.core.PixelRatio, {
+            magFilter: THREE.NearestFilter,
+            minFilter: THREE.NearestFilter,
+        });
     }
 
     /**
@@ -255,6 +268,9 @@ export abstract class Scene {
         this.camera2d.bottom = -this.core.windowSizeY / 2;
         this.camera2d.top = this.core.windowSizeY / 2;
         this.camera2d.updateProjectionMatrix();
+        this.renderTarget.setSize(
+            this.core.windowSizeX * this.core.PixelRatio,
+            this.core.windowSizeY * this.core.PixelRatio);
     }
 
     public LoadFromFile(filename: string): void {

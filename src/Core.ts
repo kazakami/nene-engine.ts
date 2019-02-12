@@ -73,6 +73,10 @@ export class Core {
     public renderTarget: THREE.WebGLRenderTarget;
     public ctx: CanvasRenderingContext2D;
     public halfFPS: boolean;
+    public offScreenSprite: THREE.Sprite;
+    public offScreenMat: THREE.SpriteMaterial;
+    public offScreenScene: THREE.Scene;
+    public offScreenCamera: THREE.OrthographicCamera;
     private frame: number = 0;
     private textureLoader: THREE.TextureLoader;
     private textCanvas: HTMLCanvasElement;
@@ -191,6 +195,11 @@ export class Core {
         this.renderer.setPixelRatio(this.ratio);
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
         this.renderTarget.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
+        this.offScreenCamera.left = -this.windowSizeX / 2;
+        this.offScreenCamera.right = this.windowSizeX / 2;
+        this.offScreenCamera.bottom = -this.windowSizeY / 2;
+        this.offScreenCamera.top = this.windowSizeY / 2;
+        this.offScreenCamera.updateProjectionMatrix();
         this.textCanvas.width = this.windowSizeX;
         this.textCanvas.height = this.windowSizeY;
         this.ctx = this.textCanvas.getContext("2d");
@@ -519,6 +528,17 @@ export class Core {
             magFilter: THREE.NearestFilter,
             minFilter: THREE.NearestFilter,
         });
+        this.offScreenCamera = new THREE.OrthographicCamera(
+            -this.windowSizeX / 2, this.windowSizeX / 2,
+            this.windowSizeY / 2, -this.windowSizeY / 2,
+            1, 10 );
+        this.offScreenCamera.position.z = 10;
+        this.offScreenMat = new THREE.SpriteMaterial({color: 0xFFFFFF});
+        this.offScreenSprite = new THREE.Sprite(this.offScreenMat);
+        this.offScreenSprite.scale.set(this.windowSizeX, this.windowSizeY, 1);
+        this.offScreenSprite.position.set(0, 0, 5);
+        this.offScreenScene = new THREE.Scene();
+        this.offScreenScene.add(this.offScreenSprite);
         this.loadingManager = new THREE.LoadingManager();
         this.textureLoader = new THREE.TextureLoader(this.loadingManager);
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
@@ -779,7 +799,9 @@ export class Core {
     }
 
     private Draw(): void {
+        this.offScreenSprite.scale.set(this.windowSizeX, this.windowSizeY, 1);
         this.activeScene.Render();
+        this.renderer.render(this.offScreenScene, this.offScreenCamera);
         this.activeScene.InnerDrawText();
         this.activeScene.DrawText();
     }
