@@ -803,7 +803,9 @@ export class Core {
 
     private Draw(): void {
         this.activeScene.Render();
-        this.renderer.render(this.offScreenScene, this.offScreenCamera);
+        if (this.renderer) {
+            this.renderer.render(this.offScreenScene, this.offScreenCamera);
+        }
         this.activeScene.InnerDrawText();
         this.activeScene.DrawText();
     }
