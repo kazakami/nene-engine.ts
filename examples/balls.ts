@@ -34,7 +34,10 @@ class LoadScene extends Scene {
 class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public casted: string[];
+    private pause: PauseScene;
     public Init(): void {
+        this.pause = new PauseScene(this);
+        this.core.AddScene("pause", this.pause);
         this.backgroundColor = new THREE.Color(0x887766);
         this.core.renderer.shadowMap.enabled = true;
         this.physicStep = 1 / 30;
@@ -127,6 +130,9 @@ class GameScene extends Scene {
                 console.log("save screenshot");
             })();
         }
+        if (this.core.IsKeyPressing("Escape")) {
+            this.core.ChangeScene("pause");
+        }
     }
     public DrawText(): void {
         this.core.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
@@ -137,6 +143,40 @@ class GameScene extends Scene {
             -this.core.windowSizeX / 2,
             this.core.windowSizeY / 2 - 50);
         this.core.DrawText(this.casted.join(), this.core.mouseX, this.core.mouseY);
+    }
+}
+
+class PauseScene extends Scene {
+    private gameScene: GameScene;
+    private sprite: THREE.Sprite;
+    private spriteMat: THREE.SpriteMaterial;
+    constructor(gameScene: GameScene) {
+        super();
+        this.gameScene = gameScene;
+    }
+    public Init() {
+        this.spriteMat = new THREE.SpriteMaterial({color: 0x888888});
+        this.sprite = new THREE.Sprite(this.spriteMat);
+        this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.sprite.position.set(0, 0, 1);
+        this.scene2d.add(this.sprite);
+        this.onWindowResize = () => {
+            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+            this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        };
+    }
+    public Update() {
+        // このコメントを解除すれば裏でgameSceneが動く
+        // this.gameScene.InnerUpdate();
+        // this.gameScene.Update();
+        this.gameScene.Render();
+        this.spriteMat.map = this.gameScene.RenderedTexture();
+        if (this.core.IsKeyPressing("Escape")) {
+            this.core.ChangeScene("game");
+        }
+    }
+    public DrawText() {
+        this.core.DrawText("Pause", 0, 0);
     }
 }
 
