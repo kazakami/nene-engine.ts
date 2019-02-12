@@ -15,12 +15,27 @@ class LoadScene extends Scene {
     public Update(): void {
         if (this.core.IsAllResourcesAvailable()) {
             // オブジェクトenteが読み込まれればシーン遷移
-            this.core.AddAndChangeScene("game", new GameScene());
+            this.core.AddAndChangeScene("title", new TitleScene());
         }
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
         this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
+    }
+}
+
+class TitleScene extends Scene {
+    private selected: number = 0;
+    public Init(): void {
+        this.backgroundColor = new THREE.Color(0x667788);
+    }
+    public Update(): void {
+        if (this.core.IsKeyPressing("Space")) {
+            this.core.AddAndChangeScene("game", new GameScene());
+        }
+    }
+    public DrawText(): void {
+        this.core.DrawText("Press space to start", -240, 0);
     }
 }
 
@@ -40,6 +55,9 @@ class GameScene extends Scene {
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
         if (this.core.IsKeyPressing("KeyQ")) {
             this.AddUnit(new Fire(this.core.mouseX, this.core.mouseY));
+        }
+        if (this.core.IsKeyPressing("Escape")) {
+            this.core.ChangeScene("title");
         }
     }
     public DrawText(): void {
