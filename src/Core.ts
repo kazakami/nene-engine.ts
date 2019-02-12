@@ -200,6 +200,7 @@ export class Core {
         this.offScreenCamera.bottom = -this.windowSizeY / 2;
         this.offScreenCamera.top = this.windowSizeY / 2;
         this.offScreenCamera.updateProjectionMatrix();
+        this.offScreenSprite.scale.set(this.windowSizeX, this.windowSizeY, 1);
         this.textCanvas.width = this.windowSizeX;
         this.textCanvas.height = this.windowSizeY;
         this.ctx = this.textCanvas.getContext("2d");
@@ -601,8 +602,10 @@ export class Core {
         });
         window.addEventListener("resize", (e) => {
             this.renderer.setPixelRatio(this.ratio);
-            if (this.activeScene.onWindowResize !== null) {
-                this.activeScene.onWindowResize(e);
+            for (const key in this.scenes) {
+                if (this.scenes[key].onWindowResize !== null) {
+                    this.scenes[key].onWindowResize(e);
+                }
             }
         });
         this.textCanvas.addEventListener("touchstart", (e) => {
