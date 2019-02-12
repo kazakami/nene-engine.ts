@@ -73,7 +73,7 @@ test("Add nad remove Figure in sprites 1", () => {
     const fig = new Rectangle(1, 2, 3, 4);
     unit.AddSprite(fig);
     expect(unit.sprites.indexOf(fig)).not.toBe(-1);
-    expect(scene.scene2d.children).toEqual([]);
+    expect(scene.scene2d.children).toEqual([fig.helper]);
     unit.RemoveSprite(fig);
     expect(unit.sprites.indexOf(fig)).toBe(-1);
     expect(scene.scene2d.children).toEqual([]);
