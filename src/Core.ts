@@ -803,6 +803,9 @@ export class Core {
 
     private Draw(): void {
         this.activeScene.Render();
+        if (this.offScreenMat) {
+            this.offScreenMat.map = this.activeScene.RenderedTexture();
+        }
         if (this.renderer) {
             this.renderer.render(this.offScreenScene, this.offScreenCamera);
         }

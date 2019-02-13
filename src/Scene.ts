@@ -165,11 +165,9 @@ export abstract class Scene {
         if (this.composer2d === null) {
             // this.core.offScreenRenderTargetに描画し、その結果をthis.core.offScreenMat.mapに設定する
             this.core.renderer.render(this.scene2d, this.camera2d, this.renderTarget);
-            this.core.offScreenMat.map = this.renderTarget.texture;
         } else {
             // omposerの結果出力バッファをthis.core.offScreenMat.mapに設定する
             this.composer2d.render();
-            this.core.offScreenMat.map = this.composer2d.readBuffer.texture;
         }
     }
 
