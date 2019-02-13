@@ -30,18 +30,74 @@ class TitleScene extends Scene {
         this.backgroundColor = new THREE.Color(0x667788);
     }
     public Update(): void {
-        if (this.core.IsKeyPressing("Space")) {
+        if (this.core.IsKeyPressing("KeyH")) {
             this.core.AddAndChangeScene("game", new GameScene());
         }
     }
     public DrawText(): void {
-        this.core.DrawText("Press space to start", -240, 0);
+        this.core.DrawText("Press H key to start", -240, 0);
+    }
+}
+
+class PauseScene extends Scene {
+    private gameScene: GameScene;
+    private sprite: THREE.Sprite;
+    private spriteMat: THREE.SpriteMaterial;
+    private selected: number = 0;
+    constructor(gameScene: GameScene) {
+        super();
+        this.gameScene = gameScene;
+    }
+    public Init() {
+        this.spriteMat = new THREE.SpriteMaterial({color: 0x888888});
+        this.sprite = new THREE.Sprite(this.spriteMat);
+        this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.sprite.position.set(0, 0, 1);
+        this.scene2d.add(this.sprite);
+        this.onWindowResize = () => {
+            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+            this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        };
+    }
+    public Update() {
+        // このコメントを解除すれば裏でgameSceneが動く
+        // this.gameScene.InnerUpdate();
+        // this.gameScene.Update();
+        this.gameScene.Render();
+        this.spriteMat.map = this.gameScene.RenderedTexture();
+        if (this.core.IsKeyPressing("Escape")) {
+            this.core.ChangeScene("game");
+        }
+        if (this.core.IsKeyPressing("KeyW")) {
+            this.selected--;
+        }
+        if (this.core.IsKeyPressing("KeyS")) {
+            this.selected++;
+        }
+        this.selected = (this.selected + 2) % 2;
+        if (this.core.IsKeyPressing("KeyH")) {
+            switch (this.selected) {
+                case 0:
+                    this.core.ChangeScene("game");
+                    break;
+                case 1:
+                    this.core.ChangeScene("title");
+                    break;
+            }
+        }
+    }
+    public DrawText() {
+        this.core.SetTextColor(new THREE.Color(0xffffff));
+        this.core.DrawText("Resume", 0, 0);
+        this.core.DrawText("Back to title", 0, -50);
+        this.core.DrawText("👉", -50, -50 * this.selected);
     }
 }
 
 class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public Init(): void {
+        this.core.AddScene("pause", new PauseScene(this));
         this.backgroundColor = new THREE.Color(0x887766);
         this.sprt = this.core.MakeSpriteFromTexture("circle");
         this.sprt.scale.set(100, 100, 1);
@@ -57,7 +113,7 @@ class GameScene extends Scene {
             this.AddUnit(new Fire(this.core.mouseX, this.core.mouseY));
         }
         if (this.core.IsKeyPressing("Escape")) {
-            this.core.ChangeScene("title");
+            this.core.ChangeScene("pause");
         }
     }
     public DrawText(): void {
