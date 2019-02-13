@@ -5,10 +5,8 @@ onmessage = (event: MessageEvent) => {
     const segY = 1024;
     const heights = (() => {
         const data = new Uint8Array(segX * segY);
-        for (let h = 0; h < 200; h ++) {
-            for (let i = 0; i < segX * segY; i++) {
-                data[i] = Math.random() * 20;
-            }
+        for (let i = 0; i < segX * segY; i++) {
+            data[i] = Math.random() * 20;
         }
         return data;
     })();
