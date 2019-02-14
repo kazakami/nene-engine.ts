@@ -11,6 +11,8 @@ class LoadScene extends Scene {
         this.core.LoadTexture("resources/images/fires.png", "fires");
         this.core.LoadTexture("resources/images/knight.png", "knight");
         this.core.LoadTexture("resources/images/shadow.png", "shadow");
+        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update(): void {
         if (this.core.IsAllResourcesAvailable()) {
@@ -28,6 +30,8 @@ class TitleScene extends Scene {
     private selected: number = 0;
     public Init(): void {
         this.backgroundColor = new THREE.Color(0x667788);
+        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update(): void {
         if (this.core.IsKeyPressing("KeyH")) {
@@ -54,10 +58,8 @@ class PauseScene extends Scene {
         this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         this.sprite.position.set(0, 0, 1);
         this.scene2d.add(this.sprite);
-        this.onWindowResize = () => {
-            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
-            this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
-        };
+        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update() {
         // このコメントを解除すれば裏でgameSceneが動く
@@ -106,6 +108,8 @@ class GameScene extends Scene {
         this.onMouseClick = () => {
             // this.core.SaveImage("ScreenShot.png");
         };
+        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update(): void {
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);

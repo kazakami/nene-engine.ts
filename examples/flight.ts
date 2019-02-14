@@ -4,6 +4,7 @@ import { Scene, Start, Unit } from "../src/nene-engine";
 class LoadScene extends Scene {
     public Init(): Promise<void> {
         this.backgroundColor = new THREE.Color(0x778899);
+        this.onTouchMove = (e) => { e.preventDefault(); };
         Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                                 "resources/models/ente progress_export.mtl", "ente"),
@@ -64,6 +65,7 @@ class GameScene extends Scene {
                 this.onWindowResize = () => {
                     this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
                 };
+                this.onTouchMove = (e) => { e.preventDefault(); };
                 this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
                 this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
                 const segX = 1024;

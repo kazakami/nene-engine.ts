@@ -5,6 +5,7 @@ class LoadScene extends Scene {
     public async Init(): Promise<void> {
         this.backgroundColor = new THREE.Color(0x887766);
         this.onLoadError = (e) => console.log(e);
+        this.onTouchMove = (e) => { e.preventDefault(); };
         await Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                                 "resources/models/ente progress_export.mtl", "ente"),
@@ -66,6 +67,7 @@ class GameScene extends Scene {
         this.onWindowResize = () => {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
         };
+        this.onTouchMove = (e) => { e.preventDefault(); };
         this.core.PixelRatio = 1 / 1;
         // 床
         const floorGeo = new THREE.PlaneBufferGeometry(500, 500);
@@ -164,6 +166,7 @@ class PauseScene extends Scene {
             this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
             this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         };
+        this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update() {
         // このコメントを解除すれば裏でgameSceneが動く
