@@ -32,6 +32,8 @@ export abstract class Scene {
     public textCanvas: HTMLCanvasElement;
     public textCanvasSprite: THREE.Sprite;
     public textCanvasSpriteMat: THREE.SpriteMaterial;
+    public textCanvasX: number;
+    public textCanvasY: number;
     public onMouseMove: (e: MouseEvent) => void = null;
     public onMouseClick: (e: Event) => void = null;
     public onWindowResize: (e: UIEvent) => void = null;
@@ -168,11 +170,11 @@ export abstract class Scene {
         }
         // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
         this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
-        this.textCanvasSprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.textCanvasSprite.scale.set(this.textCanvasX, this.textCanvasY, 1);
         const ctx = this.textCanvas.getContext("2d");
         ctx.font = "50px serif";
-        ctx.clearRect(0, 0, this.core.windowSizeX, this.core.windowSizeY);
-        ctx.fillText("hoge", 100, 100);
+        ctx.clearRect(0, 0, this.textCanvasX, this.textCanvasY);
+        ctx.fillText("hoge", this.textCanvasX / 2, this.textCanvasY / 2);
         this.textCanvasSpriteMat.map.needsUpdate = true;
         if (this.composer2d === null) {
             // this.core.offScreenRenderTargetに描画し、その結果をthis.core.offScreenMat.mapに設定する
@@ -240,13 +242,15 @@ export abstract class Scene {
             minFilter: THREE.NearestFilter,
         });
         this.textCanvas = document.createElement("canvas");
-        this.textCanvas.setAttribute("width", this.core.windowSizeX + "");
-        this.textCanvas.setAttribute("height", this.core.windowSizeY + "");
+        this.textCanvasX = 2 ** Math.ceil(Math.log2(this.core.windowSizeX));
+        this.textCanvasY = 2 ** Math.ceil(Math.log2(this.core.windowSizeY));
+        this.textCanvas.setAttribute("width", this.textCanvasX + "");
+        this.textCanvas.setAttribute("height", this.textCanvasY + "");
         this.textCanvasSpriteMat = new THREE.SpriteMaterial({
             color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas)});
         this.textCanvasSprite = new THREE.Sprite(this.textCanvasSpriteMat);
         this.textCanvasSprite.position.set(0, 0, 9);
-        this.textCanvasSprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.textCanvasSprite.scale.set(this.textCanvasX, this.textCanvasY, 1);
         this.scene2d.add(this.textCanvasSprite);
     }
 
@@ -290,8 +294,8 @@ export abstract class Scene {
         this.renderTarget.setSize(
             this.core.windowSizeX * this.core.PixelRatio,
             this.core.windowSizeY * this.core.PixelRatio);
-        this.textCanvas.setAttribute("width", this.core.windowSizeX + "");
-        this.textCanvas.setAttribute("height", this.core.windowSizeY + "");
+        this.textCanvas.setAttribute("width", this.textCanvasX + "");
+        this.textCanvas.setAttribute("height", this.textCanvasY + "");
     }
 
     public LoadFromFile(filename: string): void {
