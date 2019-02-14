@@ -614,7 +614,6 @@ export class Core {
             }
         });
         this.textCanvas.addEventListener("touchmove", (e) => {
-            e.preventDefault();
             const t = e.targetTouches[0];
             this.mouseX = t.pageX - this.windowSizeX / 2;
             this.mouseY = this.windowSizeY / 2 - t.pageY;
@@ -638,14 +637,23 @@ export class Core {
             }
         });
         document.addEventListener("keydown", (e) => {
+            if (this.activeScene.onKeyKeyDown !== null) {
+                this.activeScene.onKeyKeyDown(e);
+            }
             if (!e.repeat) {
                 this.keyState[e.code] = true;
             }
         });
         document.addEventListener("keyup", (e) => {
+            if (this.activeScene.onKeyKeyUp !== null) {
+                this.activeScene.onKeyKeyUp(e);
+            }
             this.keyState[e.code] = false;
         });
         window.addEventListener("blur", (e) => {
+            if (this.activeScene.onBlur !== null) {
+                this.activeScene.onBlur(e);
+            }
             for (const key in this.keyState) {
                 this.keyState[key] = false;
             }
