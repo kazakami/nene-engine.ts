@@ -22,7 +22,7 @@
     "cannon": "^0.6.2",
     "imports-loader": "^0.8.0",
     "three": "^0.101.1",
-    "typescript": "^3.3.1"
+    "typescript": "^3.3.3"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",
@@ -32,7 +32,7 @@
     "ts-node": "^8.0.2",
     "tslint": "^5.12.1",
     "typedoc": "^0.14.2",
-    "webpack": "^4.29.0",
-    "webpack-cli": "^3.2.1"
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3"
   }
 }
