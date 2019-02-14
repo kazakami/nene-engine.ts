@@ -29,6 +29,9 @@ export abstract class Scene {
     public id: string = "";
     public physicStep: number = 1 / 60;
     public colliders: Figure[] = [];
+    public textCanvas: HTMLCanvasElement;
+    public textCanvasSprite: THREE.Sprite;
+    public textCanvasSpriteMat: THREE.SpriteMaterial;
     public onMouseMove: (e: MouseEvent) => void = null;
     public onMouseClick: (e: Event) => void = null;
     public onWindowResize: (e: UIEvent) => void = null;
@@ -165,6 +168,12 @@ export abstract class Scene {
         }
         // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
         this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.textCanvasSprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        const ctx = this.textCanvas.getContext("2d");
+        ctx.font = "50px serif";
+        ctx.clearRect(0, 0, this.core.windowSizeX, this.core.windowSizeY);
+        ctx.fillText("hoge", 100, 100);
+        this.textCanvasSpriteMat.map.needsUpdate = true;
         if (this.composer2d === null) {
             // this.core.offScreenRenderTargetに描画し、その結果をthis.core.offScreenMat.mapに設定する
             this.core.renderer.render(this.scene2d, this.camera2d, this.renderTarget);
@@ -230,6 +239,15 @@ export abstract class Scene {
             magFilter: THREE.NearestFilter,
             minFilter: THREE.NearestFilter,
         });
+        this.textCanvas = document.createElement("canvas");
+        this.textCanvas.setAttribute("width", this.core.windowSizeX + "");
+        this.textCanvas.setAttribute("height", this.core.windowSizeY + "");
+        this.textCanvasSpriteMat = new THREE.SpriteMaterial({
+            color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas)});
+        this.textCanvasSprite = new THREE.Sprite(this.textCanvasSpriteMat);
+        this.textCanvasSprite.position.set(0, 0, 9);
+        this.textCanvasSprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.scene2d.add(this.textCanvasSprite);
     }
 
     /**
@@ -272,6 +290,8 @@ export abstract class Scene {
         this.renderTarget.setSize(
             this.core.windowSizeX * this.core.PixelRatio,
             this.core.windowSizeY * this.core.PixelRatio);
+        this.textCanvas.setAttribute("width", this.core.windowSizeX + "");
+        this.textCanvas.setAttribute("height", this.core.windowSizeY + "");
     }
 
     public LoadFromFile(filename: string): void {
