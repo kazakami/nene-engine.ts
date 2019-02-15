@@ -28,7 +28,7 @@ class LoadScene extends Scene {
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
-        this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
+        this.FillText("Now Loading " + a + "/" + b, 0, 0);
     }
 }
 
@@ -138,13 +138,13 @@ class GameScene extends Scene {
     }
     public DrawText(): void {
         this.core.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
-        this.core.DrawText("fps: " + Math.round(this.core.fps).toString(),
+        this.FillText("fps: " + Math.round(this.core.fps).toString(),
             -this.core.windowSizeX / 2,
             this.core.windowSizeY / 2);
-        this.core.DrawText("Press p to save screenshot.",
+        this.FillText("Press p to save screenshot.",
             -this.core.windowSizeX / 2,
             this.core.windowSizeY / 2 - 50);
-        this.core.DrawText(this.casted.join(), this.core.mouseX, this.core.mouseY);
+        this.FillText(this.casted.join(), this.core.mouseX, this.core.mouseY);
     }
 }
 
@@ -179,7 +179,7 @@ class PauseScene extends Scene {
         }
     }
     public DrawText() {
-        this.core.DrawText("Pause", 0, 0);
+        this.FillText("Pause", 0, 0);
     }
 }
 
@@ -262,7 +262,7 @@ class Ball extends Unit {
     public DrawText(): void {
         if (this.shaded) {
             const [x, y] = this.scene.GetScreenPosition(this.ball);
-            this.core.DrawText("custom shadered", x, y);
+            this.scene.FillText("custom shadered", x, y);
         }
     }
 }

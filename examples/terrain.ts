@@ -14,7 +14,7 @@ class LoadScene extends Scene {
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
-        this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
+        this.FillText("Now Loading " + a + "/" + b, 0, 0);
     }
 }
 
@@ -48,10 +48,10 @@ class GameScene extends Scene {
     }
     public DrawText() {
         this.core.SetTextSize(20);
-        this.core.DrawText(
+        this.FillText(
             "Press mouse left button to raise the terrain.",
             -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
-        this.core.DrawText(
+        this.FillText(
             "Press \"q\" and press mouse left button to lower the terrain.",
             -this.core.windowSizeX / 2, this.core.windowSizeY / 2 - 20);
     }

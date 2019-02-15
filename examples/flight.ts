@@ -25,8 +25,8 @@ class LoadScene extends Scene {
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
-        this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
-        this.core.DrawText(this.frame.toString(), 0, 100);
+        this.FillText("Now Loading " + a + "/" + b, 0, 0);
+        this.FillText(this.frame.toString(), 0, 100);
     }
 }
 
@@ -171,10 +171,10 @@ class Player extends Unit {
         this.plane.setRotationFromQuaternion(this.rot);
     }
     public DrawText(): void {
-        this.core.DrawText(
+        this.scene.FillText(
             "SPD " + Math.floor(this.speed * 60 * 3.6) + "km/h",
             -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
-        this.core.DrawText(
+        this.scene.FillText(
             "ALT " + Math.floor(this.y) + "m",
             -this.core.windowSizeX / 2, this.core.windowSizeY / 2 - 50);
     }

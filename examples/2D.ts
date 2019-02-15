@@ -22,7 +22,7 @@ class LoadScene extends Scene {
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
-        this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
+        this.FillText("Now Loading " + a + "/" + b, 0, 0);
     }
 }
 
@@ -39,7 +39,7 @@ class TitleScene extends Scene {
         }
     }
     public DrawText(): void {
-        this.core.DrawText("Press H key to start", -240, 0);
+        this.FillText("Press H key to start", -240, 0);
     }
 }
 
@@ -89,10 +89,10 @@ class PauseScene extends Scene {
         }
     }
     public DrawText() {
-        this.core.SetTextColor(new THREE.Color(0xffffff));
-        this.core.DrawText("Resume", 0, 0);
-        this.core.DrawText("Back to title", 0, -50);
-        this.core.DrawText("👉", -50, -50 * this.selected);
+        this.SetTextColor(new THREE.Color(0xffffff));
+        this.FillText("Resume", 0, 0);
+        this.FillText("Back to title", 0, -50);
+        this.FillText("👉", -50, -50 * this.selected);
     }
 }
 
@@ -121,8 +121,8 @@ class GameScene extends Scene {
         }
     }
     public DrawText(): void {
-        this.core.DrawText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
-        this.core.DrawText(Math.round(this.core.fps).toString(),
+        this.FillText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
+        this.FillText(Math.round(this.core.fps).toString(),
             -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
     }
 }
