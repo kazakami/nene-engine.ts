@@ -810,6 +810,9 @@ export class Core {
     }
 
     private Draw(): void {
+        this.ctx.clearRect(0, 0, this.windowSizeX, this.windowSizeY);
+        this.activeScene.InnerDrawText();
+        this.activeScene.DrawText();
         this.activeScene.Render();
         if (this.offScreenMat) {
             this.offScreenMat.map = this.activeScene.RenderedTexture();
@@ -817,8 +820,6 @@ export class Core {
         if (this.renderer) {
             this.renderer.render(this.offScreenScene, this.offScreenCamera);
         }
-        this.activeScene.InnerDrawText();
-        this.activeScene.DrawText();
     }
 
     private CalcFPS(): void {

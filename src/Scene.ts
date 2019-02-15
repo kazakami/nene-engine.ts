@@ -34,6 +34,7 @@ export abstract class Scene {
     public textCanvasSpriteMat: THREE.SpriteMaterial;
     public textCanvasX: number;
     public textCanvasY: number;
+    public ctx: CanvasRenderingContext2D;
     public onMouseMove: (e: MouseEvent) => void = null;
     public onMouseClick: (e: Event) => void = null;
     public onWindowResize: (e: UIEvent) => void = null;
@@ -157,7 +158,6 @@ export abstract class Scene {
     }
 
     public Render(): void {
-        this.core.ctx.clearRect(0, 0, this.core.windowSizeX, this.core.windowSizeY);
         this.core.renderer.setClearColor(this.backgroundColor);
         if (this.composer === null) {
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
@@ -171,10 +171,10 @@ export abstract class Scene {
         // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
         this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         this.textCanvasSprite.scale.set(this.textCanvasX, this.textCanvasY, 1);
-        const ctx = this.textCanvas.getContext("2d");
-        ctx.font = "50px serif";
-        ctx.clearRect(0, 0, this.textCanvasX, this.textCanvasY);
-        ctx.fillText("hoge", this.textCanvasX / 2, this.textCanvasY / 2);
+        // const ctx = this.textCanvas.getContext("2d");
+        // ctx.font = "50px serif";
+        // ctx.clearRect(0, 0, this.textCanvasX, this.textCanvasY);
+        // ctx.fillText("hoge", this.textCanvasX / 2, this.textCanvasY / 2);
         this.textCanvasSpriteMat.map.needsUpdate = true;
         if (this.composer2d === null) {
             // this.core.offScreenRenderTargetに描画し、その結果をthis.core.offScreenMat.mapに設定する
@@ -182,6 +182,37 @@ export abstract class Scene {
         } else {
             // omposerの結果出力バッファをthis.core.offScreenMat.mapに設定する
             this.composer2d.render();
+        }
+    }
+
+    /**
+     * テキストのサイズを指定する
+     * @param size ピクセル単位のサイズ
+     */
+    public SetTextSize(size: number): void {
+        this.ctx.font = size.toString() + "px serif";
+    }
+
+    /**
+     * テキストの色を指定する
+     * @param color 指定する色
+     */
+    public SetTextColor(color: THREE.Color): void {
+        this.ctx.fillStyle = "rgb(" + color.r + ", " + color.g + ", " + color.b + ")";
+    }
+
+    /**
+     * 指定した座標に文字列を描画する
+     * @param str 描画する文字列
+     * @param x X座標
+     * @param y Y座標
+     * @param maxWidth 最大横幅
+     */
+    public FillText(str: string, x: number, y: number, maxWidth: number = null): void {
+        if (maxWidth === null) {
+            this.ctx.fillText(str, this.textCanvasX / 2 + x, this.textCanvasY / 2 - y);
+        } else {
+            this.ctx.fillText(str, this.textCanvasX / 2 + x, this.textCanvasY / 2 - y, maxWidth);
         }
     }
 
@@ -197,6 +228,10 @@ export abstract class Scene {
      * 基本的にこの関数はオーバーライドすべきでない
      */
     public InnerDrawText(): void {
+        this.ctx.clearRect(0, 0, this.textCanvasX, this.textCanvasY);
+        this.ctx.font = "50px serif";
+        this.ctx.textAlign = "left";
+        this.ctx.textBaseline = "top";
         this.units.forEach((u) => {
             u.DrawText();
         });
@@ -246,6 +281,7 @@ export abstract class Scene {
         this.textCanvasY = 2 ** Math.ceil(Math.log2(this.core.windowSizeY));
         this.textCanvas.setAttribute("width", this.textCanvasX + "");
         this.textCanvas.setAttribute("height", this.textCanvasY + "");
+        this.ctx = this.textCanvas.getContext("2d");
         this.textCanvasSpriteMat = new THREE.SpriteMaterial({
             color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas)});
         this.textCanvasSprite = new THREE.Sprite(this.textCanvasSpriteMat);
