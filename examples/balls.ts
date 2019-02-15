@@ -137,7 +137,7 @@ class GameScene extends Scene {
         }
     }
     public DrawText(): void {
-        this.core.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
+        this.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
         this.FillText("fps: " + Math.round(this.core.fps).toString(),
             -this.core.windowSizeX / 2,
             this.core.windowSizeY / 2);

@@ -47,7 +47,7 @@ class GameScene extends Scene {
         this.onContextmenu = (e) => { e.preventDefault(); };
     }
     public DrawText() {
-        this.core.SetTextSize(20);
+        this.SetTextSize(20);
         this.FillText(
             "Press mouse left button to raise the terrain.",
             -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
