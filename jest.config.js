@@ -15,4 +15,5 @@ module.exports = {
     "moduleNameMapper": {
       "imports-loader?.*": "<rootDir>/src/test/importsLoader.js"
     },
+    "setupFiles": ["jest-canvas-mock"]
   }
