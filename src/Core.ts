@@ -810,7 +810,9 @@ export class Core {
     }
 
     private Draw(): void {
-        this.ctx.clearRect(0, 0, this.windowSizeX, this.windowSizeY);
+        if (this.ctx) {
+            this.ctx.clearRect(0, 0, this.windowSizeX, this.windowSizeY);
+        }
         this.activeScene.InnerDrawText();
         this.activeScene.DrawText();
         this.activeScene.Render();

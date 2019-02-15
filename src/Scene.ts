@@ -228,10 +228,12 @@ export abstract class Scene {
      * 基本的にこの関数はオーバーライドすべきでない
      */
     public InnerDrawText(): void {
-        this.ctx.clearRect(0, 0, this.textCanvasX, this.textCanvasY);
-        this.ctx.font = "50px serif";
-        this.ctx.textAlign = "left";
-        this.ctx.textBaseline = "top";
+        if (this.ctx) {
+            this.ctx.clearRect(0, 0, this.textCanvasX, this.textCanvasY);
+            this.ctx.font = "50px serif";
+            this.ctx.textAlign = "left";
+            this.ctx.textBaseline = "top";
+        }
         this.units.forEach((u) => {
             u.DrawText();
         });
