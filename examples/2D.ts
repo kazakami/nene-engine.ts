@@ -223,8 +223,26 @@ class Fire extends Unit {
 }
 
 // ゲームの開始
-Start("init", new LoadScene(), {
+const core = Start("init", new LoadScene(), {
     parent: document.getElementById("screen"),
     windowSizeX: 640,
     windowSizeY: 480,
 });
+
+const pause = document.getElementById("pause");
+pause.onclick = () => {
+    if (core.GetActiveSceneName() === "game") {
+        if (core.GetScene("pause")) {
+            core.ChangeScene("pause");
+        }
+    }
+};
+
+const title = document.getElementById("title");
+title.onclick = () => {
+    if (core.GetActiveSceneName() === "pause" || core.GetActiveSceneName() ===  "game") {
+        if (core.GetScene("title")) {
+            core.ChangeScene("title");
+        }
+    }
+};
