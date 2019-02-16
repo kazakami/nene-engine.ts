@@ -88,6 +88,7 @@ export class Core {
     private texts: { [key: string]: string } = {};
     private scenes: { [key: string]: Scene } = {};
     private activeScene: Scene = null;
+    private activeSceneName: string = null;
     private nextSceneName: string = null;
     private loadingManager: THREE.LoadingManager;
     private objLoader: THREE.OBJLoader;
@@ -659,6 +660,7 @@ export class Core {
             }
         });
         scene.core = this;
+        this.activeSceneName = sceneName;
         this.scenes[sceneName] = scene;
         this.activeScene = scene;
         this.activeScene.InnerInit();
@@ -718,6 +720,28 @@ export class Core {
             this.scenes[sceneName].Fin();
             delete this.scenes[sceneName];
         }
+    }
+
+    /**
+     * シーンを取得する
+     * @param sceneName キー
+     */
+    public GetScene(sceneName: string): Scene {
+        return this.scenes[sceneName];
+    }
+
+    /**
+     * active sceneを取得する
+     */
+    public GetActiveScene(): Scene {
+        return this.activeScene;
+    }
+
+    /**
+     * active sceneのキーを取得する
+     */
+    public GetActiveSceneName(): string {
+        return this.activeSceneName;
     }
 
     /**
@@ -795,6 +819,7 @@ export class Core {
             if (this.scenes[this.nextSceneName] === null || this.scenes[this.nextSceneName] === undefined) {
                 throw new Error("Scene " + this.nextSceneName + " does not exist.");
             }
+            this.activeSceneName = this.nextSceneName;
             this.activeScene = this.scenes[this.nextSceneName];
             this.nextSceneName = null;
         }
