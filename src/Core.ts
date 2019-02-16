@@ -70,7 +70,6 @@ export class Core {
      */
     public windowSizeY: number;
     public renderer: THREE.WebGLRenderer;
-    public renderTarget: THREE.WebGLRenderTarget;
     public ctx: CanvasRenderingContext2D;
     public halfFPS: boolean;
     public offScreenSprite: THREE.Sprite;
@@ -195,7 +194,6 @@ export class Core {
             "width: " + this.windowSizeX.toString() + "px; height: " + this.windowSizeY.toString() + "px;");
         this.renderer.setPixelRatio(this.ratio);
         this.renderer.setSize(this.windowSizeX, this.windowSizeY);
-        this.renderTarget.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
         this.offScreenCamera.left = -this.windowSizeX / 2;
         this.offScreenCamera.right = this.windowSizeX / 2;
         this.offScreenCamera.bottom = -this.windowSizeY / 2;
@@ -526,10 +524,6 @@ export class Core {
         this.halfFPS = this.option.halfFPS;
         this.windowSizeX = this.option.windowSizeX;
         this.windowSizeY = this.option.windowSizeY;
-        this.renderTarget = new THREE.WebGLRenderTarget(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio, {
-            magFilter: THREE.NearestFilter,
-            minFilter: THREE.NearestFilter,
-        });
         this.offScreenCamera = new THREE.OrthographicCamera(
             -this.windowSizeX / 2, this.windowSizeX / 2,
             this.windowSizeY / 2, -this.windowSizeY / 2,

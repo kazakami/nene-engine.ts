@@ -23,6 +23,7 @@ export abstract class Scene {
     public fov: number = 75;
     public composer: THREE.EffectComposer = null;
     public composer2d: THREE.EffectComposer = null;
+    public offScreenRenderTarget: THREE.WebGLRenderTarget;
     public offScreen: THREE.Sprite;
     public offScreenMat: THREE.SpriteMaterial;
     public renderTarget: THREE.WebGLRenderTarget;
@@ -161,8 +162,8 @@ export abstract class Scene {
         this.core.renderer.setClearColor(this.backgroundColor);
         if (this.composer === null) {
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
-            this.core.renderer.render(this.scene, this.camera , this.core.renderTarget);
-            this.offScreenMat.map = this.core.renderTarget.texture;
+            this.core.renderer.render(this.scene, this.camera , this.offScreenRenderTarget);
+            this.offScreenMat.map = this.offScreenRenderTarget.texture;
         } else {
             // 3D用のシーンでcomposerを使っていればcomposerの結果出力バッファを用いる
             this.composer.render();
@@ -269,6 +270,11 @@ export abstract class Scene {
         this.offScreenMat = new THREE.SpriteMaterial({
             color: 0xFFFFFF,
         });
+        this.offScreenRenderTarget = new THREE.WebGLRenderTarget(
+            this.core.windowSizeX * this.core.PixelRatio, this.core.windowSizeY * this.core.PixelRatio, {
+            magFilter: THREE.NearestFilter,
+            minFilter: THREE.NearestFilter,
+        });
         this.offScreen = new THREE.Sprite(this.offScreenMat);
         this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         this.offScreen.position.set(0, 0, 1);
@@ -329,6 +335,9 @@ export abstract class Scene {
         this.camera2d.bottom = -this.core.windowSizeY / 2;
         this.camera2d.top = this.core.windowSizeY / 2;
         this.camera2d.updateProjectionMatrix();
+        this.offScreenRenderTarget.setSize(
+            this.core.windowSizeX * this.core.PixelRatio,
+            this.core.windowSizeY * this.core.PixelRatio);
         this.renderTarget.setSize(
             this.core.windowSizeX * this.core.PixelRatio,
             this.core.windowSizeY * this.core.PixelRatio);
