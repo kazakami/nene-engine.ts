@@ -29,12 +29,12 @@ export class CoreOption {
      * 画面幅
      * 省略時はwindow.innerWidth
      */
-    public windowSizeX?: number;
+    public screenSizeX?: number;
     /**
      * 画面高さ
      * 省略時はwindow.innerHeight
      */
-    public windowSizeY?: number;
+    public screenSizeY?: number;
     /**
      * fpsを半分の30とするか
      * 省略時はfalse
@@ -43,8 +43,8 @@ export class CoreOption {
     constructor(option: CoreOption) {
         this.antialias = Coalescing(option.antialias, true);
         this.parent = Coalescing(option.parent, document.body);
-        this.windowSizeX = Coalescing(option.windowSizeX, window.innerWidth);
-        this.windowSizeY = Coalescing(option.windowSizeY, window.innerHeight);
+        this.screenSizeX = Coalescing(option.screenSizeX, window.innerWidth);
+        this.screenSizeY = Coalescing(option.screenSizeY, window.innerHeight);
         this.halfFPS = Coalescing(option.halfFPS, false);
     }
 }
@@ -64,11 +64,11 @@ export class Core {
     /**
      * 画面幅
      */
-    public windowSizeX: number;
+    public screenSizeX: number;
     /**
      * 画面高さ
      */
-    public windowSizeY: number;
+    public screenSizeY: number;
     public renderer: THREE.WebGLRenderer;
     public ctx: CanvasRenderingContext2D;
     public halfFPS: boolean;
@@ -119,7 +119,7 @@ export class Core {
 
     set PixelRatio(r: number) {
         this.ratio = r;
-        this.ChangeScreenSize(this.windowSizeX, this.windowSizeY);
+        this.ChangeScreenSize(this.screenSizeX, this.screenSizeY);
     }
 
     /**
@@ -127,7 +127,7 @@ export class Core {
      */
     public MakeEffectComposer(): THREE.EffectComposer {
         const c = new THREE.EffectComposer(this.renderer);
-        c.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
+        c.setSize(this.screenSizeX * this.ratio, this.screenSizeY * this.ratio);
         return c;
     }
 
@@ -188,19 +188,19 @@ export class Core {
      * @param y 新しい高さ
      */
     public ChangeScreenSize(x: number, y: number): void {
-        this.windowSizeX = x;
-        this.windowSizeY = y;
+        this.screenSizeX = x;
+        this.screenSizeY = y;
         this.div.setAttribute("style",
-            "width: " + this.windowSizeX.toString() + "px; height: " + this.windowSizeY.toString() + "px;");
+            "width: " + this.screenSizeX.toString() + "px; height: " + this.screenSizeY.toString() + "px;");
         this.renderer.setPixelRatio(this.ratio);
-        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
-        this.offScreenCamera.left = -this.windowSizeX / 2;
-        this.offScreenCamera.right = this.windowSizeX / 2;
-        this.offScreenCamera.bottom = -this.windowSizeY / 2;
-        this.offScreenCamera.top = this.windowSizeY / 2;
+        this.renderer.setSize(this.screenSizeX, this.screenSizeY);
+        this.offScreenCamera.left = -this.screenSizeX / 2;
+        this.offScreenCamera.right = this.screenSizeX / 2;
+        this.offScreenCamera.bottom = -this.screenSizeY / 2;
+        this.offScreenCamera.top = this.screenSizeY / 2;
         this.offScreenCamera.updateProjectionMatrix();
-        this.textCanvas.width = this.windowSizeX;
-        this.textCanvas.height = this.windowSizeY;
+        this.textCanvas.width = this.screenSizeX;
+        this.textCanvas.height = this.screenSizeY;
         this.ctx = this.textCanvas.getContext("2d");
         this.ctx.font = "50px serif";
         this.ctx.textAlign = "left";
@@ -516,18 +516,18 @@ export class Core {
             antialias: this.option.antialias,
             preserveDrawingBuffer: true,
         });
-        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
+        this.renderer.setSize(this.screenSizeX, this.screenSizeY);
         this.halfFPS = this.option.halfFPS;
-        this.windowSizeX = this.option.windowSizeX;
-        this.windowSizeY = this.option.windowSizeY;
+        this.screenSizeX = this.option.screenSizeX;
+        this.screenSizeY = this.option.screenSizeY;
         this.offScreenCamera = new THREE.OrthographicCamera(
-            -this.windowSizeX / 2, this.windowSizeX / 2,
-            this.windowSizeY / 2, -this.windowSizeY / 2,
+            -this.screenSizeX / 2, this.screenSizeX / 2,
+            this.screenSizeY / 2, -this.screenSizeY / 2,
             1, 10 );
         this.offScreenCamera.position.z = 10;
         this.offScreenMat = new THREE.SpriteMaterial({color: 0xFFFFFF});
         this.offScreenSprite = new THREE.Sprite(this.offScreenMat);
-        this.offScreenSprite.scale.set(this.windowSizeX, this.windowSizeY, 1);
+        this.offScreenSprite.scale.set(this.screenSizeX, this.screenSizeY, 1);
         this.offScreenSprite.position.set(0, 0, 5);
         this.offScreenScene = new THREE.Scene();
         this.offScreenScene.add(this.offScreenSprite);
@@ -540,16 +540,16 @@ export class Core {
         this.div = document.createElement("div");
         this.div.setAttribute("position", "relative");
         this.div.setAttribute("style",
-            "width: " + this.windowSizeX.toString() + "px; height: " + this.windowSizeY.toString() + "px;");
+            "width: " + this.screenSizeX.toString() + "px; height: " + this.screenSizeY.toString() + "px;");
         this.canvas = this.renderer.domElement;
         this.canvas.setAttribute("style", "position: absolute;");
         this.renderer.setPixelRatio(this.ratio);
-        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
+        this.renderer.setSize(this.screenSizeX, this.screenSizeY);
         this.div.appendChild(this.canvas);
         // 2D文字列描画のためのcanvasの作成
         this.textCanvas = document.createElement("canvas");
-        this.textCanvas.setAttribute("width", this.windowSizeX.toString());
-        this.textCanvas.setAttribute("height", this.windowSizeY.toString());
+        this.textCanvas.setAttribute("width", this.screenSizeX.toString());
+        this.textCanvas.setAttribute("height", this.screenSizeY.toString());
         this.textCanvas.setAttribute("z-index", "100");
         this.textCanvas.setAttribute("style", "position: absolute;");
         this.div.appendChild(this.textCanvas);
@@ -564,8 +564,8 @@ export class Core {
         this.option.parent.appendChild(this.link);
         // イベントの登録
         this.textCanvas.addEventListener("mousemove", (e) => {
-            this.mouseX = e.offsetX - this.windowSizeX / 2;
-            this.mouseY = this.windowSizeY / 2 - e.offsetY;
+            this.mouseX = e.offsetX - this.screenSizeX / 2;
+            this.mouseY = this.screenSizeY / 2 - e.offsetY;
             if (this.activeScene.onMouseMove !== null) {
                 this.activeScene.onMouseMove(e);
             }
@@ -606,8 +606,8 @@ export class Core {
         });
         this.textCanvas.addEventListener("touchmove", (e) => {
             const t = e.targetTouches[0];
-            this.mouseX = t.pageX - this.windowSizeX / 2;
-            this.mouseY = this.windowSizeY / 2 - t.pageY;
+            this.mouseX = t.pageX - this.screenSizeX / 2;
+            this.mouseY = this.screenSizeY / 2 - t.pageY;
             if (this.activeScene.onTouchMove !== null) {
                 this.activeScene.onTouchMove(e);
             }
@@ -753,8 +753,8 @@ export class Core {
         glImage.src = this.canvas.toDataURL("image/png");
         return Promise.all([glImagePromise, textsImagePromise]).then(() => {
             const tmpCanvas = document.createElement("canvas");
-            tmpCanvas.setAttribute("width", this.windowSizeX.toString());
-            tmpCanvas.setAttribute("height", this.windowSizeY.toString());
+            tmpCanvas.setAttribute("width", this.screenSizeX.toString());
+            tmpCanvas.setAttribute("height", this.screenSizeY.toString());
             const context = tmpCanvas.getContext("2d");
             context.drawImage(glImage, 0, 0);
             context.drawImage(textsImage, 0, 0);
@@ -791,9 +791,9 @@ export class Core {
      */
     public DrawText(str: string, x: number, y: number, maxWidth: number = null): void {
         if (maxWidth === null) {
-            this.ctx.fillText(str, this.windowSizeX / 2 + x, this.windowSizeY / 2 - y);
+            this.ctx.fillText(str, this.screenSizeX / 2 + x, this.screenSizeY / 2 - y);
         } else {
-            this.ctx.fillText(str, this.windowSizeX / 2 + x, this.windowSizeY / 2 - y, maxWidth);
+            this.ctx.fillText(str, this.screenSizeX / 2 + x, this.screenSizeY / 2 - y, maxWidth);
         }
     }
 
@@ -828,7 +828,7 @@ export class Core {
 
     private Draw(): void {
         if (this.ctx) {
-            this.ctx.clearRect(0, 0, this.windowSizeX, this.windowSizeY);
+            this.ctx.clearRect(0, 0, this.screenSizeX, this.screenSizeY);
         }
         this.activeScene.InnerDrawText();
         this.activeScene.DrawText();

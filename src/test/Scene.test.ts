@@ -25,8 +25,8 @@ test("this.frame increase by call of InnerUpdate()", () => {
 
 test("InnerInit() generate cameras", () => {
     const c = new Core({});
-    c.windowSizeX = 640;
-    c.windowSizeY = 480;
+    c.screenSizeX = 640;
+    c.screenSizeY = 480;
     const scene = new TestScene();
     scene.core = c;
     scene.InnerInit();
@@ -46,8 +46,8 @@ test("remove unit if isAlive is false", () => {
 
 test("innerInit() call unit.Init()", () => {
     const c = new Core({});
-    c.windowSizeX = 640;
-    c.windowSizeY = 480;
+    c.screenSizeX = 640;
+    c.screenSizeY = 480;
     const scene = new TestScene();
     scene.core = c;
     const unit = new TestUnit();

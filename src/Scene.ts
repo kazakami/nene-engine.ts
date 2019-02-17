@@ -123,7 +123,7 @@ export abstract class Scene {
             p.set(input[0], input[1], input[2]);
         }
         p.project(this.camera);
-        return [p.x * this.core.windowSizeX / 2, p.y * this.core.windowSizeY / 2];
+        return [p.x * this.core.screenSizeX / 2, p.y * this.core.screenSizeY / 2];
     }
 
     /**
@@ -134,8 +134,8 @@ export abstract class Scene {
      */
     public Raycast(data: {message?: object, position?: THREE.Vec2} = {message: null, position: null}): void {
         if (data.position === null || data.position === undefined) {
-            data.position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
-                             y: this.core.mouseY / (this.core.windowSizeY / 2)};
+            data.position = {x: this.core.mouseX / (this.core.screenSizeX / 2),
+                             y: this.core.mouseY / (this.core.screenSizeY / 2)};
         }
         this.raycaster.setFromCamera(data.position, this.camera);
         this.units.filter((u) => u.raycastTarget).forEach((u) => {
@@ -152,8 +152,8 @@ export abstract class Scene {
      */
     public GetIntersects(position: THREE.Vec2 = null): THREE.Intersection[] {
         if (position === null || position === undefined) {
-            position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
-                        y: this.core.mouseY / (this.core.windowSizeY / 2)};
+            position = {x: this.core.mouseX / (this.core.screenSizeX / 2),
+                        y: this.core.mouseY / (this.core.screenSizeY / 2)};
         }
         this.raycaster.setFromCamera(position, this.camera);
         const objs = new Array<THREE.Object3D>();

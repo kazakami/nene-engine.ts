@@ -3,14 +3,14 @@ import { EachMesh, PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Star
 
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
-        this.canvasSizeX = this.core.windowSizeX;
-        this.canvasSizeY = this.core.windowSizeY;
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
         this.backgroundColor = new THREE.Color(0x887766);
         this.onLoadError = (e) => console.log(e);
         this.onTouchMove = (e) => { e.preventDefault(); };
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
-            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
         };
         await Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
@@ -43,8 +43,8 @@ class GameScene extends Scene {
     public casted: string[];
     private pause: PauseScene;
     public Init(): void {
-        this.canvasSizeX = this.core.windowSizeX;
-        this.canvasSizeY = this.core.windowSizeY;
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
         this.canvasSizeX = 640;
         this.canvasSizeY = 480;
         this.pause = new PauseScene(this);
@@ -76,7 +76,7 @@ class GameScene extends Scene {
         this.scene2d.add(this.sprt);
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
-            // this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+            // this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
             this.ResizeCanvas(640, 480);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };
@@ -151,11 +151,11 @@ class GameScene extends Scene {
     public DrawText(): void {
         this.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
         this.FillText("fps: " + Math.round(this.core.fps).toString(),
-            -this.core.windowSizeX / 2,
-            this.core.windowSizeY / 2);
+            -this.canvasSizeX / 2,
+            this.canvasSizeY / 2);
         this.FillText("Press p to save screenshot.",
-            -this.core.windowSizeX / 2,
-            this.core.windowSizeY / 2 - 50);
+            -this.canvasSizeX / 2,
+            this.canvasSizeY / 2 - 50);
         this.FillText(this.casted.join(), this.core.mouseX, this.core.mouseY);
     }
 }
@@ -169,17 +169,17 @@ class PauseScene extends Scene {
         this.gameScene = gameScene;
     }
     public Init() {
-        this.canvasSizeX = this.core.windowSizeX;
-        this.canvasSizeY = this.core.windowSizeY;
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
         this.spriteMat = new THREE.SpriteMaterial({color: 0x888888});
         this.sprite = new THREE.Sprite(this.spriteMat);
-        this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
         this.sprite.position.set(0, 0, 1);
         this.scene2d.add(this.sprite);
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
-            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
-            this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
+            this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };
     }

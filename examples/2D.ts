@@ -55,7 +55,7 @@ class PauseScene extends Scene {
     public Init() {
         this.spriteMat = new THREE.SpriteMaterial({color: 0x888888});
         this.sprite = new THREE.Sprite(this.spriteMat);
-        this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
         this.sprite.position.set(0, 0, 1);
         this.scene2d.add(this.sprite);
         this.onKeyKeyDown = (e) => { e.preventDefault(); };
@@ -123,7 +123,7 @@ class GameScene extends Scene {
     public DrawText(): void {
         this.FillText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
         this.FillText(Math.round(this.core.fps).toString(),
-            -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2);
     }
 }
 
@@ -225,8 +225,8 @@ class Fire extends Unit {
 // ゲームの開始
 const core = Start("init", new LoadScene(), {
     parent: document.getElementById("screen"),
-    windowSizeX: 640,
-    windowSizeY: 480,
+    screenSizeX: 640,
+    screenSizeY: 480,
 });
 
 const pause = document.getElementById("pause");

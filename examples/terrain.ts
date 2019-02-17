@@ -3,12 +3,12 @@ import { Scene, Start, Terrain, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init() {
-        this.canvasSizeX = this.core.windowSizeX;
-        this.canvasSizeY = this.core.windowSizeY;
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
         this.onTouchMove = (e) => { e.preventDefault(); };
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
-            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
         };
         this.core.LoadTexture("resources/images/grass.png", "grass");
     }
@@ -28,11 +28,11 @@ class GameScene extends Scene {
     private g: Ground;
     private c: Cameraman;
     public Init() {
-        this.canvasSizeX = this.core.windowSizeX;
-        this.canvasSizeY = this.core.windowSizeY;
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
-            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
@@ -59,10 +59,10 @@ class GameScene extends Scene {
         this.SetTextSize(20);
         this.FillText(
             "Press mouse left button to raise the terrain.",
-            -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2);
         this.FillText(
             "Press \"q\" and press mouse left button to lower the terrain.",
-            -this.core.windowSizeX / 2, this.core.windowSizeY / 2 - 20);
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 20);
     }
 }
 

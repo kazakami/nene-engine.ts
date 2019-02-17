@@ -319,16 +319,16 @@ test("core option", () => {
     const op = new CoreOption({});
     expect(op.antialias).toBeTruthy();
     expect(op.parent).toEqual(document.body);
-    expect(op.windowSizeX).toEqual(window.innerWidth);
-    expect(op.windowSizeY).toEqual(window.innerHeight);
+    expect(op.screenSizeX).toEqual(window.innerWidth);
+    expect(op.screenSizeY).toEqual(window.innerHeight);
     const op2 = new CoreOption({
-        windowSizeX: 100,
-        windowSizeY: 200,
+        screenSizeX: 100,
+        screenSizeY: 200,
     });
     expect(op2.antialias).toBeTruthy();
     expect(op2.parent).toEqual(document.body);
-    expect(op2.windowSizeX).toEqual(100);
-    expect(op2.windowSizeY).toEqual(200);
+    expect(op2.screenSizeX).toEqual(100);
+    expect(op2.screenSizeY).toEqual(200);
 });
 
 test("MakeSpriteFromTexture", () => {

@@ -3,13 +3,13 @@ import { Scene, Start, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init(): Promise<void> {
-        this.canvasSizeX = this.core.windowSizeX;
-        this.canvasSizeY = this.core.windowSizeY;
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
         this.backgroundColor = new THREE.Color(0x778899);
         this.onTouchMove = (e) => { e.preventDefault(); };
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
-            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
         };
         Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
@@ -50,8 +50,8 @@ class GameScene extends Scene {
     }
     public Init(): Promise<void> {
         return new Promise((resolve) => {
-            this.canvasSizeX = this.core.windowSizeX;
-            this.canvasSizeY = this.core.windowSizeY;
+            this.canvasSizeX = this.core.screenSizeX;
+            this.canvasSizeY = this.core.screenSizeY;
             const worker = new Worker("dist/flightWorker.js");
             worker.addEventListener("message", (event) => {
                 this.onWheel = (e) => {
@@ -72,7 +72,7 @@ class GameScene extends Scene {
                 };
                 this.onWindowResize = () => {
                     this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
-                    this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+                    this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
                 };
                 this.onTouchMove = (e) => { e.preventDefault(); };
                 this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
@@ -168,7 +168,7 @@ class Player extends Unit {
         const q2 = new THREE.Quaternion();
         q2.setFromAxisAngle(
             new THREE.Vector3(-Math.sin(theta), -Math.cos(theta), 0),
-            d / Math.min(this.core.windowSizeX, this.core.windowSizeY) * Math.PI * 1.1);
+            d / Math.min(this.core.screenSizeX, this.core.screenSizeY) * Math.PI * 1.1);
         const v = new THREE.Vector3(0, 0.3, -1);
         v.applyQuaternion(q2);
         v.applyQuaternion(this.rot);
@@ -182,10 +182,10 @@ class Player extends Unit {
     public DrawText(): void {
         this.scene.FillText(
             "SPD " + Math.floor(this.speed * 60 * 3.6) + "km/h",
-            -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2);
         this.scene.FillText(
             "ALT " + Math.floor(this.y) + "m",
-            -this.core.windowSizeX / 2, this.core.windowSizeY / 2 - 50);
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 50);
     }
 }
 
