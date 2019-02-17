@@ -689,7 +689,7 @@ export class Core {
         this.scenes[sceneName] = scene;
         scene.InnerInit();
         await scene.Init();
-        scene.ResizeCanvas(this.activeScene.canvasSizeX, this.activeScene.canvasSizeY);
+        scene.ResizeCanvas(scene.canvasSizeX, scene.canvasSizeY);
     }
 
     /**
