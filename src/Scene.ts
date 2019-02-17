@@ -21,6 +21,9 @@ export abstract class Scene {
     public physicWorld: Cannon.World;
     public frame: number = 0;
     public fov: number = 75;
+    public canvasSizeX: number;
+    public canvasSizeY: number;
+    public renderer: THREE.WebGLRenderer;
     public composer: THREE.EffectComposer = null;
     public composer2d: THREE.EffectComposer = null;
     public offScreenRenderTarget: THREE.WebGLRenderTarget;
@@ -39,6 +42,7 @@ export abstract class Scene {
     public onMouseMove: (e: MouseEvent) => void = null;
     public onMouseClick: (e: Event) => void = null;
     public onWindowResize: (e: UIEvent) => void = null;
+    public onScreenResize: () => void = null;
     public onMouseUp: (e: MouseEvent) => void = null;
     public onMouseDown: (e: MouseEvent) => void = null;
     public onWheel: (e: WheelEvent) => void = null;
@@ -55,6 +59,8 @@ export abstract class Scene {
      * 初期化処理はInit()に記述すべきでコンストラクタはパラメータの受け渡しのみに用いること
      */
     constructor() {
+        this.canvasSizeX = 640;
+        this.canvasSizeY = 480;
         this.backgroundColor = new THREE.Color(0x000000);
         this.raycaster = new THREE.Raycaster();
         this.scene = new THREE.Scene();
@@ -187,6 +193,15 @@ export abstract class Scene {
     }
 
     /**
+     * ゲームエンジンで使用しているTHREE.WebGLRendererを使うTHREE.EffectComposerを生成する
+     */
+    public MakeEffectComposer(): THREE.EffectComposer {
+        const c = new THREE.EffectComposer(this.renderer);
+        c.setSize(this.canvasSizeX, this.canvasSizeY);
+        return c;
+    }
+
+    /**
      * テキストのサイズを指定する
      * @param size ピクセル単位のサイズ
      */
@@ -261,32 +276,34 @@ export abstract class Scene {
         this.units.forEach((u) => {
             u.Init();
         });
-        this.camera = new THREE.PerspectiveCamera(this.fov, this.core.windowSizeX / this.core.windowSizeY, 0.1, 5000);
+        this.renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true});
+        this.renderer.setSize(this.canvasSizeX, this.canvasSizeY);
+        this.camera = new THREE.PerspectiveCamera(this.fov, this.canvasSizeX / this.canvasSizeY, 0.1, 5000);
         this.camera2d = new THREE.OrthographicCamera(
-            -this.core.windowSizeX / 2, this.core.windowSizeX / 2,
-            this.core.windowSizeY / 2, -this.core.windowSizeY / 2,
+            -this.canvasSizeX / 2, this.canvasSizeX / 2,
+            this.canvasSizeY / 2, -this.canvasSizeY / 2,
             1, 10 );
         this.camera2d.position.z = 10;
         this.offScreenMat = new THREE.SpriteMaterial({
             color: 0xFFFFFF,
         });
         this.offScreenRenderTarget = new THREE.WebGLRenderTarget(
-            this.core.windowSizeX * this.core.PixelRatio, this.core.windowSizeY * this.core.PixelRatio, {
+            this.canvasSizeX, this.canvasSizeY, {
             magFilter: THREE.NearestFilter,
             minFilter: THREE.NearestFilter,
         });
         this.offScreen = new THREE.Sprite(this.offScreenMat);
-        this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.offScreen.scale.set(this.canvasSizeX, this.canvasSizeY, 1);
         this.offScreen.position.set(0, 0, 1);
         this.scene2d.add(this.offScreen);
         this.renderTarget = new THREE.WebGLRenderTarget(
-            this.core.windowSizeX * this.core.PixelRatio, this.core.windowSizeY * this.core.PixelRatio, {
+            this.canvasSizeX, this.canvasSizeY, {
             magFilter: THREE.NearestFilter,
             minFilter: THREE.NearestFilter,
         });
         this.textCanvas = document.createElement("canvas");
-        this.textCanvasX = 2 ** Math.ceil(Math.log2(this.core.windowSizeX));
-        this.textCanvasY = 2 ** Math.ceil(Math.log2(this.core.windowSizeY));
+        this.textCanvasX = 2 ** Math.ceil(Math.log2(this.canvasSizeX));
+        this.textCanvasY = 2 ** Math.ceil(Math.log2(this.canvasSizeY));
         this.textCanvas.setAttribute("width", this.textCanvasX + "");
         this.textCanvas.setAttribute("height", this.textCanvasY + "");
         this.ctx = this.textCanvas.getContext("2d");
@@ -327,20 +344,31 @@ export abstract class Scene {
         return;
     }
 
-    public OnCanvasResizeCallBack(): void {
-        this.camera.aspect = this.core.windowSizeX / this.core.windowSizeY;
+    public ResizeCanvas(sizeX: number, sizeY: number): void {
+        this.canvasSizeX = sizeX;
+        this.canvasSizeY = sizeY;
+        this.renderer.setSize(this.canvasSizeX, this.canvasSizeY);
+        this.camera.aspect = this.canvasSizeX / this.canvasSizeY;
         this.camera.updateProjectionMatrix();
-        this.camera2d.left = -this.core.windowSizeX / 2;
-        this.camera2d.right = this.core.windowSizeX / 2;
-        this.camera2d.bottom = -this.core.windowSizeY / 2;
-        this.camera2d.top = this.core.windowSizeY / 2;
+        this.camera2d.left = -this.canvasSizeX / 2;
+        this.camera2d.right = this.canvasSizeX / 2;
+        this.camera2d.bottom = -this.canvasSizeY / 2;
+        this.camera2d.top = this.canvasSizeY / 2;
         this.camera2d.updateProjectionMatrix();
         this.offScreenRenderTarget.setSize(
-            this.core.windowSizeX * this.core.PixelRatio,
-            this.core.windowSizeY * this.core.PixelRatio);
+            this.canvasSizeX,
+            this.canvasSizeY);
         this.renderTarget.setSize(
-            this.core.windowSizeX * this.core.PixelRatio,
-            this.core.windowSizeY * this.core.PixelRatio);
+            this.canvasSizeX,
+            this.canvasSizeY);
+        if (this.composer) {
+            this.composer.setSize(this.canvasSizeX, this.canvasSizeY);
+        }
+        if (this.composer2d) {
+            this.composer2d.setSize(this.canvasSizeX, this.canvasSizeY);
+        }
+        this.textCanvasX = 2 ** Math.ceil(Math.log2(this.canvasSizeX));
+        this.textCanvasY = 2 ** Math.ceil(Math.log2(this.canvasSizeY));
         this.textCanvas.setAttribute("width", this.textCanvasX + "");
         this.textCanvas.setAttribute("height", this.textCanvasY + "");
     }

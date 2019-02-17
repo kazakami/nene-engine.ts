@@ -119,7 +119,7 @@ export class Core {
 
     set PixelRatio(r: number) {
         this.ratio = r;
-        this.ChangeCanvasSize(this.windowSizeX, this.windowSizeY);
+        this.ChangeScreenSize(this.windowSizeX, this.windowSizeY);
     }
 
     /**
@@ -187,7 +187,7 @@ export class Core {
      * @param x 新しい横幅
      * @param y 新しい高さ
      */
-    public ChangeCanvasSize(x: number, y: number): void {
+    public ChangeScreenSize(x: number, y: number): void {
         this.windowSizeX = x;
         this.windowSizeY = y;
         this.div.setAttribute("style",
@@ -199,7 +199,6 @@ export class Core {
         this.offScreenCamera.bottom = -this.windowSizeY / 2;
         this.offScreenCamera.top = this.windowSizeY / 2;
         this.offScreenCamera.updateProjectionMatrix();
-        this.offScreenSprite.scale.set(this.windowSizeX, this.windowSizeY, 1);
         this.textCanvas.width = this.windowSizeX;
         this.textCanvas.height = this.windowSizeY;
         this.ctx = this.textCanvas.getContext("2d");
@@ -207,12 +206,8 @@ export class Core {
         this.ctx.textAlign = "left";
         this.ctx.textBaseline = "top";
         for (const key in this.scenes) {
-            this.scenes[key].OnCanvasResizeCallBack();
-            if (this.scenes[key].composer !== null) {
-                this.scenes[key].composer.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
-            }
-            if (this.scenes[key].composer2d !== null) {
-                this.scenes[key].composer2d.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
+            if (this.scenes[key].onScreenResize) {
+                this.scenes[key].onScreenResize();
             }
         }
     }
@@ -521,6 +516,7 @@ export class Core {
             antialias: this.option.antialias,
             preserveDrawingBuffer: true,
         });
+        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
         this.halfFPS = this.option.halfFPS;
         this.windowSizeX = this.option.windowSizeX;
         this.windowSizeY = this.option.windowSizeY;
@@ -659,6 +655,7 @@ export class Core {
         this.activeScene = scene;
         this.activeScene.InnerInit();
         this.activeScene.Init();
+        this.activeScene.ResizeCanvas(this.activeScene.canvasSizeX, this.activeScene.canvasSizeY);
         const animate = () => {
             requestAnimationFrame(animate);
             this.frame++;
@@ -692,6 +689,7 @@ export class Core {
         this.scenes[sceneName] = scene;
         scene.InnerInit();
         await scene.Init();
+        scene.ResizeCanvas(this.activeScene.canvasSizeX, this.activeScene.canvasSizeY);
     }
 
     /**
@@ -839,6 +837,7 @@ export class Core {
             this.offScreenMat.map = this.activeScene.RenderedTexture();
         }
         if (this.renderer) {
+            this.offScreenSprite.scale.set(this.activeScene.canvasSizeX, this.activeScene.canvasSizeY, 1);
             this.renderer.render(this.offScreenScene, this.offScreenCamera);
         }
     }

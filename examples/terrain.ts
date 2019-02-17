@@ -3,7 +3,13 @@ import { Scene, Start, Terrain, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init() {
+        this.canvasSizeX = this.core.windowSizeX;
+        this.canvasSizeY = this.core.windowSizeY;
         this.onTouchMove = (e) => { e.preventDefault(); };
+        this.onWindowResize = () => {
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+        };
         this.core.LoadTexture("resources/images/grass.png", "grass");
     }
     public Update(): void {
@@ -22,8 +28,11 @@ class GameScene extends Scene {
     private g: Ground;
     private c: Cameraman;
     public Init() {
+        this.canvasSizeX = this.core.windowSizeX;
+        this.canvasSizeY = this.core.windowSizeY;
         this.onWindowResize = () => {
-            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);

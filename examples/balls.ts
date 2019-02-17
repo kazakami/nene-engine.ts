@@ -3,9 +3,15 @@ import { EachMesh, PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Star
 
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
+        this.canvasSizeX = this.core.windowSizeX;
+        this.canvasSizeY = this.core.windowSizeY;
         this.backgroundColor = new THREE.Color(0x887766);
         this.onLoadError = (e) => console.log(e);
         this.onTouchMove = (e) => { e.preventDefault(); };
+        this.onWindowResize = () => {
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+        };
         await Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                                 "resources/models/ente progress_export.mtl", "ente"),
@@ -37,6 +43,10 @@ class GameScene extends Scene {
     public casted: string[];
     private pause: PauseScene;
     public Init(): void {
+        this.canvasSizeX = this.core.windowSizeX;
+        this.canvasSizeY = this.core.windowSizeY;
+        this.canvasSizeX = 640;
+        this.canvasSizeY = 480;
         this.pause = new PauseScene(this);
         this.core.AddScene("pause", this.pause);
         this.backgroundColor = new THREE.Color(0x887766);
@@ -65,7 +75,9 @@ class GameScene extends Scene {
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
         this.onWindowResize = () => {
-            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            // this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+            this.ResizeCanvas(640, 480);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };
         this.core.PixelRatio = 1 / 1;
@@ -157,13 +169,16 @@ class PauseScene extends Scene {
         this.gameScene = gameScene;
     }
     public Init() {
+        this.canvasSizeX = this.core.windowSizeX;
+        this.canvasSizeY = this.core.windowSizeY;
         this.spriteMat = new THREE.SpriteMaterial({color: 0x888888});
         this.sprite = new THREE.Sprite(this.spriteMat);
         this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         this.sprite.position.set(0, 0, 1);
         this.scene2d.add(this.sprite);
         this.onWindowResize = () => {
-            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
             this.sprite.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };

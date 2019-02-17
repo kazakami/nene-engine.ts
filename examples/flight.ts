@@ -3,8 +3,14 @@ import { Scene, Start, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init(): Promise<void> {
+        this.canvasSizeX = this.core.windowSizeX;
+        this.canvasSizeY = this.core.windowSizeY;
         this.backgroundColor = new THREE.Color(0x778899);
         this.onTouchMove = (e) => { e.preventDefault(); };
+        this.onWindowResize = () => {
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
+        };
         Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                                 "resources/models/ente progress_export.mtl", "ente"),
@@ -44,6 +50,8 @@ class GameScene extends Scene {
     }
     public Init(): Promise<void> {
         return new Promise((resolve) => {
+            this.canvasSizeX = this.core.windowSizeX;
+            this.canvasSizeY = this.core.windowSizeY;
             const worker = new Worker("dist/flightWorker.js");
             worker.addEventListener("message", (event) => {
                 this.onWheel = (e) => {
@@ -63,7 +71,8 @@ class GameScene extends Scene {
                     this.preY = this.core.mouseY;
                 };
                 this.onWindowResize = () => {
-                    this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+                    this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+                    this.ResizeCanvas(this.core.windowSizeX, this.core.windowSizeY);
                 };
                 this.onTouchMove = (e) => { e.preventDefault(); };
                 this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
