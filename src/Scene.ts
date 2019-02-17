@@ -23,7 +23,6 @@ export abstract class Scene {
     public fov: number = 75;
     public canvasSizeX: number;
     public canvasSizeY: number;
-    public renderer: THREE.WebGLRenderer;
     public composer: THREE.EffectComposer = null;
     public composer2d: THREE.EffectComposer = null;
     public offScreenRenderTarget: THREE.WebGLRenderTarget;
@@ -176,12 +175,8 @@ export abstract class Scene {
             this.offScreenMat.map = this.composer.readBuffer.texture;
         }
         // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
-        this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.offScreen.scale.set(this.canvasSizeX, this.canvasSizeY, 1);
         this.textCanvasSprite.scale.set(this.textCanvasX, this.textCanvasY, 1);
-        // const ctx = this.textCanvas.getContext("2d");
-        // ctx.font = "50px serif";
-        // ctx.clearRect(0, 0, this.textCanvasX, this.textCanvasY);
-        // ctx.fillText("hoge", this.textCanvasX / 2, this.textCanvasY / 2);
         this.textCanvasSpriteMat.map.needsUpdate = true;
         if (this.composer2d === null) {
             // this.core.offScreenRenderTargetに描画し、その結果をthis.core.offScreenMat.mapに設定する
@@ -190,15 +185,6 @@ export abstract class Scene {
             // omposerの結果出力バッファをthis.core.offScreenMat.mapに設定する
             this.composer2d.render();
         }
-    }
-
-    /**
-     * ゲームエンジンで使用しているTHREE.WebGLRendererを使うTHREE.EffectComposerを生成する
-     */
-    public MakeEffectComposer(): THREE.EffectComposer {
-        const c = new THREE.EffectComposer(this.renderer);
-        c.setSize(this.canvasSizeX, this.canvasSizeY);
-        return c;
     }
 
     /**
@@ -276,8 +262,6 @@ export abstract class Scene {
         this.units.forEach((u) => {
             u.Init();
         });
-        this.renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true});
-        this.renderer.setSize(this.canvasSizeX, this.canvasSizeY);
         this.camera = new THREE.PerspectiveCamera(this.fov, this.canvasSizeX / this.canvasSizeY, 0.1, 5000);
         this.camera2d = new THREE.OrthographicCamera(
             -this.canvasSizeX / 2, this.canvasSizeX / 2,
@@ -347,7 +331,7 @@ export abstract class Scene {
     public ResizeCanvas(sizeX: number, sizeY: number): void {
         this.canvasSizeX = sizeX;
         this.canvasSizeY = sizeY;
-        this.renderer.setSize(this.canvasSizeX, this.canvasSizeY);
+        // this.renderer.setSize(this.canvasSizeX, this.canvasSizeY);
         this.camera.aspect = this.canvasSizeX / this.canvasSizeY;
         this.camera.updateProjectionMatrix();
         this.camera2d.left = -this.canvasSizeX / 2;
