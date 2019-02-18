@@ -6,7 +6,8 @@ module.exports = {
       '2D': './examples/2D.ts',
       'flight': './examples/flight.ts',
       'flightWorker': './examples/flightWorker.ts',
-      'terrain': './examples/terrain.ts'
+      'terrain': './examples/terrain.ts',
+      'scenes': './examples/scenes.ts',
     },
 
     output: {
