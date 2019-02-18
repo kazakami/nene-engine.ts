@@ -25,7 +25,11 @@ class MainScene extends Scene {
     private miniWindow: MiniWindowScene;
     private spriteMat: THREE.SpriteMaterial;
     private sprite: THREE.Sprite;
+    private miniWindowX: number;
+    private miniWindowY: number;
     public Init() {
+        this.miniWindowX = 400;
+        this.miniWindowY = 100;
         this.canvasSizeX = this.core.screenSizeX;
         this.canvasSizeY = this.core.screenSizeY;
         this.backgroundColor = new THREE.Color(0xaaaaaa);
@@ -42,7 +46,7 @@ class MainScene extends Scene {
         this.spriteMat = new THREE.SpriteMaterial({color: 0xffffff, map: this.miniWindow.RenderedTexture()});
         this.sprite = new THREE.Sprite(this.spriteMat);
         this.sprite.scale.set(320, 240, 1);
-        this.sprite.position.set(100, 100, 1);
+        this.sprite.position.set(this.miniWindowX, this.miniWindowY, 1);
         this.scene2d.add(this.sprite);
         const light = new THREE.DirectionalLight("white", 1);
         light.position.set(0, 100, 0);
@@ -59,6 +63,8 @@ class MainScene extends Scene {
         this.miniWindow.Update();
         this.miniWindow.Render();
         this.mesh.rotateY(0.1);
+        this.miniWindowX -= 1;
+        this.sprite.position.set(this.miniWindowX, this.miniWindowY, 1);
     }
 }
 
