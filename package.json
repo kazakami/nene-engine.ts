@@ -11,7 +11,8 @@
     "build": "webpack --verbose",
     "docs": "rm -rf docs && typedoc",
     "test": "jest",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "watch": "webpack --watch"
   },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
   "license": "MIT",
