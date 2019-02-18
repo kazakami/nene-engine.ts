@@ -165,6 +165,8 @@ export abstract class Scene {
 
     public Render(): void {
         this.core.renderer.setClearColor(this.backgroundColor);
+        this.InnerDrawText();
+        this.DrawText();
         if (this.composer === null) {
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
             this.core.renderer.render(this.scene, this.camera , this.offScreenRenderTarget);

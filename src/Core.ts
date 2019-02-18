@@ -830,8 +830,6 @@ export class Core {
         if (this.ctx) {
             this.ctx.clearRect(0, 0, this.screenSizeX, this.screenSizeY);
         }
-        this.activeScene.InnerDrawText();
-        this.activeScene.DrawText();
         this.activeScene.Render();
         if (this.offScreenMat) {
             this.offScreenMat.map = this.activeScene.RenderedTexture();
