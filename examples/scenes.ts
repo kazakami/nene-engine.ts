@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {Scene, Start} from "../src/nene-engine";
+import {collideTest, Point, Rectangle, Scene, Start} from "../src/nene-engine";
 
 class LoaddScene extends Scene {
     public async Init() {
@@ -27,6 +27,9 @@ class MainScene extends Scene {
     private sprite: THREE.Sprite;
     private miniWindowX: number;
     private miniWindowY: number;
+    private previousMouseX: number;
+    private previousMouseY: number;
+    private miniWindowDragging: boolean = false;
     public Init() {
         this.miniWindowX = 400;
         this.miniWindowY = 100;
@@ -63,8 +66,24 @@ class MainScene extends Scene {
         this.miniWindow.Update();
         this.miniWindow.Render();
         this.mesh.rotateY(0.1);
-        this.miniWindowX -= 1;
         this.sprite.position.set(this.miniWindowX, this.miniWindowY, 1);
+        if (this.core.IsMouseLeftButtonPressing() &&
+            collideTest(new Point(this.core.mouseX, this.core.mouseY),
+                        new Rectangle(this.miniWindowX, this.miniWindowY, 320, 240))) {
+            this.previousMouseX = this.core.mouseX;
+            this.previousMouseY = this.core.mouseY;
+            this.miniWindowDragging = true;
+        }
+        if (this.miniWindowDragging) {
+            if (this.core.IsMouseLeftButtonDown()) {
+                this.miniWindowX += this.core.mouseX - this.previousMouseX;
+                this.miniWindowY += this.core.mouseY - this.previousMouseY;
+                this.previousMouseX = this.core.mouseX;
+                this.previousMouseY = this.core.mouseY;
+            } else {
+                this.miniWindowDragging = false;
+            }
+        }
     }
 }
 
