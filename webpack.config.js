@@ -5,7 +5,9 @@ module.exports = {
       'balls': './examples/balls.ts',
       '2D': './examples/2D.ts',
       'flight': './examples/flight.ts',
-      'terrain': './examples/terrain.ts'
+      'flightWorker': './examples/flightWorker.ts',
+      'terrain': './examples/terrain.ts',
+      'scenes': './examples/scenes.ts',
     },
 
     output: {

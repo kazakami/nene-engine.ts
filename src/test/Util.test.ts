@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import {
-    AllIsNotNullOrUndefined, AssociativeArrayToArray, BooleanToString, Coalescing,
-    EachMesh, NullCoalescing, RandomColor, UndefCoalescing,
+    AllIsNotNullOrUndefined, AssociativeArrayToArray, BooleanToString, Clamp,
+    Coalescing, EachMesh, NullCoalescing, RandomColor, UndefCoalescing,
 } from "../Util";
 
 test("undefine coalescing 1", () => {
@@ -115,4 +115,12 @@ test("EachMesh 3", () => {
     expect(mesh3.name).toEqual("fuga");
     expect(group1.name).toEqual("piyo");
     expect(group2.name).toEqual("piyo");
+});
+test("Range 1", () => {
+    expect(Clamp(10, 0, 100)).toBeCloseTo(10);
+    expect(Clamp(150, 0, 100)).toBeCloseTo(100);
+    expect(Clamp(10, 50, 100)).toBeCloseTo(50);
+    expect(Clamp(2.7, 1.6, 4.5)).toBeCloseTo(2.7);
+    expect(Clamp(0.7, 1.6, 4.5)).toBeCloseTo(1.6);
+    expect(Clamp(8.7, 1.6, 4.5)).toBeCloseTo(4.5);
 });

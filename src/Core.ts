@@ -29,12 +29,12 @@ export class CoreOption {
      * 画面幅
      * 省略時はwindow.innerWidth
      */
-    public windowSizeX?: number;
+    public screenSizeX?: number;
     /**
      * 画面高さ
      * 省略時はwindow.innerHeight
      */
-    public windowSizeY?: number;
+    public screenSizeY?: number;
     /**
      * fpsを半分の30とするか
      * 省略時はfalse
@@ -43,8 +43,8 @@ export class CoreOption {
     constructor(option: CoreOption) {
         this.antialias = Coalescing(option.antialias, true);
         this.parent = Coalescing(option.parent, document.body);
-        this.windowSizeX = Coalescing(option.windowSizeX, window.innerWidth);
-        this.windowSizeY = Coalescing(option.windowSizeY, window.innerHeight);
+        this.screenSizeX = Coalescing(option.screenSizeX, window.innerWidth);
+        this.screenSizeY = Coalescing(option.screenSizeY, window.innerHeight);
         this.halfFPS = Coalescing(option.halfFPS, false);
     }
 }
@@ -64,15 +64,18 @@ export class Core {
     /**
      * 画面幅
      */
-    public windowSizeX: number;
+    public screenSizeX: number;
     /**
      * 画面高さ
      */
-    public windowSizeY: number;
+    public screenSizeY: number;
     public renderer: THREE.WebGLRenderer;
-    public renderTarget: THREE.WebGLRenderTarget;
     public ctx: CanvasRenderingContext2D;
     public halfFPS: boolean;
+    public offScreenSprite: THREE.Sprite;
+    public offScreenMat: THREE.SpriteMaterial;
+    public offScreenScene: THREE.Scene;
+    public offScreenCamera: THREE.OrthographicCamera;
     private frame: number = 0;
     private textureLoader: THREE.TextureLoader;
     private textCanvas: HTMLCanvasElement;
@@ -84,6 +87,7 @@ export class Core {
     private texts: { [key: string]: string } = {};
     private scenes: { [key: string]: Scene } = {};
     private activeScene: Scene = null;
+    private activeSceneName: string = null;
     private nextSceneName: string = null;
     private loadingManager: THREE.LoadingManager;
     private objLoader: THREE.OBJLoader;
@@ -115,7 +119,7 @@ export class Core {
 
     set PixelRatio(r: number) {
         this.ratio = r;
-        this.ChangeCanvasSize(this.windowSizeX, this.windowSizeY);
+        this.ChangeScreenSize(this.screenSizeX, this.screenSizeY);
     }
 
     /**
@@ -123,7 +127,7 @@ export class Core {
      */
     public MakeEffectComposer(): THREE.EffectComposer {
         const c = new THREE.EffectComposer(this.renderer);
-        c.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
+        c.setSize(this.screenSizeX * this.ratio, this.screenSizeY * this.ratio);
         return c;
     }
 
@@ -183,25 +187,27 @@ export class Core {
      * @param x 新しい横幅
      * @param y 新しい高さ
      */
-    public ChangeCanvasSize(x: number, y: number): void {
-        this.windowSizeX = x;
-        this.windowSizeY = y;
+    public ChangeScreenSize(x: number, y: number): void {
+        this.screenSizeX = x;
+        this.screenSizeY = y;
+        this.div.setAttribute("style",
+            "width: " + this.screenSizeX.toString() + "px; height: " + this.screenSizeY.toString() + "px;");
         this.renderer.setPixelRatio(this.ratio);
-        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
-        this.renderTarget.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
-        this.textCanvas.width = this.windowSizeX;
-        this.textCanvas.height = this.windowSizeY;
+        this.renderer.setSize(this.screenSizeX, this.screenSizeY);
+        this.offScreenCamera.left = -this.screenSizeX / 2;
+        this.offScreenCamera.right = this.screenSizeX / 2;
+        this.offScreenCamera.bottom = -this.screenSizeY / 2;
+        this.offScreenCamera.top = this.screenSizeY / 2;
+        this.offScreenCamera.updateProjectionMatrix();
+        this.textCanvas.width = this.screenSizeX;
+        this.textCanvas.height = this.screenSizeY;
         this.ctx = this.textCanvas.getContext("2d");
         this.ctx.font = "50px serif";
         this.ctx.textAlign = "left";
         this.ctx.textBaseline = "top";
         for (const key in this.scenes) {
-            this.scenes[key].OnCanvasResizeCallBack();
-            if (this.scenes[key].composer !== null) {
-                this.scenes[key].composer.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
-            }
-            if (this.scenes[key].composer2d !== null) {
-                this.scenes[key].composer2d.setSize(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio);
+            if (this.scenes[key].onScreenResize) {
+                this.scenes[key].onScreenResize();
             }
         }
     }
@@ -222,7 +228,7 @@ export class Core {
         const objProg = this.GetObjectLoadingProgress();
         const texProg = this.GetTextureLoadingProgress();
         const textProg = this.GetTextLoadingProgress();
-        const allProg =  [objProg, texProg, textProg].reduce(([a0, a1], [b0, b1]) => [a0 + b0, a1 + b1]);
+        const allProg = [objProg, texProg, textProg].reduce(([a0, a1], [b0, b1]) => [a0 + b0, a1 + b1]);
         return allProg;
     }
 
@@ -248,7 +254,7 @@ export class Core {
                     } else {
                         throw e;
                     }
-            });
+                });
         });
     }
 
@@ -321,7 +327,7 @@ export class Core {
                         throw e;
                     }
                 });
-            });
+        });
     }
 
     /**
@@ -454,7 +460,7 @@ export class Core {
                         throw e;
                     }
                 });
-            });
+        });
     }
 
     /**
@@ -510,13 +516,21 @@ export class Core {
             antialias: this.option.antialias,
             preserveDrawingBuffer: true,
         });
+        this.renderer.setSize(this.screenSizeX, this.screenSizeY);
         this.halfFPS = this.option.halfFPS;
-        this.windowSizeX = this.option.windowSizeX;
-        this.windowSizeY = this.option.windowSizeY;
-        this.renderTarget = new THREE.WebGLRenderTarget(this.windowSizeX * this.ratio, this.windowSizeY * this.ratio, {
-            magFilter: THREE.NearestFilter,
-            minFilter: THREE.NearestFilter,
-        });
+        this.screenSizeX = this.option.screenSizeX;
+        this.screenSizeY = this.option.screenSizeY;
+        this.offScreenCamera = new THREE.OrthographicCamera(
+            -this.screenSizeX / 2, this.screenSizeX / 2,
+            this.screenSizeY / 2, -this.screenSizeY / 2,
+            1, 10);
+        this.offScreenCamera.position.z = 10;
+        this.offScreenMat = new THREE.SpriteMaterial({ color: 0xFFFFFF });
+        this.offScreenSprite = new THREE.Sprite(this.offScreenMat);
+        this.offScreenSprite.scale.set(this.screenSizeX, this.screenSizeY, 1);
+        this.offScreenSprite.position.set(0, 0, 5);
+        this.offScreenScene = new THREE.Scene();
+        this.offScreenScene.add(this.offScreenSprite);
         this.loadingManager = new THREE.LoadingManager();
         this.textureLoader = new THREE.TextureLoader(this.loadingManager);
         this.objLoader = new THREE.OBJLoader(this.loadingManager);
@@ -525,15 +539,17 @@ export class Core {
         this.gltfLoader = new THREE.GLTFLoader(this.loadingManager);
         this.div = document.createElement("div");
         this.div.setAttribute("position", "relative");
+        this.div.setAttribute("style",
+            "width: " + this.screenSizeX.toString() + "px; height: " + this.screenSizeY.toString() + "px;");
         this.canvas = this.renderer.domElement;
         this.canvas.setAttribute("style", "position: absolute;");
         this.renderer.setPixelRatio(this.ratio);
-        this.renderer.setSize(this.windowSizeX, this.windowSizeY);
+        this.renderer.setSize(this.screenSizeX, this.screenSizeY);
         this.div.appendChild(this.canvas);
         // 2D文字列描画のためのcanvasの作成
         this.textCanvas = document.createElement("canvas");
-        this.textCanvas.setAttribute("width", this.windowSizeX.toString());
-        this.textCanvas.setAttribute("height", this.windowSizeY.toString());
+        this.textCanvas.setAttribute("width", this.screenSizeX.toString());
+        this.textCanvas.setAttribute("height", this.screenSizeY.toString());
         this.textCanvas.setAttribute("z-index", "100");
         this.textCanvas.setAttribute("style", "position: absolute;");
         this.div.appendChild(this.textCanvas);
@@ -548,8 +564,8 @@ export class Core {
         this.option.parent.appendChild(this.link);
         // イベントの登録
         this.textCanvas.addEventListener("mousemove", (e) => {
-            this.mouseX = e.offsetX - this.windowSizeX / 2;
-            this.mouseY = this.windowSizeY / 2 - e.offsetY;
+            this.mouseX = e.offsetX - this.screenSizeX / 2;
+            this.mouseY = this.screenSizeY / 2 - e.offsetY;
             if (this.activeScene.onMouseMove !== null) {
                 this.activeScene.onMouseMove(e);
             }
@@ -577,8 +593,10 @@ export class Core {
         });
         window.addEventListener("resize", (e) => {
             this.renderer.setPixelRatio(this.ratio);
-            if (this.activeScene.onWindowResize !== null) {
-                this.activeScene.onWindowResize(e);
+            for (const key in this.scenes) {
+                if (this.scenes[key].onWindowResize !== null) {
+                    this.scenes[key].onWindowResize(e);
+                }
             }
         });
         this.textCanvas.addEventListener("touchstart", (e) => {
@@ -587,10 +605,9 @@ export class Core {
             }
         });
         this.textCanvas.addEventListener("touchmove", (e) => {
-            e.preventDefault();
             const t = e.targetTouches[0];
-            this.mouseX = t.pageX - this.windowSizeX / 2;
-            this.mouseY = this.windowSizeY / 2 - t.pageY;
+            this.mouseX = t.pageX - this.screenSizeX / 2;
+            this.mouseY = this.screenSizeY / 2 - t.pageY;
             if (this.activeScene.onTouchMove !== null) {
                 this.activeScene.onTouchMove(e);
             }
@@ -610,24 +627,35 @@ export class Core {
                 this.activeScene.onContextmenu(e);
             }
         });
-        document.addEventListener("keypress", (e) => {
+        document.addEventListener("keydown", (e) => {
+            if (this.activeScene.onKeyKeyDown !== null) {
+                this.activeScene.onKeyKeyDown(e);
+            }
             if (!e.repeat) {
-                this.keyState[e.key] = true;
+                this.keyState[e.code] = true;
             }
         });
         document.addEventListener("keyup", (e) => {
-            this.keyState[e.key] = false;
+            if (this.activeScene.onKeyKeyUp !== null) {
+                this.activeScene.onKeyKeyUp(e);
+            }
+            this.keyState[e.code] = false;
         });
         window.addEventListener("blur", (e) => {
+            if (this.activeScene.onBlur !== null) {
+                this.activeScene.onBlur(e);
+            }
             for (const key in this.keyState) {
                 this.keyState[key] = false;
             }
         });
         scene.core = this;
+        this.activeSceneName = sceneName;
         this.scenes[sceneName] = scene;
         this.activeScene = scene;
         this.activeScene.InnerInit();
         this.activeScene.Init();
+        this.activeScene.ResizeCanvas(this.activeScene.canvasSizeX, this.activeScene.canvasSizeY);
         const animate = () => {
             requestAnimationFrame(animate);
             this.frame++;
@@ -656,11 +684,12 @@ export class Core {
      * @param sceneName シーンを呼び出すためのキー
      * @param scene 追加するシーン
      */
-    public AddScene(sceneName: string, scene: Scene): void {
+    public async AddScene(sceneName: string, scene: Scene): Promise<void> {
         scene.core = this;
         this.scenes[sceneName] = scene;
         scene.InnerInit();
-        scene.Init();
+        await scene.Init();
+        scene.ResizeCanvas(scene.canvasSizeX, scene.canvasSizeY);
     }
 
     /**
@@ -686,6 +715,28 @@ export class Core {
     }
 
     /**
+     * シーンを取得する
+     * @param sceneName キー
+     */
+    public GetScene(sceneName: string): Scene {
+        return this.scenes[sceneName];
+    }
+
+    /**
+     * active sceneを取得する
+     */
+    public GetActiveScene(): Scene {
+        return this.activeScene;
+    }
+
+    /**
+     * active sceneのキーを取得する
+     */
+    public GetActiveSceneName(): string {
+        return this.activeSceneName;
+    }
+
+    /**
      * 現在描画されてる画像をファイルとして保存する
      * @param filename 保存時のファイル名。デフォルトはscreenshot.png
      */
@@ -702,8 +753,8 @@ export class Core {
         glImage.src = this.canvas.toDataURL("image/png");
         return Promise.all([glImagePromise, textsImagePromise]).then(() => {
             const tmpCanvas = document.createElement("canvas");
-            tmpCanvas.setAttribute("width", this.windowSizeX.toString());
-            tmpCanvas.setAttribute("height", this.windowSizeY.toString());
+            tmpCanvas.setAttribute("width", this.screenSizeX.toString());
+            tmpCanvas.setAttribute("height", this.screenSizeY.toString());
             const context = tmpCanvas.getContext("2d");
             context.drawImage(glImage, 0, 0);
             context.drawImage(textsImage, 0, 0);
@@ -740,9 +791,9 @@ export class Core {
      */
     public DrawText(str: string, x: number, y: number, maxWidth: number = null): void {
         if (maxWidth === null) {
-            this.ctx.fillText(str, this.windowSizeX / 2 + x, this.windowSizeY / 2 - y);
+            this.ctx.fillText(str, this.screenSizeX / 2 + x, this.screenSizeY / 2 - y);
         } else {
-            this.ctx.fillText(str, this.windowSizeX / 2 + x, this.windowSizeY / 2 - y, maxWidth);
+            this.ctx.fillText(str, this.screenSizeX / 2 + x, this.screenSizeY / 2 - y, maxWidth);
         }
     }
 
@@ -760,6 +811,7 @@ export class Core {
             if (this.scenes[this.nextSceneName] === null || this.scenes[this.nextSceneName] === undefined) {
                 throw new Error("Scene " + this.nextSceneName + " does not exist.");
             }
+            this.activeSceneName = this.nextSceneName;
             this.activeScene = this.scenes[this.nextSceneName];
             this.nextSceneName = null;
         }
@@ -775,9 +827,17 @@ export class Core {
     }
 
     private Draw(): void {
+        if (this.ctx) {
+            this.ctx.clearRect(0, 0, this.screenSizeX, this.screenSizeY);
+        }
         this.activeScene.Render();
-        this.activeScene.InnerDrawText();
-        this.activeScene.DrawText();
+        if (this.offScreenMat) {
+            this.offScreenMat.map = this.activeScene.RenderedTexture();
+        }
+        if (this.renderer) {
+            this.offScreenSprite.scale.set(this.activeScene.canvasSizeX, this.activeScene.canvasSizeY, 1);
+            this.renderer.render(this.offScreenScene, this.offScreenCamera);
+        }
     }
 
     private CalcFPS(): void {

@@ -3,11 +3,18 @@ import { EachMesh, PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Star
 
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
         this.backgroundColor = new THREE.Color(0x887766);
         this.onLoadError = (e) => console.log(e);
+        this.onTouchMove = (e) => { e.preventDefault(); };
+        this.onWindowResize = () => {
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
+        };
         await Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
-                                "resources/models/ente progress_export.mtl", "ente"),
+                "resources/models/ente progress_export.mtl", "ente"),
             this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball"),
             this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle"),
             this.core.LoadTexture("resources/images/star.png", "star"),
@@ -27,14 +34,21 @@ class LoadScene extends Scene {
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
-        this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
+        this.FillText("Now Loading " + a + "/" + b, 0, 0);
     }
 }
 
 class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public casted: string[];
+    private pause: PauseScene;
     public Init(): void {
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
+        // this.canvasSizeX = 640;
+        // this.canvasSizeY = 480;
+        this.pause = new PauseScene(this);
+        this.core.AddScene("pause", this.pause);
         this.backgroundColor = new THREE.Color(0x887766);
         this.core.renderer.shadowMap.enabled = true;
         this.physicStep = 1 / 30;
@@ -61,8 +75,11 @@ class GameScene extends Scene {
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
         this.onWindowResize = () => {
-            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            // this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
+            // this.ResizeCanvas(640, 480);
         };
+        this.onTouchMove = (e) => { e.preventDefault(); };
         this.core.PixelRatio = 1 / 1;
         // 床
         const floorGeo = new THREE.PlaneBufferGeometry(500, 500);
@@ -72,7 +89,7 @@ class GameScene extends Scene {
         floorTex.repeat.set(10, 10);
         floorTex.wrapS = THREE.RepeatWrapping;
         floorTex.wrapT = THREE.RepeatWrapping;
-        const floorMat = new THREE.MeshPhongMaterial({map: floorTex});
+        const floorMat = new THREE.MeshPhongMaterial({ map: floorTex });
         const floorMesh = new THREE.Mesh(floorGeo, floorMat);
         floorMesh.receiveShadow = true;
         this.scene.add(floorMesh);
@@ -83,7 +100,7 @@ class GameScene extends Scene {
         wallTex.repeat.set(10, 10);
         wallTex.wrapS = THREE.RepeatWrapping;
         wallTex.wrapT = THREE.RepeatWrapping;
-        const wallMat = new THREE.MeshBasicMaterial({map: wallTex});
+        const wallMat = new THREE.MeshBasicMaterial({ map: wallTex });
         const wallMesh1 = new THREE.Mesh(wallGeo1, wallMat);
         this.scene.add(wallMesh1);
         // 右の壁
@@ -104,46 +121,87 @@ class GameScene extends Scene {
         const pass = new THREE.ShaderPass({
             fragmentShader: this.core.GetText("pass1.frag"),
             uniforms: {
-                tDiffuse: {value: null},
+                tDiffuse: { value: null },
             },
             vertexShader: this.core.GetText("pass1.vert"),
         });
         this.composer.addPass(pass);
-        this.composer = null;
+        // this.composer = null;
 
         this.composer2d = this.core.MakeEffectComposer();
         this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
         const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
         this.composer2d.addPass(pass2d);
-        this.composer2d = null;
+        // this.composer2d = null;
     }
     public Update(): void {
         this.casted = [];
         this.Raycast();
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
-        if (this.core.IsKeyPressing("p")) {
+        if (this.core.IsKeyPressing("KeyP")) {
             (async () => {
                 await this.core.SaveImage();
                 console.log("save screenshot");
             })();
         }
+        if (this.core.IsKeyPressing("Escape")) {
+            this.core.ChangeScene("pause");
+        }
     }
     public DrawText(): void {
-        this.core.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
-        this.core.DrawText("fps: " + Math.round(this.core.fps).toString(),
-            -this.core.windowSizeX / 2,
-            this.core.windowSizeY / 2);
-        this.core.DrawText("Press p to save screenshot.",
-            -this.core.windowSizeX / 2,
-            this.core.windowSizeY / 2 - 50);
-        this.core.DrawText(this.casted.join(), this.core.mouseX, this.core.mouseY);
+        this.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
+        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
+            -this.canvasSizeX / 2,
+            this.canvasSizeY / 2);
+        this.FillText("Press p to save screenshot.",
+            -this.canvasSizeX / 2,
+            this.canvasSizeY / 2 - 50);
+        this.FillText(this.casted.join(), this.core.mouseX, this.core.mouseY);
+    }
+}
+
+class PauseScene extends Scene {
+    private gameScene: GameScene;
+    private sprite: THREE.Sprite;
+    private spriteMat: THREE.SpriteMaterial;
+    constructor(gameScene: GameScene) {
+        super();
+        this.gameScene = gameScene;
+    }
+    public Init() {
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
+        this.spriteMat = new THREE.SpriteMaterial({ color: 0x888888 });
+        this.sprite = new THREE.Sprite(this.spriteMat);
+        this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
+        this.sprite.position.set(0, 0, 1);
+        this.scene2d.add(this.sprite);
+        this.onWindowResize = () => {
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
+            this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
+        };
+        this.onTouchMove = (e) => { e.preventDefault(); };
+    }
+    public Update() {
+        // このコメントを解除すれば裏でgameSceneが動く
+        // this.gameScene.InnerUpdate();
+        // this.gameScene.Update();
+        this.gameScene.Render();
+        this.spriteMat.map = this.gameScene.RenderedTexture();
+        if (this.core.IsKeyPressing("Escape")) {
+            this.core.ChangeScene("game");
+        }
+    }
+    public DrawText() {
+        this.FillText("Pause", 0, 0);
     }
 }
 
 class Particle extends Unit {
     private sprite: THREE.Object3D;
     constructor(private x: number, private y: number, private z: number,
-                private vx: number, private vy: number, private vz: number) {
+        private vx: number, private vy: number, private vz: number) {
         super();
     }
     public Init(): void {
@@ -181,7 +239,7 @@ class Ball extends Unit {
                 },
                 vertexShader: this.core.GetText("sample1.vert"),
             });
-            this.shaderMat.uniforms.hoge = {value: 0.0};
+            this.shaderMat.uniforms.hoge = { value: 0.0 };
             const mesh = new THREE.Mesh(geo, this.shaderMat);
             this.ball = new PhysicSphere(1, 1, "ball", mesh);
         } else {
@@ -213,13 +271,13 @@ class Ball extends Unit {
             this.ball.angularVelocity.set(0, 0, 0);
         }
         if (this.shaded) {
-            this.shaderMat.uniforms.time = {value: this.frame};
+            this.shaderMat.uniforms.time = { value: this.frame };
         }
     }
     public DrawText(): void {
         if (this.shaded) {
             const [x, y] = this.scene.GetScreenPosition(this.ball);
-            this.core.DrawText("custom shadered", x, y);
+            this.scene.FillText("custom shadered", x, y);
         }
     }
 }
@@ -232,7 +290,7 @@ class Board extends Unit {
         this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON(
             this.core.GetText("board"),
-            new THREE.MeshPhongMaterial({map: this.core.GetTexture("tile")}));
+            new THREE.MeshPhongMaterial({ map: this.core.GetTexture("tile") }));
         EachMesh(this.floor.viewBody, (m) => {
             m.castShadow = true;
             m.receiveShadow = true;
@@ -251,4 +309,4 @@ class Board extends Unit {
 }
 
 // ゲームの開始
-Start("init", new LoadScene(), {halfFPS: true});
+Start("init", new LoadScene(), { halfFPS: true });

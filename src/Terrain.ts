@@ -108,8 +108,8 @@ export class Terrain {
      * @param material マテリアル
      */
     public MakeGeometry(width: number, depth: number,
-                        widthSegments: number, depthSegments: number,
-                        widthTiles: number, depthTiles: number, material: THREE.Material = null): void {
+        widthSegments: number, depthSegments: number,
+        widthTiles: number, depthTiles: number, material: THREE.Material = null): void {
         this.width = width;
         this.depth = depth;
         this.widthSegments = widthSegments;
@@ -119,7 +119,7 @@ export class Terrain {
         this.widthAllSegments = this.widthTiles * (this.widthSegments - 0) + 1;
         this.depthAllSegments = this.depthTiles * (this.depthSegments - 0) + 1;
         if (material === null || material === undefined) {
-            this.mat = new THREE.MeshPhongMaterial({color: 0x888888});
+            this.mat = new THREE.MeshPhongMaterial({ color: 0x888888 });
         } else {
             this.mat = material;
         }
@@ -332,7 +332,7 @@ export class Terrain {
      * @param ComputeNormal 法線を計算しなおすか。デフォルトではtrue
      */
     public LimitedRaise(width: number, depth: number, delta: number,
-                        min: number, max: number, ComputeNormal: boolean = true): void {
+        min: number, max: number, ComputeNormal: boolean = true): void {
         const nowHeight = this.GetHeight(width, depth);
         const h = Math.min(Math.max(nowHeight + delta, min), max);
         this.SetHeight(width, depth, h, ComputeNormal);
@@ -348,7 +348,7 @@ export class Terrain {
      * @param ComputeNormal 法線を計算しなおすか。デフォルトではtrue
      */
     public SafeLimitedRaise(width: number, depth: number, delta: number,
-                            min: number, max: number, ComputeNormal: boolean = true): boolean {
+        min: number, max: number, ComputeNormal: boolean = true): boolean {
         if (width >= 0 && width < this.widthAllSegments && depth >= 0 && depth < this.depthAllSegments) {
             this.LimitedRaise(width, depth, delta, min, max, ComputeNormal);
             return true;

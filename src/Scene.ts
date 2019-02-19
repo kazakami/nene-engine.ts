@@ -1,5 +1,6 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
+import { collide, Figure } from "./Collider2D";
 import { Core } from "./Core";
 import { PhysicBox, PhysicObject, PhysicPlane, PhysicSphere } from "./PhysicObject";
 import { PhysicUnit, Unit } from "./Unit";
@@ -20,15 +21,27 @@ export abstract class Scene {
     public physicWorld: Cannon.World;
     public frame: number = 0;
     public fov: number = 75;
+    public canvasSizeX: number;
+    public canvasSizeY: number;
     public composer: THREE.EffectComposer = null;
     public composer2d: THREE.EffectComposer = null;
+    public offScreenRenderTarget: THREE.WebGLRenderTarget;
     public offScreen: THREE.Sprite;
     public offScreenMat: THREE.SpriteMaterial;
+    public renderTarget: THREE.WebGLRenderTarget;
     public id: string = "";
     public physicStep: number = 1 / 60;
+    public colliders: Figure[] = [];
+    public textCanvas: HTMLCanvasElement;
+    public textCanvasSprite: THREE.Sprite;
+    public textCanvasSpriteMat: THREE.SpriteMaterial;
+    public textCanvasX: number;
+    public textCanvasY: number;
+    public ctx: CanvasRenderingContext2D;
     public onMouseMove: (e: MouseEvent) => void = null;
     public onMouseClick: (e: Event) => void = null;
     public onWindowResize: (e: UIEvent) => void = null;
+    public onScreenResize: () => void = null;
     public onMouseUp: (e: MouseEvent) => void = null;
     public onMouseDown: (e: MouseEvent) => void = null;
     public onWheel: (e: WheelEvent) => void = null;
@@ -37,11 +50,16 @@ export abstract class Scene {
     public onTouchMove: (e: TouchEvent) => void = null;
     public onTouchEnd: (e: TouchEvent) => void = null;
     public onContextmenu: (e: MouseEvent) => void = null;
+    public onKeyKeyDown: (e: KeyboardEvent) => void = null;
+    public onKeyKeyUp: (e: KeyboardEvent) => void = null;
+    public onBlur: (e: FocusEvent) => void = null;
 
     /**
      * 初期化処理はInit()に記述すべきでコンストラクタはパラメータの受け渡しのみに用いること
      */
     constructor() {
+        this.canvasSizeX = 640;
+        this.canvasSizeY = 480;
         this.backgroundColor = new THREE.Color(0x000000);
         this.raycaster = new THREE.Raycaster();
         this.scene = new THREE.Scene();
@@ -64,6 +82,7 @@ export abstract class Scene {
             u.Update();
         });
         this.physicWorld.step(this.physicStep);
+        collide(this.colliders);
     }
 
     /**
@@ -86,11 +105,11 @@ export abstract class Scene {
      * @param input 3Dオブジェクト等や3次元座標等
      */
     public GetScreenPosition(input: THREE.Object3D |
-                                    THREE.Vector3 |
-                                    Cannon.Vec3 |
-                                    PhysicObject |
-                                    [number, number, number])
-                            : [number, number] {
+        THREE.Vector3 |
+        Cannon.Vec3 |
+        PhysicObject |
+        [number, number, number])
+        : [number, number] {
         const p = new THREE.Vector3();
         if (input instanceof THREE.Vector3) {
             p.copy(input);
@@ -104,7 +123,7 @@ export abstract class Scene {
             p.set(input[0], input[1], input[2]);
         }
         p.project(this.camera);
-        return [p.x * this.core.windowSizeX / 2, p.y * this.core.windowSizeY / 2];
+        return [p.x * this.core.screenSizeX / 2, p.y * this.core.screenSizeY / 2];
     }
 
     /**
@@ -113,10 +132,12 @@ export abstract class Scene {
      * レイキャストに成功した場合UnitのonRaycastCallbackを呼ぶ
      * @param data messageはUnitに対して処理を分岐させるパラメータ、positionはレイキャストを行う画面上の座標で省略時はマウス座標
      */
-    public Raycast(data: {message?: object, position?: THREE.Vec2} = {message: null, position: null}): void {
+    public Raycast(data: { message?: object, position?: THREE.Vec2 } = { message: null, position: null }): void {
         if (data.position === null || data.position === undefined) {
-            data.position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
-                             y: this.core.mouseY / (this.core.windowSizeY / 2)};
+            data.position = {
+                x: this.core.mouseX / (this.core.screenSizeX / 2),
+                y: this.core.mouseY / (this.core.screenSizeY / 2)
+            };
         }
         this.raycaster.setFromCamera(data.position, this.camera);
         this.units.filter((u) => u.raycastTarget).forEach((u) => {
@@ -133,8 +154,10 @@ export abstract class Scene {
      */
     public GetIntersects(position: THREE.Vec2 = null): THREE.Intersection[] {
         if (position === null || position === undefined) {
-            position = {x: this.core.mouseX / (this.core.windowSizeX / 2),
-                        y: this.core.mouseY / (this.core.windowSizeY / 2)};
+            position = {
+                x: this.core.mouseX / (this.core.screenSizeX / 2),
+                y: this.core.mouseY / (this.core.screenSizeY / 2)
+            };
         }
         this.raycaster.setFromCamera(position, this.camera);
         const objs = new Array<THREE.Object3D>();
@@ -145,28 +168,74 @@ export abstract class Scene {
     }
 
     public Render(): void {
-        this.core.ctx.clearRect(0, 0, this.core.windowSizeX, this.core.windowSizeY);
         this.core.renderer.setClearColor(this.backgroundColor);
+        this.InnerDrawText();
+        this.DrawText();
         if (this.composer === null) {
-            this.core.renderer.render(this.scene, this.camera , this.core.renderTarget);
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
-            this.offScreenMat.map = this.core.renderTarget.texture;
+            this.core.renderer.render(this.scene, this.camera, this.offScreenRenderTarget);
+            this.offScreenMat.map = this.offScreenRenderTarget.texture;
         } else {
-            this.composer.render();
             // 3D用のシーンでcomposerを使っていればcomposerの結果出力バッファを用いる
+            this.composer.render();
             this.offScreenMat.map = this.composer.readBuffer.texture;
         }
         // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
-        this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.offScreen.scale.set(this.canvasSizeX, this.canvasSizeY, 1);
+        this.textCanvasSprite.scale.set(this.textCanvasX, this.textCanvasY, 1);
+        this.textCanvasSpriteMat.map.needsUpdate = true;
         if (this.composer2d === null) {
-            this.core.renderer.render(this.scene2d, this.camera2d);
+            // this.core.offScreenRenderTargetに描画し、その結果をthis.core.offScreenMat.mapに設定する
+            this.core.renderer.render(this.scene2d, this.camera2d, this.renderTarget);
         } else {
-            // 最終のpassのrenderToScreenをtrueにしてrenderした後、renderToScreenを元に戻す
-            const num = this.composer2d.passes.length;
-            const before = this.composer2d.passes[num - 1].renderToScreen;
-            this.composer2d.passes[num - 1].renderToScreen = true;
+            // omposerの結果出力バッファをthis.core.offScreenMat.mapに設定する
             this.composer2d.render();
-            this.composer2d.passes[num - 1].renderToScreen = before;
+        }
+    }
+
+    public CreateScene<T extends Scene>(scene: T): T {
+        scene.core = this.core;
+        scene.InnerInit();
+        scene.Init();
+        return scene;
+    }
+
+    /**
+     * テキストのサイズを指定する
+     * @param size ピクセル単位のサイズ
+     */
+    public SetTextSize(size: number): void {
+        this.ctx.font = size.toString() + "px serif";
+    }
+
+    /**
+     * テキストの色を指定する
+     * @param color 指定する色
+     */
+    public SetTextColor(color: THREE.Color): void {
+        this.ctx.fillStyle = "rgb(" + color.r + ", " + color.g + ", " + color.b + ")";
+    }
+
+    /**
+     * 指定した座標に文字列を描画する
+     * @param str 描画する文字列
+     * @param x X座標
+     * @param y Y座標
+     * @param maxWidth 最大横幅
+     */
+    public FillText(str: string, x: number, y: number, maxWidth: number = null): void {
+        if (maxWidth === null) {
+            this.ctx.fillText(str, this.textCanvasX / 2 + x, this.textCanvasY / 2 - y);
+        } else {
+            this.ctx.fillText(str, this.textCanvasX / 2 + x, this.textCanvasY / 2 - y, maxWidth);
+        }
+    }
+
+    public RenderedTexture(): THREE.Texture {
+        if (this.composer2d === null) {
+            return this.renderTarget.texture;
+        } else {
+            return this.composer2d.readBuffer.texture;
         }
     }
 
@@ -174,6 +243,12 @@ export abstract class Scene {
      * 基本的にこの関数はオーバーライドすべきでない
      */
     public InnerDrawText(): void {
+        if (this.ctx) {
+            this.ctx.clearRect(0, 0, this.textCanvasX, this.textCanvasY);
+            this.ctx.font = "50px serif";
+            this.ctx.textAlign = "left";
+            this.ctx.textBaseline = "top";
+        }
         this.units.forEach((u) => {
             u.DrawText();
         });
@@ -200,19 +275,42 @@ export abstract class Scene {
         this.units.forEach((u) => {
             u.Init();
         });
-        this.camera = new THREE.PerspectiveCamera(this.fov, this.core.windowSizeX / this.core.windowSizeY, 0.1, 5000);
+        this.camera = new THREE.PerspectiveCamera(this.fov, this.canvasSizeX / this.canvasSizeY, 0.1, 5000);
         this.camera2d = new THREE.OrthographicCamera(
-            -this.core.windowSizeX / 2, this.core.windowSizeX / 2,
-            this.core.windowSizeY / 2, -this.core.windowSizeY / 2,
-            1, 10 );
+            -this.canvasSizeX / 2, this.canvasSizeX / 2,
+            this.canvasSizeY / 2, -this.canvasSizeY / 2,
+            1, 10);
         this.camera2d.position.z = 10;
         this.offScreenMat = new THREE.SpriteMaterial({
             color: 0xFFFFFF,
         });
+        this.offScreenRenderTarget = new THREE.WebGLRenderTarget(
+            this.canvasSizeX, this.canvasSizeY, {
+                magFilter: THREE.NearestFilter,
+                minFilter: THREE.NearestFilter,
+            });
         this.offScreen = new THREE.Sprite(this.offScreenMat);
-        this.offScreen.scale.set(this.core.windowSizeX, this.core.windowSizeY, 1);
+        this.offScreen.scale.set(this.canvasSizeX, this.canvasSizeY, 1);
         this.offScreen.position.set(0, 0, 1);
         this.scene2d.add(this.offScreen);
+        this.renderTarget = new THREE.WebGLRenderTarget(
+            this.canvasSizeX, this.canvasSizeY, {
+                magFilter: THREE.NearestFilter,
+                minFilter: THREE.NearestFilter,
+            });
+        this.textCanvas = document.createElement("canvas");
+        this.textCanvasX = 2 ** Math.ceil(Math.log2(this.canvasSizeX));
+        this.textCanvasY = 2 ** Math.ceil(Math.log2(this.canvasSizeY));
+        this.textCanvas.setAttribute("width", this.textCanvasX + "");
+        this.textCanvas.setAttribute("height", this.textCanvasY + "");
+        this.ctx = this.textCanvas.getContext("2d");
+        this.textCanvasSpriteMat = new THREE.SpriteMaterial({
+            color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas)
+        });
+        this.textCanvasSprite = new THREE.Sprite(this.textCanvasSpriteMat);
+        this.textCanvasSprite.position.set(0, 0, 9);
+        this.textCanvasSprite.scale.set(this.textCanvasX, this.textCanvasY, 1);
+        this.scene2d.add(this.textCanvasSprite);
     }
 
     /**
@@ -244,14 +342,33 @@ export abstract class Scene {
         return;
     }
 
-    public OnCanvasResizeCallBack(): void {
-        this.camera.aspect = this.core.windowSizeX / this.core.windowSizeY;
+    public ResizeCanvas(sizeX: number, sizeY: number): void {
+        this.canvasSizeX = sizeX;
+        this.canvasSizeY = sizeY;
+        // this.renderer.setSize(this.canvasSizeX, this.canvasSizeY);
+        this.camera.aspect = this.canvasSizeX / this.canvasSizeY;
         this.camera.updateProjectionMatrix();
-        this.camera2d.left = -this.core.windowSizeX / 2;
-        this.camera2d.right = this.core.windowSizeX / 2;
-        this.camera2d.bottom = -this.core.windowSizeY / 2;
-        this.camera2d.top = this.core.windowSizeY / 2;
+        this.camera2d.left = -this.canvasSizeX / 2;
+        this.camera2d.right = this.canvasSizeX / 2;
+        this.camera2d.bottom = -this.canvasSizeY / 2;
+        this.camera2d.top = this.canvasSizeY / 2;
         this.camera2d.updateProjectionMatrix();
+        this.offScreenRenderTarget.setSize(
+            this.canvasSizeX,
+            this.canvasSizeY);
+        this.renderTarget.setSize(
+            this.canvasSizeX,
+            this.canvasSizeY);
+        if (this.composer) {
+            this.composer.setSize(this.canvasSizeX, this.canvasSizeY);
+        }
+        if (this.composer2d) {
+            this.composer2d.setSize(this.canvasSizeX, this.canvasSizeY);
+        }
+        this.textCanvasX = 2 ** Math.ceil(Math.log2(this.canvasSizeX));
+        this.textCanvasY = 2 ** Math.ceil(Math.log2(this.canvasSizeY));
+        this.textCanvas.setAttribute("width", this.textCanvasX + "");
+        this.textCanvas.setAttribute("height", this.textCanvasY + "");
     }
 
     public LoadFromFile(filename: string): void {
@@ -331,19 +448,10 @@ export abstract class Scene {
 
     private DeleteUnits(units: Unit[]): void {
         units.forEach((u) => {
-            u.objects.forEach((o) => { this.scene.remove(o); });
-            u.sprites.forEach((s) => {
-                if ("isTiledTexturedSprite" in s) {
-                    this.scene2d.remove(s.sprite);
-                    s.Dispose();
-                } else {
-                    this.scene2d.remove(s);
-                }
-            });
-            u.physicObjects.forEach((p) => {
-                this.scene.remove(p.viewBody);
-                this.physicWorld.remove(p.phyBody);
-            });
+            u.objects.forEach((o) => this.scene.remove(o));
+            u.sprites.forEach((s) => u.RemoveSprite(s));
+            u.physicObjects.forEach((p) => u.RemovePhysicObject(p));
+            u.colliders.forEach((f) => u.RemoveCollider(f));
             u.Fin();
             u.objects = [];
             u.allObject3D = [];

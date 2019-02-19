@@ -3,6 +3,13 @@ import { Scene, Start, Terrain, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init() {
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
+        this.onTouchMove = (e) => { e.preventDefault(); };
+        this.onWindowResize = () => {
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
+        };
         this.core.LoadTexture("resources/images/grass.png", "grass");
     }
     public Update(): void {
@@ -13,7 +20,7 @@ class LoadScene extends Scene {
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
-        this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
+        this.FillText("Now Loading " + a + "/" + b, 0, 0);
     }
 }
 
@@ -21,9 +28,13 @@ class GameScene extends Scene {
     private g: Ground;
     private c: Cameraman;
     public Init() {
+        this.canvasSizeX = this.core.screenSizeX;
+        this.canvasSizeY = this.core.screenSizeY;
         this.onWindowResize = () => {
-            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+            this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
         };
+        this.onTouchMove = (e) => { e.preventDefault(); };
         this.backgroundColor = new THREE.Color(0.6, 0.8, 0.9);
         this.scene.fog = new THREE.Fog(new THREE.Color(0.6, 0.8, 0.9).getHex(), 1, 3000);
         const light = new THREE.DirectionalLight("white", 1);
@@ -45,13 +56,15 @@ class GameScene extends Scene {
         this.onContextmenu = (e) => { e.preventDefault(); };
     }
     public DrawText() {
-        this.core.SetTextSize(20);
-        this.core.DrawText(
+        this.SetTextSize(20);
+        this.FillText(
             "Press mouse left button to raise the terrain.",
-            -this.core.windowSizeX / 2, this.core.windowSizeY / 2);
-        this.core.DrawText(
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2);
+        this.FillText(
             "Press \"q\" and press mouse left button to lower the terrain.",
-            -this.core.windowSizeX / 2, this.core.windowSizeY / 2 - 20);
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 20);
+        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 40);
     }
 }
 
@@ -60,7 +73,7 @@ class Ground extends Unit {
     public Init() {
         this.raycastTarget = true;
         this.t = new Terrain();
-        this.t.MakeGeometry(50, 50, 10, 10, 5, 5, new THREE.MeshPhongMaterial({color: 0x448866}));
+        this.t.MakeGeometry(50, 50, 10, 10, 5, 5, new THREE.MeshPhongMaterial({ color: 0x448866 }));
         this.t.SetFar(100);
         this.AddObject(this.t.GetObject());
         for (let i = 0; i < this.t.GetWidthAllSegments(); i++) {
@@ -82,7 +95,7 @@ class Ground extends Unit {
                 const i = Math.round(w2 / this.t.GetSegmentWidth());
                 const j = Math.round(d2 / this.t.GetSegmentDepth());
                 // 地形を上げるか下げるかの符号
-                const s = (this.core.IsKeyDown("q")) ? -1 : 1;
+                const s = (this.core.IsKeyDown("KeyQ")) ? -1 : 1;
                 const min = -5;
                 const max = 5;
                 this.t.LimitedRaise(i, j, 0.5 * s, min, max, false);
@@ -214,25 +227,25 @@ class Cameraman extends Unit {
         if (this.core.IsKeyDown("ArrowUp")) {
             this.altitude = Math.min(this.altitude + 0.02, Math.PI / 2);
         }
-        if (this.core.IsKeyDown("w")) {
+        if (this.core.IsKeyDown("KeyW")) {
             this.pos.addScaledVector(new THREE.Vector3(
                 Math.cos(this.altitude) * Math.sin(this.azimuth),
                 Math.sin(this.altitude),
                 Math.cos(this.altitude) * Math.cos(this.azimuth)), 1);
         }
-        if (this.core.IsKeyDown("s")) {
+        if (this.core.IsKeyDown("KeyS")) {
             this.pos.addScaledVector(new THREE.Vector3(
                 -Math.cos(this.altitude) * Math.sin(this.azimuth),
                 -Math.sin(this.altitude),
                 -Math.cos(this.altitude) * Math.cos(this.azimuth)), 1);
         }
-        if (this.core.IsKeyDown("d")) {
+        if (this.core.IsKeyDown("KeyD")) {
             this.pos.addScaledVector(new THREE.Vector3(
                 Math.sin(this.azimuth - Math.PI / 2),
                 0,
                 Math.cos(this.azimuth - Math.PI / 2)), 1);
         }
-        if (this.core.IsKeyDown("a")) {
+        if (this.core.IsKeyDown("KeyA")) {
             this.pos.addScaledVector(new THREE.Vector3(
                 Math.sin(this.azimuth + Math.PI / 2),
                 0,
