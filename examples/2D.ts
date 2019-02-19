@@ -1,6 +1,14 @@
 import * as THREE from "three";
 import { Circle, Clamp, Figure, Point, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
 
+const attack = "KeyZ";
+const jump = "KeyX";
+const up = "ArrowUp";
+const left = "ArrowLeft";
+const down = "ArrowDown";
+const right = "ArrowRight";
+const pause = "Escape";
+
 class LoadScene extends Scene {
     public Init(): void {
         this.backgroundColor = new THREE.Color(0x887766);
@@ -34,12 +42,12 @@ class TitleScene extends Scene {
         this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update(): void {
-        if (this.core.IsKeyPressing("KeyH")) {
+        if (this.core.IsKeyPressing(attack)) {
             this.core.AddAndChangeScene("game", new GameScene());
         }
     }
     public DrawText(): void {
-        this.FillText("Press H key to start", -240, 0);
+        this.FillText("Press Z key to start", -240, 0);
     }
 }
 
@@ -67,17 +75,17 @@ class PauseScene extends Scene {
         // this.gameScene.Update();
         this.gameScene.Render();
         this.spriteMat.map = this.gameScene.RenderedTexture();
-        if (this.core.IsKeyPressing("Escape")) {
+        if (this.core.IsKeyPressing(pause)) {
             this.core.ChangeScene("game");
         }
-        if (this.core.IsKeyPressing("KeyW")) {
+        if (this.core.IsKeyPressing(up)) {
             this.selected--;
         }
-        if (this.core.IsKeyPressing("KeyS")) {
+        if (this.core.IsKeyPressing(down)) {
             this.selected++;
         }
         this.selected = (this.selected + 2) % 2;
-        if (this.core.IsKeyPressing("KeyH")) {
+        if (this.core.IsKeyPressing(attack)) {
             switch (this.selected) {
                 case 0:
                     this.core.ChangeScene("game");
@@ -116,7 +124,7 @@ class GameScene extends Scene {
         if (this.core.IsKeyPressing("KeyQ")) {
             this.AddUnit(new Fire(this.core.mouseX, this.core.mouseY));
         }
-        if (this.core.IsKeyPressing("Escape")) {
+        if (this.core.IsKeyPressing(pause)) {
             this.core.ChangeScene("pause");
         }
     }
@@ -151,26 +159,26 @@ class Chara extends Unit {
     }
     public Update(): void {
         this.tts.SetTile(0, 0);
-        if (this.core.IsKeyDown("KeyW")) {
+        if (this.core.IsKeyDown(up)) {
             this.y += 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("KeyS")) {
+        if (this.core.IsKeyDown(down)) {
             this.y -= 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("KeyD")) {
+        if (this.core.IsKeyDown(right)) {
             this.x += 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("KeyA")) {
+        if (this.core.IsKeyDown(left)) {
             this.x -= 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("KeyK")) {
+        if (this.core.IsKeyDown(attack)) {
             this.tts.SetTile(1, 0);
-            if (this.core.IsKeyDown("KeyA") || this.core.IsKeyDown("KeyS") ||
-                this.core.IsKeyDown("KeyD") || this.core.IsKeyDown("KeyW")) {
+            if (this.core.IsKeyDown(down) || this.core.IsKeyDown(up) ||
+                this.core.IsKeyDown(right) || this.core.IsKeyDown(left)) {
                     this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2 + 1, 0);
             }
         }
@@ -183,7 +191,7 @@ class Chara extends Unit {
                 this.jumpingVel = 0;
             }
         }
-        if (this.core.IsKeyDown("KeyJ") && this.jumpingHeight === 0) {
+        if (this.core.IsKeyDown(jump) && this.jumpingHeight === 0) {
             this.jumpingVel = 5;
             this.jumpingHeight += this.jumpingVel;
         }
@@ -229,8 +237,8 @@ const core = Start("init", new LoadScene(), {
     screenSizeY: 480,
 });
 
-const pause = document.getElementById("pause");
-pause.onclick = () => {
+const pauseButton = document.getElementById("pause");
+pauseButton.onclick = () => {
     if (core.GetActiveSceneName() === "game") {
         if (core.GetScene("pause")) {
             core.ChangeScene("pause");
@@ -238,8 +246,8 @@ pause.onclick = () => {
     }
 };
 
-const title = document.getElementById("title");
-title.onclick = () => {
+const titleButton = document.getElementById("title");
+titleButton.onclick = () => {
     if (core.GetActiveSceneName() === "pause" || core.GetActiveSceneName() ===  "game") {
         if (core.GetScene("title")) {
             core.ChangeScene("title");
