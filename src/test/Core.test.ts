@@ -288,14 +288,12 @@ test("keyState copy to previousKeyState when Update() called", () => {
     expect(c["previousKeyState"]["c"]).toBeTruthy();
 });
 
-test("Draw() calls activeScene.Render() and activeScene.DrawText()", () => {
+test("Draw() calls activeScene.Render()", () => {
     const c = new Core({});
     const s = new TestScene();
     c["activeScene"] = s;
-    expect(s.IsDrawedText).toBeFalsy();
     expect(s.IsRendered).toBeFalsy();
     c["Draw"]();
-    expect(s.IsDrawedText).toBeTruthy();
     expect(s.IsRendered).toBeTruthy();
 });
 
