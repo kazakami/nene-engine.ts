@@ -7,6 +7,7 @@ div#screen {
     position: relative;
     border-radius: 20px;
     overflow: hidden;
+    z-index: 1;
 }
 .center{
     width: 640px;
