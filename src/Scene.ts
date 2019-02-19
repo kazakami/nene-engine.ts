@@ -189,6 +189,13 @@ export abstract class Scene {
         }
     }
 
+    public CreateScene<T extends Scene>(scene: T): T {
+        scene.core = this.core;
+        scene.InnerInit();
+        scene.Init();
+        return scene;
+    }
+
     /**
      * テキストのサイズを指定する
      * @param size ピクセル単位のサイズ

@@ -42,10 +42,7 @@ class MainScene extends Scene {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
             this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
         };
-        this.miniWindow = new MiniWindowScene();
-        this.miniWindow.core = this.core;
-        this.miniWindow.InnerInit();
-        this.miniWindow.Init();
+        this.miniWindow = this.CreateScene(new MiniWindowScene());
         this.spriteMat = new THREE.SpriteMaterial({color: 0xffffff, map: this.miniWindow.RenderedTexture()});
         this.sprite = new THREE.Sprite(this.spriteMat);
         this.sprite.scale.set(320, 240, 1);
