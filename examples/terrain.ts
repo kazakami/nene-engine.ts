@@ -63,6 +63,8 @@ class GameScene extends Scene {
         this.FillText(
             "Press \"q\" and press mouse left button to lower the terrain.",
             -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 20);
+        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 40);
     }
 }
 

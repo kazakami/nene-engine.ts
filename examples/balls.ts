@@ -45,8 +45,8 @@ class GameScene extends Scene {
     public Init(): void {
         this.canvasSizeX = this.core.screenSizeX;
         this.canvasSizeY = this.core.screenSizeY;
-        this.canvasSizeX = 640;
-        this.canvasSizeY = 480;
+        // this.canvasSizeX = 640;
+        // this.canvasSizeY = 480;
         this.pause = new PauseScene(this);
         this.core.AddScene("pause", this.pause);
         this.backgroundColor = new THREE.Color(0x887766);
@@ -77,7 +77,7 @@ class GameScene extends Scene {
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
             // this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
-            this.ResizeCanvas(640, 480);
+            // this.ResizeCanvas(640, 480);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };
         this.core.PixelRatio = 1 / 1;
@@ -150,7 +150,7 @@ class GameScene extends Scene {
     }
     public DrawText(): void {
         this.SetTextColor(new THREE.Color().setRGB(200, 200, 200));
-        this.FillText("fps: " + Math.round(this.core.fps).toString(),
+        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
             -this.canvasSizeX / 2,
             this.canvasSizeY / 2);
         this.FillText("Press p to save screenshot.",

@@ -85,6 +85,10 @@ class MainScene extends Scene {
             }
         }
     }
+    public DrawText() {
+        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2);
+    }
 }
 
 class MiniWindowScene extends Scene {

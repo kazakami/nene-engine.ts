@@ -122,7 +122,7 @@ class GameScene extends Scene {
     }
     public DrawText(): void {
         this.FillText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
-        this.FillText(Math.round(this.core.fps).toString(),
+        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
             -this.core.screenSizeX / 2, this.core.screenSizeY / 2);
     }
 }

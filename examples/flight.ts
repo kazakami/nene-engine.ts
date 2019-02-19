@@ -110,6 +110,10 @@ class GameScene extends Scene {
             worker.postMessage("piyo");
         });
     }
+    public DrawText(): void {
+        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
+            -this.core.screenSizeX / 2, -this.core.screenSizeY / 2 + 50);
+    }
 }
 
 class Player extends Unit {
