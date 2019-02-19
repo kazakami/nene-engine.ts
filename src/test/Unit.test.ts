@@ -5,8 +5,8 @@ import { Scene } from "../Scene";
 import { TiledTexturedSprite } from "../TiledTexturedSprite";
 import { Unit } from "../Unit";
 
-class TestUnit extends Unit {}
-class TestScene extends Scene {}
+class TestUnit extends Unit { }
+class TestScene extends Scene { }
 
 test("constructor", () => {
     const unit = new TestUnit();

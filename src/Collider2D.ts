@@ -37,7 +37,7 @@ export class Point extends Figure {
     }
     public GenerateHelper(color: THREE.Color = new THREE.Color(0xffffff)): void {
         super.GenerateHelper();
-        const mat = new THREE.PointsMaterial({color: color});
+        const mat = new THREE.PointsMaterial({ color: color });
         const geo = new THREE.Geometry();
         geo.vertices.push(new THREE.Vector3(0, 0, 0));
         this.helper = new THREE.Points(geo, mat);
@@ -75,7 +75,7 @@ export class Circle extends Figure {
     }
     public GenerateHelper(color: THREE.Color = new THREE.Color(0xffffff)): void {
         super.GenerateHelper();
-        const mat = new THREE.LineBasicMaterial({color: color});
+        const mat = new THREE.LineBasicMaterial({ color: color });
         const geo = new THREE.Geometry();
         for (let i = 0; i < this.mSegments + 1; i++) {
             geo.vertices.push(
@@ -120,7 +120,7 @@ export class Rectangle extends Figure {
     }
     public GenerateHelper(color: THREE.Color = new THREE.Color(0xffffff)): void {
         super.GenerateHelper();
-        const mat = new THREE.LineBasicMaterial({color: color});
+        const mat = new THREE.LineBasicMaterial({ color: color });
         const geo = new THREE.Geometry();
         geo.vertices.push(
             new THREE.Vector3(this.width / 2, this.height / 2, 0),

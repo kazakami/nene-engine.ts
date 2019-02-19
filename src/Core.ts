@@ -228,7 +228,7 @@ export class Core {
         const objProg = this.GetObjectLoadingProgress();
         const texProg = this.GetTextureLoadingProgress();
         const textProg = this.GetTextLoadingProgress();
-        const allProg =  [objProg, texProg, textProg].reduce(([a0, a1], [b0, b1]) => [a0 + b0, a1 + b1]);
+        const allProg = [objProg, texProg, textProg].reduce(([a0, a1], [b0, b1]) => [a0 + b0, a1 + b1]);
         return allProg;
     }
 
@@ -254,7 +254,7 @@ export class Core {
                     } else {
                         throw e;
                     }
-            });
+                });
         });
     }
 
@@ -327,7 +327,7 @@ export class Core {
                         throw e;
                     }
                 });
-            });
+        });
     }
 
     /**
@@ -460,7 +460,7 @@ export class Core {
                         throw e;
                     }
                 });
-            });
+        });
     }
 
     /**
@@ -523,9 +523,9 @@ export class Core {
         this.offScreenCamera = new THREE.OrthographicCamera(
             -this.screenSizeX / 2, this.screenSizeX / 2,
             this.screenSizeY / 2, -this.screenSizeY / 2,
-            1, 10 );
+            1, 10);
         this.offScreenCamera.position.z = 10;
-        this.offScreenMat = new THREE.SpriteMaterial({color: 0xFFFFFF});
+        this.offScreenMat = new THREE.SpriteMaterial({ color: 0xFFFFFF });
         this.offScreenSprite = new THREE.Sprite(this.offScreenMat);
         this.offScreenSprite.scale.set(this.screenSizeX, this.screenSizeY, 1);
         this.offScreenSprite.position.set(0, 0, 5);

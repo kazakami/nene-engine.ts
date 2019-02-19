@@ -27,7 +27,7 @@ export function EachMesh(obj: THREE.Object3D, func: (mesh: THREE.Mesh) => void):
  * 連想配列の全ての要素がNullでもUndefinedでもなければtrueを返す
  * @param arr 調べる連想配列
  */
-export function AllIsNotNullOrUndefined<T>(arr: {[key: string]: T}): boolean {
+export function AllIsNotNullOrUndefined<T>(arr: { [key: string]: T }): boolean {
     for (const key in arr) {
         if (arr[key] === null || arr[key] === undefined) {
             return false;
@@ -40,9 +40,9 @@ export function AllIsNotNullOrUndefined<T>(arr: {[key: string]: T}): boolean {
  * 連想配列を配列にする
  * @param arr 連想配列
  */
-export function AssociativeArrayToArray<T>(arr: {[key: string]: T}): T[] {
+export function AssociativeArrayToArray<T>(arr: { [key: string]: T }): T[] {
     const a: T[] = [];
-    for (const key in arr ) {
+    for (const key in arr) {
         a.push(arr[key]);
     }
     return a;

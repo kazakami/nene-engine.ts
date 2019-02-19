@@ -61,7 +61,7 @@ class PauseScene extends Scene {
         this.gameScene = gameScene;
     }
     public Init() {
-        this.spriteMat = new THREE.SpriteMaterial({color: 0x888888});
+        this.spriteMat = new THREE.SpriteMaterial({ color: 0x888888 });
         this.sprite = new THREE.Sprite(this.spriteMat);
         this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
         this.sprite.position.set(0, 0, 1);
@@ -179,7 +179,7 @@ class Chara extends Unit {
             this.tts.SetTile(1, 0);
             if (this.core.IsKeyDown(down) || this.core.IsKeyDown(up) ||
                 this.core.IsKeyDown(right) || this.core.IsKeyDown(left)) {
-                    this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2 + 1, 0);
+                this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2 + 1, 0);
             }
         }
         if (this.jumpingHeight !== 0) {
@@ -248,7 +248,7 @@ pauseButton.onclick = () => {
 
 const titleButton = document.getElementById("title");
 titleButton.onclick = () => {
-    if (core.GetActiveSceneName() === "pause" || core.GetActiveSceneName() ===  "game") {
+    if (core.GetActiveSceneName() === "pause" || core.GetActiveSceneName() === "game") {
         if (core.GetScene("title")) {
             core.ChangeScene("title");
         }

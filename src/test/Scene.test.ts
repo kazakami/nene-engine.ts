@@ -2,7 +2,7 @@ import { Core } from "../Core";
 import { Scene } from "../Scene";
 import { Unit } from "../Unit";
 
-class TestScene extends Scene {}
+class TestScene extends Scene { }
 class TestUnit extends Unit {
     public inited = false;
     public finned = false;

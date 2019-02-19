@@ -105,11 +105,11 @@ export abstract class Scene {
      * @param input 3Dオブジェクト等や3次元座標等
      */
     public GetScreenPosition(input: THREE.Object3D |
-                                    THREE.Vector3 |
-                                    Cannon.Vec3 |
-                                    PhysicObject |
-                                    [number, number, number])
-                            : [number, number] {
+        THREE.Vector3 |
+        Cannon.Vec3 |
+        PhysicObject |
+        [number, number, number])
+        : [number, number] {
         const p = new THREE.Vector3();
         if (input instanceof THREE.Vector3) {
             p.copy(input);
@@ -132,10 +132,12 @@ export abstract class Scene {
      * レイキャストに成功した場合UnitのonRaycastCallbackを呼ぶ
      * @param data messageはUnitに対して処理を分岐させるパラメータ、positionはレイキャストを行う画面上の座標で省略時はマウス座標
      */
-    public Raycast(data: {message?: object, position?: THREE.Vec2} = {message: null, position: null}): void {
+    public Raycast(data: { message?: object, position?: THREE.Vec2 } = { message: null, position: null }): void {
         if (data.position === null || data.position === undefined) {
-            data.position = {x: this.core.mouseX / (this.core.screenSizeX / 2),
-                             y: this.core.mouseY / (this.core.screenSizeY / 2)};
+            data.position = {
+                x: this.core.mouseX / (this.core.screenSizeX / 2),
+                y: this.core.mouseY / (this.core.screenSizeY / 2)
+            };
         }
         this.raycaster.setFromCamera(data.position, this.camera);
         this.units.filter((u) => u.raycastTarget).forEach((u) => {
@@ -152,8 +154,10 @@ export abstract class Scene {
      */
     public GetIntersects(position: THREE.Vec2 = null): THREE.Intersection[] {
         if (position === null || position === undefined) {
-            position = {x: this.core.mouseX / (this.core.screenSizeX / 2),
-                        y: this.core.mouseY / (this.core.screenSizeY / 2)};
+            position = {
+                x: this.core.mouseX / (this.core.screenSizeX / 2),
+                y: this.core.mouseY / (this.core.screenSizeY / 2)
+            };
         }
         this.raycaster.setFromCamera(position, this.camera);
         const objs = new Array<THREE.Object3D>();
@@ -169,7 +173,7 @@ export abstract class Scene {
         this.DrawText();
         if (this.composer === null) {
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
-            this.core.renderer.render(this.scene, this.camera , this.offScreenRenderTarget);
+            this.core.renderer.render(this.scene, this.camera, this.offScreenRenderTarget);
             this.offScreenMat.map = this.offScreenRenderTarget.texture;
         } else {
             // 3D用のシーンでcomposerを使っていればcomposerの結果出力バッファを用いる
@@ -275,25 +279,25 @@ export abstract class Scene {
         this.camera2d = new THREE.OrthographicCamera(
             -this.canvasSizeX / 2, this.canvasSizeX / 2,
             this.canvasSizeY / 2, -this.canvasSizeY / 2,
-            1, 10 );
+            1, 10);
         this.camera2d.position.z = 10;
         this.offScreenMat = new THREE.SpriteMaterial({
             color: 0xFFFFFF,
         });
         this.offScreenRenderTarget = new THREE.WebGLRenderTarget(
             this.canvasSizeX, this.canvasSizeY, {
-            magFilter: THREE.NearestFilter,
-            minFilter: THREE.NearestFilter,
-        });
+                magFilter: THREE.NearestFilter,
+                minFilter: THREE.NearestFilter,
+            });
         this.offScreen = new THREE.Sprite(this.offScreenMat);
         this.offScreen.scale.set(this.canvasSizeX, this.canvasSizeY, 1);
         this.offScreen.position.set(0, 0, 1);
         this.scene2d.add(this.offScreen);
         this.renderTarget = new THREE.WebGLRenderTarget(
             this.canvasSizeX, this.canvasSizeY, {
-            magFilter: THREE.NearestFilter,
-            minFilter: THREE.NearestFilter,
-        });
+                magFilter: THREE.NearestFilter,
+                minFilter: THREE.NearestFilter,
+            });
         this.textCanvas = document.createElement("canvas");
         this.textCanvasX = 2 ** Math.ceil(Math.log2(this.canvasSizeX));
         this.textCanvasY = 2 ** Math.ceil(Math.log2(this.canvasSizeY));
@@ -301,7 +305,8 @@ export abstract class Scene {
         this.textCanvas.setAttribute("height", this.textCanvasY + "");
         this.ctx = this.textCanvas.getContext("2d");
         this.textCanvasSpriteMat = new THREE.SpriteMaterial({
-            color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas)});
+            color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas)
+        });
         this.textCanvasSprite = new THREE.Sprite(this.textCanvasSpriteMat);
         this.textCanvasSprite.position.set(0, 0, 9);
         this.textCanvasSprite.scale.set(this.textCanvasX, this.textCanvasY, 1);

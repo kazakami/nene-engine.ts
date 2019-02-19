@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {collideTest, Point, Rectangle, Scene, Start} from "../src/nene-engine";
+import { collideTest, Point, Rectangle, Scene, Start } from "../src/nene-engine";
 
 class LoaddScene extends Scene {
     public async Init() {
@@ -43,7 +43,7 @@ class MainScene extends Scene {
             this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
         };
         this.miniWindow = this.CreateScene(new MiniWindowScene());
-        this.spriteMat = new THREE.SpriteMaterial({color: 0xffffff, map: this.miniWindow.RenderedTexture()});
+        this.spriteMat = new THREE.SpriteMaterial({ color: 0xffffff, map: this.miniWindow.RenderedTexture() });
         this.sprite = new THREE.Sprite(this.spriteMat);
         this.sprite.scale.set(320, 240, 1);
         this.sprite.position.set(this.miniWindowX, this.miniWindowY, 1);
@@ -53,7 +53,7 @@ class MainScene extends Scene {
         this.scene.add(light);
         this.camera.position.set(0, 15, 15);
         this.camera.lookAt(0, 0, 0);
-        const mat = new THREE.MeshPhongMaterial({color: 0x225599});
+        const mat = new THREE.MeshPhongMaterial({ color: 0x225599 });
         const geo = new THREE.TorusBufferGeometry(5, 2);
         this.mesh = new THREE.Mesh(geo, mat);
         this.scene.add(this.mesh);
@@ -66,7 +66,7 @@ class MainScene extends Scene {
         this.sprite.position.set(this.miniWindowX, this.miniWindowY, 1);
         if (this.core.IsMouseLeftButtonPressing() &&
             collideTest(new Point(this.core.mouseX, this.core.mouseY),
-                        new Rectangle(this.miniWindowX, this.miniWindowY, 320, 240))) {
+                new Rectangle(this.miniWindowX, this.miniWindowY, 320, 240))) {
             this.previousMouseX = this.core.mouseX;
             this.previousMouseY = this.core.mouseY;
             this.miniWindowDragging = true;
@@ -101,7 +101,7 @@ class MiniWindowScene extends Scene {
         this.scene.add(light);
         this.camera.position.set(0, 15, 15);
         this.camera.lookAt(0, 0, 0);
-        const mat = new THREE.MeshPhongMaterial({color: 0xeeff33});
+        const mat = new THREE.MeshPhongMaterial({ color: 0xeeff33 });
         const geo = new THREE.BoxBufferGeometry(10, 10, 10);
         this.mesh = new THREE.Mesh(geo, mat);
         this.scene.add(this.mesh);

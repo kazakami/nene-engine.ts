@@ -14,7 +14,7 @@ class LoadScene extends Scene {
         };
         await Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
-                                "resources/models/ente progress_export.mtl", "ente"),
+                "resources/models/ente progress_export.mtl", "ente"),
             this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball"),
             this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle"),
             this.core.LoadTexture("resources/images/star.png", "star"),
@@ -89,7 +89,7 @@ class GameScene extends Scene {
         floorTex.repeat.set(10, 10);
         floorTex.wrapS = THREE.RepeatWrapping;
         floorTex.wrapT = THREE.RepeatWrapping;
-        const floorMat = new THREE.MeshPhongMaterial({map: floorTex});
+        const floorMat = new THREE.MeshPhongMaterial({ map: floorTex });
         const floorMesh = new THREE.Mesh(floorGeo, floorMat);
         floorMesh.receiveShadow = true;
         this.scene.add(floorMesh);
@@ -100,7 +100,7 @@ class GameScene extends Scene {
         wallTex.repeat.set(10, 10);
         wallTex.wrapS = THREE.RepeatWrapping;
         wallTex.wrapT = THREE.RepeatWrapping;
-        const wallMat = new THREE.MeshBasicMaterial({map: wallTex});
+        const wallMat = new THREE.MeshBasicMaterial({ map: wallTex });
         const wallMesh1 = new THREE.Mesh(wallGeo1, wallMat);
         this.scene.add(wallMesh1);
         // 右の壁
@@ -121,18 +121,18 @@ class GameScene extends Scene {
         const pass = new THREE.ShaderPass({
             fragmentShader: this.core.GetText("pass1.frag"),
             uniforms: {
-                tDiffuse: {value: null},
+                tDiffuse: { value: null },
             },
             vertexShader: this.core.GetText("pass1.vert"),
         });
         this.composer.addPass(pass);
-        this.composer = null;
+        // this.composer = null;
 
         this.composer2d = this.core.MakeEffectComposer();
         this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
         const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
         this.composer2d.addPass(pass2d);
-        this.composer2d = null;
+        // this.composer2d = null;
     }
     public Update(): void {
         this.casted = [];
@@ -171,7 +171,7 @@ class PauseScene extends Scene {
     public Init() {
         this.canvasSizeX = this.core.screenSizeX;
         this.canvasSizeY = this.core.screenSizeY;
-        this.spriteMat = new THREE.SpriteMaterial({color: 0x888888});
+        this.spriteMat = new THREE.SpriteMaterial({ color: 0x888888 });
         this.sprite = new THREE.Sprite(this.spriteMat);
         this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
         this.sprite.position.set(0, 0, 1);
@@ -201,7 +201,7 @@ class PauseScene extends Scene {
 class Particle extends Unit {
     private sprite: THREE.Object3D;
     constructor(private x: number, private y: number, private z: number,
-                private vx: number, private vy: number, private vz: number) {
+        private vx: number, private vy: number, private vz: number) {
         super();
     }
     public Init(): void {
@@ -239,7 +239,7 @@ class Ball extends Unit {
                 },
                 vertexShader: this.core.GetText("sample1.vert"),
             });
-            this.shaderMat.uniforms.hoge = {value: 0.0};
+            this.shaderMat.uniforms.hoge = { value: 0.0 };
             const mesh = new THREE.Mesh(geo, this.shaderMat);
             this.ball = new PhysicSphere(1, 1, "ball", mesh);
         } else {
@@ -271,7 +271,7 @@ class Ball extends Unit {
             this.ball.angularVelocity.set(0, 0, 0);
         }
         if (this.shaded) {
-            this.shaderMat.uniforms.time = {value: this.frame};
+            this.shaderMat.uniforms.time = { value: this.frame };
         }
     }
     public DrawText(): void {
@@ -290,7 +290,7 @@ class Board extends Unit {
         this.floor.position.set(0, -10, 0);
         this.floor.AddShapeFromJSON(
             this.core.GetText("board"),
-            new THREE.MeshPhongMaterial({map: this.core.GetTexture("tile")}));
+            new THREE.MeshPhongMaterial({ map: this.core.GetTexture("tile") }));
         EachMesh(this.floor.viewBody, (m) => {
             m.castShadow = true;
             m.receiveShadow = true;
@@ -309,4 +309,4 @@ class Board extends Unit {
 }
 
 // ゲームの開始
-Start("init", new LoadScene(), {halfFPS: true});
+Start("init", new LoadScene(), { halfFPS: true });

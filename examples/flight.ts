@@ -13,17 +13,17 @@ class LoadScene extends Scene {
         };
         Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
-                                "resources/models/ente progress_export.mtl", "ente"),
+                "resources/models/ente progress_export.mtl", "ente"),
             this.core.LoadObjMtl("resources/models/progress_export.obj",
-                                 "resources/models/progress_export.mtl", "plane"),
+                "resources/models/progress_export.mtl", "plane"),
             this.core.LoadGLTF("resources/models/progress.glb", "plane2"),
             this.core.LoadTexture("resources/images/grass.png", "grass"),
         ])
-        .then(() => console.log("i"))
-        .then(() => this.core.AddScene("game", new GameScene()))
-        .then(() => console.log("i2"))
-        .then(() => this.core.ChangeScene("game"))
-        .catch(() => console.log("err"));
+            .then(() => console.log("i"))
+            .then(() => this.core.AddScene("game", new GameScene()))
+            .then(() => console.log("i2"))
+            .then(() => this.core.ChangeScene("game"))
+            .catch(() => console.log("err"));
         return;
     }
     public Update(): void {
@@ -95,7 +95,8 @@ class GameScene extends Scene {
                 tex.wrapT = THREE.RepeatWrapping;
                 const groundMat = new THREE.MeshPhongMaterial({
                     color: new THREE.Color(0.6, 0.4, 0.35),
-                    map: tex});
+                    map: tex
+                });
                 const ground = new THREE.Mesh(groundGeo, groundMat);
                 ground.rotation.x = -Math.PI / 2;
                 this.scene.add(ground);

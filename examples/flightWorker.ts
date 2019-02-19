@@ -18,13 +18,13 @@ onmessage = (event: MessageEvent) => {
     }
     groundGeo.computeVertexNormals();
     postMessage({
-            normal: groundGeo.attributes.normal.array,
-            normalCount: groundGeo.attributes.normal.count,
-            position: groundGeo.attributes.position.array,
-            positionCount: groundGeo.attributes.position.count,
-            uv: groundGeo.attributes.uv.array,
-            uvCount: groundGeo.attributes.uv.count,
-        }, [
+        normal: groundGeo.attributes.normal.array,
+        normalCount: groundGeo.attributes.normal.count,
+        position: groundGeo.attributes.position.array,
+        positionCount: groundGeo.attributes.position.count,
+        uv: groundGeo.attributes.uv.array,
+        uvCount: groundGeo.attributes.uv.count,
+    }, [
             // (groundGeo.attributes.normal.array as Float32Array),
             // (groundGeo.attributes.position.array as Float32Array),
             // (groundGeo.attributes.uv.array as Float32Array),
