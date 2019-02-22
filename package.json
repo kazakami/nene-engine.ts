@@ -12,7 +12,7 @@
     "docs": "rm -rf docs && typedoc",
     "test": "jest",
     "coverage": "jest --coverage",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch --watch-poll"
   },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
   "license": "MIT",
