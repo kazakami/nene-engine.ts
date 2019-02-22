@@ -209,7 +209,7 @@ class Particle extends Unit {
         this.geo = new THREE.BufferGeometry();
         const points: number[] = [];
         const colors: number[] = [];
-        for (let i = 0; i < 1; i++) {
+        for (let i = 0; i < 3; i++) {
             points.push(0, 0, 0);
             const col = RandomColor();
             colors.push(col.r, col.g, col.b);
@@ -223,10 +223,12 @@ class Particle extends Unit {
         });
         this.points = new THREE.Points(this.geo, this.mat);
         this.points.position.set(this.x, this.y, this.z);
+        this.geo.attributes.position.setY(0, 5);
+        this.geo.attributes.position.setY(1, NaN);
+        this.geo.attributes.position.setY(2, 10);
         this.AddObject(this.points);
     }
     public Update(): void {
-        this.geo.attributes.position.setY(0, NaN);
         (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
         this.geo.computeBoundingSphere();
         if (this.frame > 100) {
