@@ -126,13 +126,13 @@ class GameScene extends Scene {
             vertexShader: this.core.GetText("pass1.vert"),
         });
         this.composer.addPass(pass);
-        // this.composer = null;
+        this.composer = null;
 
         this.composer2d = this.core.MakeEffectComposer();
         this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
         const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
         this.composer2d.addPass(pass2d);
-        // this.composer2d = null;
+        this.composer2d = null;
     }
     public Update(): void {
         this.casted = [];
@@ -199,23 +199,33 @@ class PauseScene extends Scene {
 }
 
 class Particle extends Unit {
-    private sprite: THREE.Object3D;
-    constructor(private x: number, private y: number, private z: number,
-        private vx: number, private vy: number, private vz: number) {
+    private geo: THREE.BufferGeometry;
+    private mat: THREE.PointsMaterial;
+    private points: THREE.Points;
+    constructor(private x: number, private y: number, private z: number) {
         super();
     }
     public Init(): void {
-        this.sprite = new THREE.Object3D();
-        this.sprite.add(this.core.MakeSpriteFromTexture("star", RandomColor()));
-        this.sprite.position.set(this.x, this.y, this.z);
-        this.AddObject(this.sprite);
+        this.geo = new THREE.BufferGeometry();
+        const points: number[] = [];
+        const colors: number[] = [];
+        for (let i = 0; i < 1; i++) {
+            points.push(0, 0, 0);
+            const col = RandomColor();
+            colors.push(col.r, col.g, col.b);
+        }
+        this.geo.addAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+        this.geo.addAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+        this.geo.computeBoundingSphere();
+        this.mat = new THREE.PointsMaterial({
+            blending: THREE.AdditiveBlending, map: this.core.GetTexture("star"), size: 1, transparent: true,
+            vertexColors: THREE.VertexColors,
+        });
+        this.points = new THREE.Points(this.geo, this.mat);
+        this.points.position.set(this.x, this.y, this.z);
+        this.AddObject(this.points);
     }
     public Update(): void {
-        this.vy -= 9.8 / 60 / 60;
-        this.x += this.vx;
-        this.y += this.vy;
-        this.z += this.vz;
-        this.sprite.position.set(this.x, this.y, this.z);
         if (this.frame > 100) {
             this.isAlive = false;
         }
@@ -253,11 +263,7 @@ class Ball extends Unit {
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
             const p = c.collidePosition;
-            for (let i = 0; i < 10; i++) {
-                this.scene.AddUnit(new Particle(
-                    p.x, p.y, p.z,
-                    Random(0.1), Random(0.1), Random(0.1)));
-            }
+            this.scene.AddUnit(new Particle(p.x, p.y, p.z));
         });
         this.onRaycastedCallback = (ints, message) => {
             (this.scene as GameScene).casted.push("Ball");
