@@ -226,6 +226,9 @@ class Particle extends Unit {
         this.AddObject(this.points);
     }
     public Update(): void {
+        this.geo.attributes.position.setY(0, NaN);
+        (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+        this.geo.computeBoundingSphere();
         if (this.frame > 100) {
             this.isAlive = false;
         }
