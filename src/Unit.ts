@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { Figure } from "./Collider2D";
 import { Core } from "./Core";
+import { Particles } from "./Particles";
 import { PhysicObject } from "./PhysicObject";
 import { Scene } from "./Scene";
 import { TiledTexturedSprite } from "./TiledTexturedSprite";
@@ -22,8 +23,10 @@ export abstract class Unit {
     public frame: number = 0;
     /** このUnitに紐づけられているすべての3Dオブジェクト。 */
     public allObject3D: THREE.Object3D[] = [];
-    /** このUnitに紐づけられているすべての立体オブジェクト。ただし物理オブジェクトの描画用のオブジェクトを除く。 */
+    /** 物理オブジェクトの描画用のオブジェクトを除くこのUnitに紐づけられているすべての立体オブジェクト。 */
     public objects: THREE.Object3D[] = [];
+    /** このUnitに紐づけられているすべてのParticles */
+    public allParticles: Particles[] = [];
     /** このUnitに紐づけられているすべてのスプライト。 */
     public sprites: Array<THREE.Object3D | TiledTexturedSprite | Figure> = [];
     /** このUnitに紐づけられているすべての物理オブジェクト。 */
@@ -156,6 +159,16 @@ export abstract class Unit {
     public RemoveCollider(f: Figure): void {
         this.colliders = this.colliders.filter((fig) => f !== fig);
         this.scene.colliders = this.scene.colliders.filter((fig) => f !== fig);
+    }
+
+    public AddParticle(p: Particles): void {
+        this.allParticles.push(p);
+        this.scene.scene.add(p.particle);
+        console.log("add");
+    }
+    public RemoveParticle(p: Particles): void {
+        this.allParticles = this.allParticles.filter((par) => p !== par);
+        this.scene.scene.remove(p.particle);
     }
 }
 

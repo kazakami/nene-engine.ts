@@ -452,11 +452,14 @@ export abstract class Scene {
             u.sprites.forEach((s) => u.RemoveSprite(s));
             u.physicObjects.forEach((p) => u.RemovePhysicObject(p));
             u.colliders.forEach((f) => u.RemoveCollider(f));
+            u.allParticles.forEach((p) => u.RemoveParticle(p));
             u.Fin();
             u.objects = [];
             u.allObject3D = [];
             u.sprites = [];
             u.physicObjects = [];
+            u.colliders = [];
+            u.allParticles = [];
             u.scene = null;
             u.core = null;
         });
