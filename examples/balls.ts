@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { EachMesh, PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } from "../src/nene-engine";
+import { EachMesh, Particles, PhysicObjects, PhysicSphere, RandomColor, Scene, Start, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
@@ -199,38 +199,27 @@ class PauseScene extends Scene {
 }
 
 class Particle extends Unit {
-    private geo: THREE.BufferGeometry;
-    private mat: THREE.PointsMaterial;
+    private particles: Particles;
     private points: THREE.Points;
     constructor(private x: number, private y: number, private z: number) {
         super();
     }
     public Init(): void {
-        this.geo = new THREE.BufferGeometry();
-        const points: number[] = [];
-        const colors: number[] = [];
-        for (let i = 0; i < 3; i++) {
-            points.push(0, 0, 0);
-            const col = RandomColor();
-            colors.push(col.r, col.g, col.b);
+        this.particles = new Particles();
+        this.particles.GenerateParticles(1);
+        for (let i = 0; i < 1; i++) {
+            this.particles.SetPosition(0, 0, 0, 0);
+            this.particles.SetColor(0, 1, 1, 1);
         }
-        this.geo.addAttribute("position", new THREE.Float32BufferAttribute(points, 3));
-        this.geo.addAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-        this.geo.computeBoundingSphere();
-        this.mat = new THREE.PointsMaterial({
-            blending: THREE.AdditiveBlending, map: this.core.GetTexture("star"), size: 1, transparent: true,
-            vertexColors: THREE.VertexColors,
-        });
-        this.points = new THREE.Points(this.geo, this.mat);
+        this.particles.GeometryUpdate();
+        this.points = this.particles.particle;
         this.points.position.set(this.x, this.y, this.z);
-        this.geo.attributes.position.setY(0, 5);
-        this.geo.attributes.position.setY(1, NaN);
-        this.geo.attributes.position.setY(2, 10);
+        this.particles.material.map = this.core.GetTexture("star");
+        this.particles.material.transparent = true;
         this.AddObject(this.points);
     }
     public Update(): void {
-        (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
-        this.geo.computeBoundingSphere();
+        this.particles.GeometryUpdate();
         if (this.frame > 100) {
             this.isAlive = false;
         }
