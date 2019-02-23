@@ -14,7 +14,7 @@ export class Particles {
         const colors = new Array<number>(this.particlesNum * 3);
         this.geo.addAttribute("position", new THREE.Float32BufferAttribute(points, 3));
         this.geo.addAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-        this.geo.computeBoundingSphere();
+        // this.geo.computeBoundingSphere();
         this.mat = new THREE.PointsMaterial({
             vertexColors: THREE.VertexColors,
         });
@@ -41,11 +41,15 @@ export class Particles {
         ];
     }
 
+    public SetGlobalPosition(x: number, y: number, z: number): void {
+        this.points.position.set(x, y, z);
+    }
+
     public SetPosition(index: number, x: number, y: number, z: number, update: boolean = true): void {
         this.geo.attributes.position.setXYZ(index, x, y, z);
         if (update) {
             (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
-            this.geo.computeBoundingSphere();
+            // this.geo.computeBoundingSphere();
         }
     }
 
@@ -62,7 +66,7 @@ export class Particles {
 
     public GeometryUpdate(): void {
         (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
-        this.geo.computeBoundingSphere();
+        // this.geo.computeBoundingSphere();
     }
 
     public get particle(): THREE.Points {
@@ -73,5 +77,9 @@ export class Particles {
         return this.mat;
     }
 
-    public Update(): void { return; }
+    public Fin(): void {
+        console.log("d");
+        this.geo.dispose();
+        this.mat.dispose();
+    }
 }
