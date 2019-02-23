@@ -65,5 +65,9 @@ export class Particles {
         return this.points;
     }
 
+    public get material(): THREE.PointsMaterial {
+        return this.mat;
+    }
+
     public Update(): void { return; }
 }
