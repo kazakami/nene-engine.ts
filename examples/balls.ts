@@ -200,7 +200,6 @@ class PauseScene extends Scene {
 
 class Particle extends Unit {
     private particles: Particles;
-    private points: THREE.Points;
     constructor(private x: number, private y: number, private z: number) {
         super();
     }
@@ -209,16 +208,17 @@ class Particle extends Unit {
         this.particles.GenerateParticles(1);
         for (let i = 0; i < 1; i++) {
             this.particles.SetPosition(0, 0, 0, 0);
-            this.particles.SetColor(0, 1, 1, 1);
+            this.particles.SetColor(0, 1, 0, 1);
         }
+        // this.particles.SetPointDisable(0);
         this.particles.GeometryUpdate();
-        this.points = this.particles.particle;
-        this.points.position.set(this.x, this.y, this.z);
+        this.particles.SetGlobalPosition(this.x, this.y, this.z);
+        this.AddParticle(this.particles);
         this.particles.material.map = this.core.GetTexture("star");
         this.particles.material.transparent = true;
-        this.AddObject(this.points);
     }
     public Update(): void {
+        this.particles.SetColor(0, 1, this.frame / 100, 1 - this.frame / 100);
         this.particles.GeometryUpdate();
         if (this.frame > 100) {
             this.isAlive = false;
