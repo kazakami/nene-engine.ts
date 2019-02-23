@@ -56,6 +56,10 @@ export class Particles {
         }
     }
 
+    public SetPointDisable(index: number): void {
+        this.geo.attributes.position.setX(index, NaN);
+    }
+
     public GeometryUpdate(): void {
         (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
         this.geo.computeBoundingSphere();
