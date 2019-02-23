@@ -1,28 +1,69 @@
 import * as THREE from "three";
 
 export class Particles {
-    private geo: THREE.Geometry;
+    private geo: THREE.BufferGeometry;
     private particlesNum: number;
     private mat: THREE.PointsMaterial;
     private points: THREE.Points;
-    private updateFunc: (x: number, y: number, z: number) => [number, number, number];
-    constructor(pos: THREE.Vector3, num: number) {
-        this.geo = new THREE.Geometry();
+    constructor() { return; }
+
+    public GenerateParticles(num: number): void {
+        this.geo = new THREE.BufferGeometry();
         this.particlesNum = num;
-        for (let i = 0; i < this.particlesNum; i++) {
-            this.geo.vertices.push(pos.clone());
-        }
-        this.mat = new THREE.PointsMaterial({});
+        const points = new Array<number>(this.particlesNum * 3);
+        const colors = new Array<number>(this.particlesNum * 3);
+        this.geo.addAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+        this.geo.addAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+        this.geo.computeBoundingSphere();
+        this.mat = new THREE.PointsMaterial({
+            vertexColors: THREE.VertexColors,
+        });
         this.points = new THREE.Points(this.geo, this.mat);
+    }
+
+    public GetParticlesNum(): number {
+        return this.particlesNum;
+    }
+
+    public GetPosition(index: number): [number, number, number] {
+        return [
+            this.geo.attributes.position.getX(index),
+            this.geo.attributes.position.getY(index),
+            this.geo.attributes.position.getZ(index),
+        ];
+    }
+
+    public GetColor(index: number): [number, number, number] {
+        return [
+            this.geo.attributes.color.getX(index),
+            this.geo.attributes.color.getY(index),
+            this.geo.attributes.color.getZ(index),
+        ];
+    }
+
+    public SetPosition(index: number, x: number, y: number, z: number, update: boolean = true): void {
+        this.geo.attributes.position.setXYZ(index, x, y, z);
+        if (update) {
+            (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+            this.geo.computeBoundingSphere();
+        }
+    }
+
+    public SetColor(index: number, x: number, y: number, z: number, update: boolean = true): void {
+        this.geo.attributes.color.setXYZ(index, x, y, z);
+        if (update) {
+            (this.geo.attributes.color as THREE.BufferAttribute).needsUpdate = true;
+        }
+    }
+
+    public GeometryUpdate(): void {
+        (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+        this.geo.computeBoundingSphere();
     }
 
     public get particle(): THREE.Points {
         return this.points;
     }
-    public Update(): void {
-        for (const vec of this.geo.vertices) {
-            const [x, y, z] = this.updateFunc(vec.x, vec.y, vec.z);
-            vec.set(x, y, z);
-        }
-    }
+
+    public Update(): void { return; }
 }
