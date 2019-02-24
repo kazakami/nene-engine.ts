@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { EachMesh, Particles, PhysicObjects, PhysicSphere, RandomColor, Scene, Start, Unit } from "../src/nene-engine";
+import { EachMesh, Particles, PhysicObjects, PhysicSphere, Random, Scene, Start, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
@@ -200,25 +200,37 @@ class PauseScene extends Scene {
 
 class Particle extends Unit {
     private particles: Particles;
+    private num: number = 1000;
+    private vel: THREE.Vector3[] = [];
+    private pos: THREE.Vector3[] = [];
     constructor(private x: number, private y: number, private z: number) {
         super();
     }
     public Init(): void {
         this.particles = new Particles();
-        this.particles.GenerateParticles(1);
-        for (let i = 0; i < 1; i++) {
-            this.particles.SetPosition(0, 0, 0, 0);
-            this.particles.SetColor(0, 1, 0, 1);
+        this.particles.GenerateParticles(this.num);
+        for (let i = 0; i < this.num; i++) {
+            const v = new THREE.Vector3(Random(0.1), 0.5, Random(0.1));
+            const p = new THREE.Vector3(0, 0, 0);
+            this.vel.push(v);
+            this.pos.push(p);
+            this.particles.SetPosition(i, p.x, p.y, p.z, false);
+            this.particles.SetColor(i, 1, 0, 1, false);
         }
         // this.particles.SetPointDisable(0);
-        this.particles.GeometryUpdate();
         this.particles.SetGlobalPosition(this.x, this.y, this.z);
+        this.particles.GeometryUpdate();
         this.AddParticle(this.particles);
         this.particles.material.map = this.core.GetTexture("star");
         this.particles.material.transparent = true;
     }
     public Update(): void {
-        this.particles.SetColor(0, 1, this.frame / 100, 1 - this.frame / 100);
+        for (let i = 0; i < this.num; i++) {
+            this.vel[i].setY(this.vel[i].y - 0.02);
+            this.pos[i].add(this.vel[i]);
+            this.particles.SetPosition(i, this.pos[i].x, this.pos[i].y, this.pos[i].z, false);
+            this.particles.SetColor(i, 1, this.frame / 100, 1 - this.frame / 100, false);
+        }
         this.particles.GeometryUpdate();
         if (this.frame > 100) {
             this.isAlive = false;
