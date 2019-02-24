@@ -50,6 +50,7 @@ export abstract class Unit {
     public InnerUpdate(): void {
         this.frame++;
         this.physicObjects.forEach((p) => { p.Update(); });
+        this.allParticles.forEach((p) => p.Update());
     }
     /**
      * この関数をオーバーライドし更新時の処理を記述する
@@ -164,7 +165,6 @@ export abstract class Unit {
     public AddParticle(p: Particles): void {
         this.allParticles.push(p);
         this.scene.scene.add(p.particle);
-        console.log("add");
     }
     public RemoveParticle(p: Particles): void {
         this.allParticles = this.allParticles.filter((par) => p !== par);
