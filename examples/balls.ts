@@ -223,6 +223,7 @@ class Particle extends Unit {
         this.AddParticle(this.particles);
         this.particles.material.map = this.core.GetTexture("star");
         this.particles.material.transparent = true;
+        this.particles.material.depthWrite = false;
     }
     public Update(): void {
         for (let i = 0; i < this.num; i++) {
