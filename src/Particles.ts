@@ -66,6 +66,7 @@ export class Particles {
 
     public GeometryUpdate(): void {
         (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+        (this.geo.attributes.color as THREE.BufferAttribute).needsUpdate = true;
         // this.geo.computeBoundingSphere();
     }
 
@@ -75,6 +76,10 @@ export class Particles {
 
     public get material(): THREE.PointsMaterial {
         return this.mat;
+    }
+
+    public Update(): void {
+        return;
     }
 
     public Fin(): void {
