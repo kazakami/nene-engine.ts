@@ -1,5 +1,8 @@
 import * as THREE from "three";
-import { EachMesh, Particles, PhysicObjects, PhysicSphere, Random, Scene, Start, Unit } from "../src/nene-engine";
+import {
+    EachMesh, Particles, PhysicObjects, PhysicSphere
+    , Random, RandomColor, Scene, Start, Unit,
+} from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
@@ -200,9 +203,10 @@ class PauseScene extends Scene {
 
 class Particle extends Unit {
     private particles: Particles;
-    private num: number = 1000;
+    private num: number = 50;
     private vel: THREE.Vector3[] = [];
     private pos: THREE.Vector3[] = [];
+    private col: THREE.Color[] = [];
     constructor(private x: number, private y: number, private z: number) {
         super();
     }
@@ -210,25 +214,32 @@ class Particle extends Unit {
         this.particles = new Particles();
         this.particles.GenerateParticles(this.num);
         for (let i = 0; i < this.num; i++) {
-            const v = new THREE.Vector3(Random(0.1), 0.5, Random(0.1));
+            const rad = Math.random() * 2 * Math.PI;
+            const d = Math.random() * 0.2;
+            const v = new THREE.Vector3(d * Math.sin(rad), 0.5 + Random(0.1), d * Math.cos(rad));
             const p = new THREE.Vector3(0, 0, 0);
             this.vel.push(v);
             this.pos.push(p);
             this.particles.SetPosition(i, p.x, p.y, p.z, false);
-            this.particles.SetColor(i, 1, 0, 1, false);
+            const c = RandomColor();
+            this.col.push(c);
+            this.particles.SetColor(i, c.r, c.g, c.b, false);
         }
         // this.particles.SetPointDisable(0);
         this.particles.SetGlobalPosition(this.x, this.y, this.z);
         this.particles.GeometryUpdate();
         this.AddParticle(this.particles);
         this.particles.material.map = this.core.GetTexture("star");
+        this.particles.material.blending = THREE.AdditiveBlending;
     }
     public Update(): void {
         for (let i = 0; i < this.num; i++) {
             this.vel[i].setY(this.vel[i].y - 0.02);
             this.pos[i].add(this.vel[i]);
+            const c = this.col[i];
+            c.setRGB(c.r * 0.95, c.g * 0.95, c.b * 0.95);
             this.particles.SetPosition(i, this.pos[i].x, this.pos[i].y, this.pos[i].z, false);
-            this.particles.SetColor(i, 1, this.frame / 100, 1 - this.frame / 100, false);
+            this.particles.SetColor(i, c.r, c.g, c.b, false);
         }
         this.particles.GeometryUpdate();
         if (this.frame > 100) {
