@@ -12,7 +12,8 @@
     "docs": "rm -rf docs && typedoc",
     "test": "jest",
     "coverage": "jest --coverage",
-    "watch": "webpack --watch --watch-poll"
+    "watch": "webpack --watch --watch-poll",
+    "lint": "tslint -p tsconfig.json"
   },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
   "license": "MIT",
