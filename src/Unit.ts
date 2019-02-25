@@ -167,6 +167,7 @@ export abstract class Unit {
         this.scene.scene.add(p.particle);
     }
     public RemoveParticle(p: Particles): void {
+        p.Fin();
         this.allParticles = this.allParticles.filter((par) => p !== par);
         this.scene.scene.remove(p.particle);
     }
