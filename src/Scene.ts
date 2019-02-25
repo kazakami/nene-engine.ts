@@ -136,7 +136,7 @@ export abstract class Scene {
         if (data.position === null || data.position === undefined) {
             data.position = {
                 x: this.core.mouseX / (this.core.screenSizeX / 2),
-                y: this.core.mouseY / (this.core.screenSizeY / 2)
+                y: this.core.mouseY / (this.core.screenSizeY / 2),
             };
         }
         this.raycaster.setFromCamera(data.position, this.camera);
@@ -156,7 +156,7 @@ export abstract class Scene {
         if (position === null || position === undefined) {
             position = {
                 x: this.core.mouseX / (this.core.screenSizeX / 2),
-                y: this.core.mouseY / (this.core.screenSizeY / 2)
+                y: this.core.mouseY / (this.core.screenSizeY / 2),
             };
         }
         this.raycaster.setFromCamera(position, this.camera);
@@ -305,7 +305,7 @@ export abstract class Scene {
         this.textCanvas.setAttribute("height", this.textCanvasY + "");
         this.ctx = this.textCanvas.getContext("2d");
         this.textCanvasSpriteMat = new THREE.SpriteMaterial({
-            color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas)
+            color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas),
         });
         this.textCanvasSprite = new THREE.Sprite(this.textCanvasSpriteMat);
         this.textCanvasSprite.position.set(0, 0, 9);

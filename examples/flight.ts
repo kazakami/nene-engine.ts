@@ -95,7 +95,7 @@ class GameScene extends Scene {
                 tex.wrapT = THREE.RepeatWrapping;
                 const groundMat = new THREE.MeshPhongMaterial({
                     color: new THREE.Color(0.6, 0.4, 0.35),
-                    map: tex
+                    map: tex,
                 });
                 const ground = new THREE.Mesh(groundGeo, groundMat);
                 ground.rotation.x = -Math.PI / 2;

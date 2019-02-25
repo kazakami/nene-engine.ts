@@ -129,7 +129,8 @@ export class PhysicPlane extends PhysicObject {
 }
 
 export class PhysicBox extends PhysicObject {
-    constructor(mass: number, width: number, height: number, depth: number,
+    constructor(
+        mass: number, width: number, height: number, depth: number,
         name: string = "box", obj: THREE.Object3D = null) {
         super(name, mass);
         if (obj === null) {
@@ -156,7 +157,8 @@ export class PhysicObjects extends PhysicObject {
     public Update(): void {
         this.Sync();
     }
-    public AddBox(width: number, height: number, depth: number,
+    public AddBox(
+        width: number, height: number, depth: number,
         x: number, y: number, z: number,
         addMesh: boolean = false,
         material: THREE.Material = null): void {
