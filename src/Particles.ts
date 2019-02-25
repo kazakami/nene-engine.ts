@@ -16,6 +16,8 @@ export class Particles {
         this.geo.addAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
         // this.geo.computeBoundingSphere();
         this.mat = new THREE.PointsMaterial({
+            depthWrite: false,
+            transparent: true,
             vertexColors: THREE.VertexColors,
         });
         this.points = new THREE.Points(this.geo, this.mat);
@@ -64,6 +66,10 @@ export class Particles {
         this.geo.attributes.position.setX(index, NaN);
     }
 
+    public IsPointDisable(index: number): boolean {
+        return isNaN(this.geo.attributes.position.getX(index));
+    }
+
     public GeometryUpdate(): void {
         (this.geo.attributes.position as THREE.BufferAttribute).needsUpdate = true;
         (this.geo.attributes.color as THREE.BufferAttribute).needsUpdate = true;
@@ -83,7 +89,6 @@ export class Particles {
     }
 
     public Fin(): void {
-        console.log("d");
         this.geo.dispose();
         this.mat.dispose();
     }
