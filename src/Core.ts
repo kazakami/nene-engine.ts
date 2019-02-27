@@ -632,14 +632,52 @@ export class Core {
                 this.activeScene.onKeyKeyDown(e);
             }
             if (!e.repeat) {
-                this.keyState[e.code] = true;
+                if (e.code === undefined) {
+                    let key: string;
+                    if (e.keyCode >= 65 && e.keyCode <= 90) {
+                        key = "Key" + String.fromCharCode(e.keyCode);
+                    } else if (e.keyCode === 37) {
+                        key = "ArrowLeft";
+                    } else if (e.keyCode === 38) {
+                        key = "ArrowUp";
+                    } else if (e.keyCode === 39) {
+                        key = "ArrowRight";
+                    } else if (e.keyCode === 40) {
+                        key = "ArrowDown";
+                    } else {
+                        key = e.keyCode + "";
+                    }
+                    console.log("KeyDown: " + key);
+                    this.keyState[key] = true;
+                } else {
+                    this.keyState[e.code] = true;
+                }
             }
         });
         document.addEventListener("keyup", (e) => {
             if (this.activeScene.onKeyKeyUp !== null) {
                 this.activeScene.onKeyKeyUp(e);
             }
-            this.keyState[e.code] = false;
+            if (e.code === undefined) {
+                let key: string;
+                if (e.keyCode >= 65 && e.keyCode <= 90) {
+                    key = "Key" + String.fromCharCode(e.keyCode);
+                } else if (e.keyCode === 37) {
+                    key = "ArrowLeft";
+                } else if (e.keyCode === 38) {
+                    key = "ArrowUp";
+                } else if (e.keyCode === 39) {
+                    key = "ArrowRight";
+                } else if (e.keyCode === 40) {
+                    key = "ArrowDown";
+                } else {
+                    key = e.keyCode + "";
+                }
+                console.log("KeyUp: " + key);
+                this.keyState[key] = false;
+            } else {
+                this.keyState[e.code] = false;
+            }
         });
         window.addEventListener("blur", (e) => {
             if (this.activeScene.onBlur !== null) {
