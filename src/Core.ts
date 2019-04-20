@@ -8,6 +8,10 @@ import "imports-loader?THREE=three!three/examples/js/postprocessing/ShaderPass.j
 import "imports-loader?THREE=three!three/examples/js/shaders/CopyShader.js";
 import "imports-loader?THREE=three!three/examples/js/shaders/FilmShader.js";
 import * as THREE from "three";
+// import { EffectComposer } from "three/examples/js/postprocessing/EffectComposer";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { Scene } from "./Scene";
 import { AssociativeArrayToArray, Base64toBlob, Coalescing } from "./Util";
 
@@ -90,10 +94,10 @@ export class Core {
     private activeSceneName: string = null;
     private nextSceneName: string = null;
     private loadingManager: THREE.LoadingManager;
-    private objLoader: THREE.OBJLoader;
-    private mtlLoader: THREE.MTLLoader;
+    private objLoader: OBJLoader;
+    private mtlLoader: MTLLoader;
     private fileLoader: THREE.FileLoader;
-    private gltfLoader: THREE.GLTFLoader;
+    private gltfLoader: GLTFLoader;
     private intervals: number[] = [];
     private previousTime: number = null;
     private keyState: { [key: string]: boolean } = {};
@@ -125,11 +129,11 @@ export class Core {
     /**
      * ゲームエンジンで使用しているTHREE.WebGLRendererを使うTHREE.EffectComposerを生成する
      */
-    public MakeEffectComposer(): THREE.EffectComposer {
-        const c = new THREE.EffectComposer(this.renderer);
-        c.setSize(this.screenSizeX * this.ratio, this.screenSizeY * this.ratio);
-        return c;
-    }
+    // public MakeEffectComposer(): EffectComposer {
+    //     const c = new EffectComposer(this.renderer);
+    //     c.setSize(this.screenSizeX * this.ratio, this.screenSizeY * this.ratio);
+    //     return c;
+    // }
 
     /**
      * マウス左ボタンが押し下げられているか
@@ -437,7 +441,7 @@ export class Core {
                         this.objLoader.setPath(objFilename.substr(0, objFilename.lastIndexOf("/")) + "/");
                         objFilename = objFilename.slice(objFilename.lastIndexOf("/") + 1);
                     }
-                    this.objLoader.setMaterials(mtl);
+                    this.objLoader.setMaterials(mtl as any);
                     this.objLoader.load(objFilename,
                         (grp) => {
                             this.objects[name] = grp;
@@ -533,10 +537,10 @@ export class Core {
         this.offScreenScene.add(this.offScreenSprite);
         this.loadingManager = new THREE.LoadingManager();
         this.textureLoader = new THREE.TextureLoader(this.loadingManager);
-        this.objLoader = new THREE.OBJLoader(this.loadingManager);
-        this.mtlLoader = new THREE.MTLLoader(this.loadingManager);
+        this.objLoader = new OBJLoader(this.loadingManager);
+        this.mtlLoader = new MTLLoader(this.loadingManager);
         this.fileLoader = new THREE.FileLoader(this.loadingManager);
-        this.gltfLoader = new THREE.GLTFLoader(this.loadingManager);
+        this.gltfLoader = new GLTFLoader(this.loadingManager);
         this.div = document.createElement("div");
         this.div.setAttribute("position", "relative");
         this.div.setAttribute("style",
@@ -874,6 +878,7 @@ export class Core {
         }
         if (this.renderer) {
             this.offScreenSprite.scale.set(this.activeScene.canvasSizeX, this.activeScene.canvasSizeY, 1);
+            this.renderer.setRenderTarget(null);
             this.renderer.render(this.offScreenScene, this.offScreenCamera);
         }
     }

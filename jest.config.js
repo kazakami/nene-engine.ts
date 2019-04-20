@@ -13,7 +13,10 @@ module.exports = {
       "node"
     ],
     "moduleNameMapper": {
-      "imports-loader?.*": "<rootDir>/src/test/importsLoader.js"
+      "imports-loader?.*": "<rootDir>/src/test/importsLoader.js",
+      "GLTFLoader": "<rootDir>/src/test/emptyMock.js",
+      "MTLLoader": "<rootDir>/src/test/emptyMock.js",
+      "OBJLoader": "<rootDir>/src/test/emptyMock.js"
     },
     "setupFiles": ["jest-canvas-mock"]
   }

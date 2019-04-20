@@ -119,23 +119,23 @@ class GameScene extends Scene {
         const wallMesh3 = new THREE.Mesh(wallGeo3, wallMat);
         this.scene.add(wallMesh3);
 
-        this.composer = this.core.MakeEffectComposer();
-        this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
-        const pass = new THREE.ShaderPass({
-            fragmentShader: this.core.GetText("pass1.frag"),
-            uniforms: {
-                tDiffuse: { value: null },
-            },
-            vertexShader: this.core.GetText("pass1.vert"),
-        });
-        this.composer.addPass(pass);
-        this.composer = null;
+        // this.composer = this.core.MakeEffectComposer();
+        // this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
+        // const pass = new THREE.ShaderPass({
+        //     fragmentShader: this.core.GetText("pass1.frag"),
+        //     uniforms: {
+        //         tDiffuse: { value: null },
+        //     },
+        //     vertexShader: this.core.GetText("pass1.vert"),
+        // });
+        // this.composer.addPass(pass);
+        // this.composer = null;
 
-        this.composer2d = this.core.MakeEffectComposer();
-        this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
-        const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
-        this.composer2d.addPass(pass2d);
-        this.composer2d = null;
+        // this.composer2d = this.core.MakeEffectComposer();
+        // this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
+        // const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
+        // this.composer2d.addPass(pass2d);
+        // this.composer2d = null;
     }
     public Update(): void {
         this.casted = [];
