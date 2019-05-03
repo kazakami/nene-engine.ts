@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Scene, Start, Terrain, Unit } from "../src/nene-engine";
+import { Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init() {
@@ -84,7 +84,7 @@ class Ground extends Unit {
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
     }
     public Update() {
-        this.t.SetPos(this.scene.camera.position);
+        this.t.SetCameraPos(this.scene.camera.position);
         if (this.core.IsMouseLeftButtonDown()) {
             const intersects = this.scene.GetIntersects();
             if (intersects.length !== 0) {
@@ -109,6 +109,18 @@ class Ground extends Unit {
                 this.t.SafeLimitedRaise(i + 1, j + 1, 0.1 * s, min, max, false);
                 this.t.SafeComputeNormal(i - 3, j - 3, i + 3, j + 3);
             }
+        }
+        if (this.core.IsKeyPressing("KeyE")) {
+            const w = Math.random() * 50;
+            const d = Math.random() * 50;
+            const h = this.t.GetInterpolatedHeight(w, d);
+            const [x, z] = this.t.GetPosition(w, d);
+            console.log(x, h, z);
+            const geo = new THREE.SphereGeometry(1, 10, 10);
+            const mat = new THREE.MeshPhongMaterial({color: new THREE.Color(0xffffff)});
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(x, h, z);
+            this.AddObject(mesh);
         }
     }
 }
