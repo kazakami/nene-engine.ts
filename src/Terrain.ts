@@ -36,7 +36,7 @@ export class Terrain {
      * カメラ位置を設定する
      * @param p カメラ座標
      */
-    public SetPos(p: THREE.Vector3): void {
+    public SetCameraPos(p: THREE.Vector3): void {
         this.pos.copy(p);
         this.UpdateVisible();
     }
@@ -477,6 +477,43 @@ export class Terrain {
      */
     public GetNormal(width: number, depth: number): THREE.Vector3 {
         return this.normals[depth * this.widthAllSegments + width].clone();
+    }
+    /**
+     * 指定された頂点の線形補間された高さを取得する
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     */
+    public GetInterpolatedHeight(width: number, depth: number): number {
+        const baseWidth = Math.floor(width);
+        const baseDepth = Math.floor(depth);
+        const difWidth = width - baseWidth;
+        const difDepth = depth - baseDepth;
+        const heightD = this.GetHeight(baseWidth, baseDepth + 1);
+        const heightW = this.GetHeight(baseWidth + 1, baseDepth);
+        console.log(baseWidth, baseDepth, heightW, heightD);
+        if (difWidth + difDepth <= 1) {
+            const height = this.GetHeight(baseWidth, baseDepth);
+            const difD = heightD - height;
+            const difW = heightW - height;
+            return height + difD * difDepth + difW * difWidth;
+        } else {
+            console.log("yaba");
+            const height = this.GetHeight(baseWidth + 1, baseDepth + 1);
+            const difD = heightD - height;
+            const difW = heightW - height;
+            return height + difD * (1 - difDepth) + difW * (1 - difWidth);
+        }
+    }
+    /**
+     * 指定した頂点番号の座標を返す。
+     * 整数以外も入力可。
+     * 返り値は[x座標, z座標]
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     */
+    public GetPosition(width: number, depth: number): [number, number] {
+        return [this.GetSegmentWidth() * width - this.GetWidth() / 2,
+             this.GetSegmentDepth() * depth - this.GetDepth() / 2];
     }
     /**
      * カメラ位置描画範囲に応じてタイルを描画非描画の設定を切り替える
