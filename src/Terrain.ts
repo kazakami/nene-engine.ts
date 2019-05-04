@@ -479,6 +479,38 @@ export class Terrain {
         return this.normals[depth * this.widthAllSegments + width].clone();
     }
     /**
+     * 指定された頂点の線形補間された法線ベクトルを取得する
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     */
+    public GetInterpolatedNormal(width: number, depth: number): THREE.Vector3 {
+        const baseWidth = Math.floor(width);
+        const baseDepth = Math.floor(depth);
+        const difWidth = width - baseWidth;
+        const difDepth = depth - baseDepth;
+        const normalD = this.GetNormal(baseWidth, baseDepth + 1);
+        const normalW = this.GetNormal(baseWidth + 1, baseDepth);
+        if (difWidth + difDepth <= 1) {
+            const normal = this.GetNormal(baseWidth, baseDepth);
+            const difD = new THREE.Vector3().subVectors(normalD, normal);
+            const difW = new THREE.Vector3().subVectors(normalW, normal);
+            difD.multiplyScalar(difDepth);
+            difW.multiplyScalar(difWidth);
+            normal.add(difD);
+            normal.add(difW);
+            return normal;
+        } else {
+            const normal = this.GetNormal(baseWidth, baseDepth);
+            const difD = new THREE.Vector3().subVectors(normalD, normal);
+            const difW = new THREE.Vector3().subVectors(normalW, normal);
+            difD.multiplyScalar(1 - difDepth);
+            difW.multiplyScalar(1 - difWidth);
+            normal.add(difD);
+            normal.add(difW);
+            return normal;
+        }
+    }
+    /**
      * 指定された頂点の線形補間された高さを取得する
      * @param width 幅方向の座標
      * @param depth 奥行方向の座標
