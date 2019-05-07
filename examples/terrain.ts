@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Scene, Start, Terrain, Unit } from "../src/nene-engine";
+import { OrientQuaternion, Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init() {
@@ -78,13 +78,14 @@ class Ground extends Unit {
         this.AddObject(this.t.GetObject());
         for (let i = 0; i < this.t.GetWidthAllSegments(); i++) {
             for (let j = 0; j < this.t.GetDepthAllSegments(); j++) {
-                this.t.SetHeight(i, j, Math.random() * 2, false);
+                // this.t.SetHeight(i, j, Math.random() * 2, false);
+                this.t.SetHeight(i, j, i * 0.5, false);
             }
         }
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
     }
     public Update() {
-        this.t.SetPos(this.scene.camera.position);
+        this.t.SetCameraPos(this.scene.camera.position);
         if (this.core.IsMouseLeftButtonDown()) {
             const intersects = this.scene.GetIntersects();
             if (intersects.length !== 0) {
@@ -109,6 +110,24 @@ class Ground extends Unit {
                 this.t.SafeLimitedRaise(i + 1, j + 1, 0.1 * s, min, max, false);
                 this.t.SafeComputeNormal(i - 3, j - 3, i + 3, j + 3);
             }
+        }
+        if (this.core.IsKeyPressing("KeyE")) {
+            const w = Math.random() * 50;
+            const d = Math.random() * 50;
+            const h = this.t.GetInterpolatedHeight(w, d);
+            const [x, z] = this.t.GetPosition(w, d);
+            console.log(x, h, z);
+            const geo = new THREE.BoxGeometry(1, 5, 1);
+            const mat = new THREE.MeshPhongMaterial({color: new THREE.Color(0xffffff)});
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(x, h, z);
+            const normal = this.t.GetInterpolatedNormal(w, d);
+            const q1 = OrientQuaternion(normal.x, normal.y, normal.z);
+            const q2 = new THREE.Quaternion()
+                .setFromAxisAngle(new THREE.Vector3(normal.x, normal.y, normal.z).normalize(), 0);
+            const q3 = new THREE.Quaternion().multiplyQuaternions(q2, q1);
+            mesh.quaternion.set(q3.x, q3.y, q3.z, q3.w);
+            this.AddObject(mesh);
         }
     }
 }

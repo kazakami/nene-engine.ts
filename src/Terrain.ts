@@ -30,34 +30,15 @@ export class Terrain {
      */
     public SetFar(d: number): void {
         this.far = d;
+        this.UpdateVisible();
     }
     /**
      * カメラ位置を設定する
      * @param p カメラ座標
      */
-    public SetPos(p: THREE.Vector3): void {
+    public SetCameraPos(p: THREE.Vector3): void {
         this.pos.copy(p);
-        for (let j = 0; j < this.depthTiles; j++) {
-            for (let i = 0; i < this.widthTiles; i++) {
-                const index = j * this.widthTiles + i;
-                // タイルの中心座標
-                const w = -this.width / 2 + this.width / (2 * this.widthTiles) + i * (this.width / this.widthTiles);
-                const d = -this.depth / 2 + this.depth / (2 * this.depthTiles) + j * (this.depth / this.depthTiles);
-                // タイル中心とカメラの距離の2乗　ただし高さは無視
-                const distance2 = Math.pow(this.pos.x - w, 2) + Math.pow(this.pos.z - d, 2);
-                if (distance2 < this.far * this.far) {
-                    if (this.grp.children.indexOf(this.tiles[index][1]) === -1) {
-                        // 視界内でgrpに入っていなければ追加
-                        this.grp.add(this.tiles[index][1]);
-                    }
-                } else {
-                    if (this.grp.children.indexOf(this.tiles[index][1]) !== -1) {
-                        // 視界外でgrpに入っていれば除去
-                        this.grp.remove(this.tiles[index][1]);
-                    }
-                }
-            }
-        }
+        this.UpdateVisible();
     }
     /**
      * 地形全体の幅を取得する
@@ -496,5 +477,100 @@ export class Terrain {
      */
     public GetNormal(width: number, depth: number): THREE.Vector3 {
         return this.normals[depth * this.widthAllSegments + width].clone();
+    }
+    /**
+     * 指定された頂点の線形補間された法線ベクトルを取得する
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     */
+    public GetInterpolatedNormal(width: number, depth: number): THREE.Vector3 {
+        const baseWidth = Math.floor(width);
+        const baseDepth = Math.floor(depth);
+        const difWidth = width - baseWidth;
+        const difDepth = depth - baseDepth;
+        const normalD = this.GetNormal(baseWidth, baseDepth + 1);
+        const normalW = this.GetNormal(baseWidth + 1, baseDepth);
+        if (difWidth + difDepth <= 1) {
+            const normal = this.GetNormal(baseWidth, baseDepth);
+            const difD = new THREE.Vector3().subVectors(normalD, normal);
+            const difW = new THREE.Vector3().subVectors(normalW, normal);
+            difD.multiplyScalar(difDepth);
+            difW.multiplyScalar(difWidth);
+            normal.add(difD);
+            normal.add(difW);
+            return normal;
+        } else {
+            const normal = this.GetNormal(baseWidth, baseDepth);
+            const difD = new THREE.Vector3().subVectors(normalD, normal);
+            const difW = new THREE.Vector3().subVectors(normalW, normal);
+            difD.multiplyScalar(1 - difDepth);
+            difW.multiplyScalar(1 - difWidth);
+            normal.add(difD);
+            normal.add(difW);
+            return normal;
+        }
+    }
+    /**
+     * 指定された頂点の線形補間された高さを取得する
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     */
+    public GetInterpolatedHeight(width: number, depth: number): number {
+        const baseWidth = Math.floor(width);
+        const baseDepth = Math.floor(depth);
+        const difWidth = width - baseWidth;
+        const difDepth = depth - baseDepth;
+        const heightD = this.GetHeight(baseWidth, baseDepth + 1);
+        const heightW = this.GetHeight(baseWidth + 1, baseDepth);
+        console.log(baseWidth, baseDepth, heightW, heightD);
+        if (difWidth + difDepth <= 1) {
+            const height = this.GetHeight(baseWidth, baseDepth);
+            const difD = heightD - height;
+            const difW = heightW - height;
+            return height + difD * difDepth + difW * difWidth;
+        } else {
+            console.log("yaba");
+            const height = this.GetHeight(baseWidth + 1, baseDepth + 1);
+            const difD = heightD - height;
+            const difW = heightW - height;
+            return height + difD * (1 - difDepth) + difW * (1 - difWidth);
+        }
+    }
+    /**
+     * 指定した頂点番号の座標を返す。
+     * 整数以外も入力可。
+     * 返り値は[x座標, z座標]
+     * @param width 幅方向の座標
+     * @param depth 奥行方向の座標
+     */
+    public GetPosition(width: number, depth: number): [number, number] {
+        return [this.GetSegmentWidth() * width - this.GetWidth() / 2,
+             this.GetSegmentDepth() * depth - this.GetDepth() / 2];
+    }
+    /**
+     * カメラ位置描画範囲に応じてタイルを描画非描画の設定を切り替える
+     */
+    private UpdateVisible(): void {
+        for (let j = 0; j < this.depthTiles; j++) {
+            for (let i = 0; i < this.widthTiles; i++) {
+                const index = j * this.widthTiles + i;
+                // タイルの中心座標
+                const w = -this.width / 2 + this.width / (2 * this.widthTiles) + i * (this.width / this.widthTiles);
+                const d = -this.depth / 2 + this.depth / (2 * this.depthTiles) + j * (this.depth / this.depthTiles);
+                // タイル中心とカメラの距離の2乗　ただし高さは無視
+                const distance2 = Math.pow(this.pos.x - w, 2) + Math.pow(this.pos.z - d, 2);
+                if (distance2 < this.far * this.far) {
+                    if (this.grp.children.indexOf(this.tiles[index][1]) === -1) {
+                        // 視界内でgrpに入っていなければ追加
+                        this.grp.add(this.tiles[index][1]);
+                    }
+                } else {
+                    if (this.grp.children.indexOf(this.tiles[index][1]) !== -1) {
+                        // 視界外でgrpに入っていれば除去
+                        this.grp.remove(this.tiles[index][1]);
+                    }
+                }
+            }
+        }
     }
 }
