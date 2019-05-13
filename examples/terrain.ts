@@ -1,6 +1,9 @@
 import * as THREE from "three";
 import { ImprovedNoise, OrientQuaternion, Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/nene-engine";
 
+const MapWidth = 100;
+const MapDepth = 100;
+
 class LoadScene extends Scene {
     public Init() {
         this.canvasSizeX = this.core.screenSizeX;
@@ -71,20 +74,29 @@ class GameScene extends Scene {
 class Ground extends Unit {
     private t: Terrain;
     public Init() {
+        const widthSeg = 16;
+        const depthSeg = 16;
+        const widthTile = 8;
+        const depthTile = 8;
         this.raycastTarget = true;
         this.t = new Terrain();
-        this.t.MakeGeometry(50, 50, 10, 10, 5, 5, new THREE.MeshPhongMaterial({ color: 0x448866 }));
-        this.t.SetFar(100);
+        this.t.MakeGeometry(
+            MapWidth, MapDepth,
+            widthSeg, depthSeg,
+            widthTile, depthTile,
+            new THREE.MeshPhongMaterial({ color: 0x448866 }));
+        this.t.SetFar(200);
         this.AddObject(this.t.GetObject());
         const noise = new ImprovedNoise();
         console.log("start");
-        for (let i = 0; i < this.t.GetWidthAllSegments(); i++) {
-            for (let j = 0; j < this.t.GetDepthAllSegments(); j++) {
-                // this.t.SetHeight(i, j, Math.random() * 2, false);
-                // this.t.SetHeight(i, j, j * 0.5, false);
-                this.t.Raise(i, j, noise.Noise(i / 15, j / 15, 20) * 20, false);
-                this.t.Raise(i, j, noise.Noise(i / 5, j / 5, 30) * 5, false);
+        let q = 1;
+        for (let iter = 0; iter < 4; iter++) {
+            for (let i = 0; i < this.t.GetWidthAllSegments(); i++) {
+                for (let j = 0; j < this.t.GetDepthAllSegments(); j++) {
+                    this.t.Raise(i, j, noise.Noise(i / q, j / q, 7) * q * 0.5, false);
+                }
             }
+            q *= 5;
         }
         console.log("end");
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
@@ -152,8 +164,8 @@ class Droplet extends Unit {
         this.t = t;
     }
     public Init() {
-        this.x = Random(25);
-        this.z = Random(25);
+        this.x = Random(MapWidth / 2);
+        this.z = Random(MapDepth / 2);
         this.vx = 0;
         this.vz = 0;
         const [width, depth] = this.t.PositionToIndex(this.x, this.z);
@@ -167,7 +179,7 @@ class Droplet extends Unit {
         // const normal = this.t.GetInterpolatedNormal(width, depth);
     }
     public Update() {
-        if (Math.abs(this.x) < 25 && Math.abs(this.z) < 25) {
+        if (Math.abs(this.x) < MapWidth / 2 && Math.abs(this.z) < MapDepth / 2) {
             const [width, depth] = this.t.PositionToIndex(this.x, this.z);
             const normal = this.t.GetInterpolatedNormal(width, depth);
             if (this.frame % 10 === 0) {
