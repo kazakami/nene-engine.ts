@@ -522,14 +522,14 @@ export class Terrain {
         const difDepth = depth - baseDepth;
         const heightD = this.GetHeight(baseWidth, baseDepth + 1);
         const heightW = this.GetHeight(baseWidth + 1, baseDepth);
-        console.log(baseWidth, baseDepth, heightW, heightD);
+        // console.log(baseWidth, baseDepth, heightW, heightD);
         if (difWidth + difDepth <= 1) {
             const height = this.GetHeight(baseWidth, baseDepth);
             const difD = heightD - height;
             const difW = heightW - height;
             return height + difD * difDepth + difW * difWidth;
         } else {
-            console.log("yaba");
+            // console.log("yaba");
             const height = this.GetHeight(baseWidth + 1, baseDepth + 1);
             const difD = heightD - height;
             const difW = heightW - height;
@@ -544,8 +544,14 @@ export class Terrain {
      * @param depth 奥行方向の座標
      */
     public GetPosition(width: number, depth: number): [number, number] {
-        return [this.GetSegmentWidth() * width - this.GetWidth() / 2,
-             this.GetSegmentDepth() * depth - this.GetDepth() / 2];
+        return [
+            this.GetSegmentWidth() * width - this.GetWidth() / 2,
+            this.GetSegmentDepth() * depth - this.GetDepth() / 2];
+    }
+    public PositionToIndex(x: number, z: number): [number, number] {
+        return [
+            (x + this.GetWidth() / 2) / this.GetSegmentWidth(),
+            (z + this.GetDepth() / 2) / this.GetSegmentDepth()];
     }
     /**
      * カメラ位置描画範囲に応じてタイルを描画非描画の設定を切り替える
