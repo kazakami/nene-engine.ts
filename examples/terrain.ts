@@ -77,14 +77,16 @@ class Ground extends Unit {
         this.t.SetFar(100);
         this.AddObject(this.t.GetObject());
         const noise = new ImprovedNoise();
+        console.log("start");
         for (let i = 0; i < this.t.GetWidthAllSegments(); i++) {
             for (let j = 0; j < this.t.GetDepthAllSegments(); j++) {
                 // this.t.SetHeight(i, j, Math.random() * 2, false);
                 // this.t.SetHeight(i, j, j * 0.5, false);
-                this.t.Raise(i, j, noise.Noise(i / 15, j / 15, 20) * 20);
-                this.t.Raise(i, j, noise.Noise(i / 5, j / 5, 30) * 5);
+                this.t.Raise(i, j, noise.Noise(i / 15, j / 15, 20) * 20, false);
+                this.t.Raise(i, j, noise.Noise(i / 5, j / 5, 30) * 5, false);
             }
         }
+        console.log("end");
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
     }
     public Update() {
@@ -194,10 +196,10 @@ class Droplet extends Unit {
             this.t.SafeComputeNormal(baseWidth - 2, baseDepth - 2, baseWidth + 3, baseDepth + 3);
             */
             this.Erosion(baseWidth, baseDepth, difWidth, difDepth, -delta);
-            this.vx *= 0.1;
-            this.vz *= 0.1;
-            this.vx += normal.x * 0.5;
-            this.vz += normal.z * 0.5;
+            this.vx *= 0.08;
+            this.vz *= 0.08;
+            this.vx += normal.x * 0.4;
+            this.vz += normal.z * 0.4;
             if (vel < 0.05 && this.frame > 10) {
                 /*
                 this.t.SafeRaise(baseWidth, baseDepth, (1 - difWidth) * (1 - difDepth) * this.soil, false);
@@ -213,7 +215,7 @@ class Droplet extends Unit {
         } else {
             this.isAlive = false;
         }
-        if (this.frame >= 2000) { this.isAlive = false; }
+        if (this.frame >= 600) { this.isAlive = false; }
         this.x += this.vx;
         this.z += this.vz;
     }
