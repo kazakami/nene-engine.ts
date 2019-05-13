@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { OrientQuaternion, Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/nene-engine";
+import { ImprovedNoise, OrientQuaternion, Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/nene-engine";
 
 class LoadScene extends Scene {
     public Init() {
@@ -76,10 +76,13 @@ class Ground extends Unit {
         this.t.MakeGeometry(50, 50, 10, 10, 5, 5, new THREE.MeshPhongMaterial({ color: 0x448866 }));
         this.t.SetFar(100);
         this.AddObject(this.t.GetObject());
+        const noise = new ImprovedNoise();
         for (let i = 0; i < this.t.GetWidthAllSegments(); i++) {
             for (let j = 0; j < this.t.GetDepthAllSegments(); j++) {
                 // this.t.SetHeight(i, j, Math.random() * 2, false);
-                this.t.SetHeight(i, j, i * 0.5, false);
+                // this.t.SetHeight(i, j, j * 0.5, false);
+                this.t.Raise(i, j, noise.Noise(i / 15, j / 15, 20) * 20);
+                this.t.Raise(i, j, noise.Noise(i / 5, j / 5, 30) * 5);
             }
         }
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
@@ -111,14 +114,16 @@ class Ground extends Unit {
                 this.t.SafeComputeNormal(i - 3, j - 3, i + 3, j + 3);
             }
         }
-        if (this.core.IsKeyPressing("KeyE")) {
+        if (this.core.IsKeyDown("KeyE")) {
+            this.scene.AddUnit(new Droplet(this.t));
+            return;
             const w = Math.random() * 50;
             const d = Math.random() * 50;
             const h = this.t.GetInterpolatedHeight(w, d);
             const [x, z] = this.t.GetPosition(w, d);
-            console.log(x, h, z);
+            // console.log(x, h, z);
             const geo = new THREE.BoxGeometry(1, 5, 1);
-            const mat = new THREE.MeshPhongMaterial({color: new THREE.Color(0xffffff)});
+            const mat = new THREE.MeshPhongMaterial({ color: new THREE.Color(0xffffff) });
             const mesh = new THREE.Mesh(geo, mat);
             mesh.position.set(x, h, z);
             const normal = this.t.GetInterpolatedNormal(w, d);
@@ -132,12 +137,119 @@ class Ground extends Unit {
     }
 }
 
+class Droplet extends Unit {
+    private x: number;
+    private z: number;
+    private t: Terrain;
+    private vx: number;
+    private vz: number;
+    private soil: number = 0;
+    private color = RandomColor();
+    constructor(t: Terrain) {
+        super();
+        this.t = t;
+    }
+    public Init() {
+        this.x = Random(25);
+        this.z = Random(25);
+        this.vx = 0;
+        this.vz = 0;
+        const [width, depth] = this.t.PositionToIndex(this.x, this.z);
+        // console.log(width, depth);
+        const height = this.t.GetInterpolatedHeight(width, depth);
+        const geo = new THREE.BoxGeometry(1, 1, 1);
+        const mat = new THREE.MeshPhongMaterial({ color: this.color });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(this.x, height, this.z);
+        this.AddObject(mesh);
+        // const normal = this.t.GetInterpolatedNormal(width, depth);
+    }
+    public Update() {
+        if (Math.abs(this.x) < 25 && Math.abs(this.z) < 25) {
+            const [width, depth] = this.t.PositionToIndex(this.x, this.z);
+            const normal = this.t.GetInterpolatedNormal(width, depth);
+            if (this.frame % 10 === 0) {
+                const height = this.t.GetInterpolatedHeight(width, depth);
+                const geo = new THREE.SphereGeometry(this.soil);
+                const mat = new THREE.MeshPhongMaterial({ color: this.color });
+                const mesh = new THREE.Mesh(geo, mat);
+                // const [x, z] = this.t.GetPosition(width, depth);
+                mesh.position.set(this.x, height, this.z);
+                this.AddObject(mesh);
+            }
+            const baseWidth = Math.floor(width);
+            const baseDepth = Math.floor(depth);
+            const difWidth = width - baseWidth;
+            const difDepth = depth - baseDepth;
+            const vel = Math.sqrt(this.vx ** 2 + this.vz ** 2);
+            const delta = vel * 3 - this.soil * 0.5; // 水滴がこの反復で削り取る量。負の場合は沈殿する量
+            // console.log(this.soil);
+            this.soil += delta;
+            // console.log(difWidth * difDepth * delta);
+            /*
+            this.t.SafeRaise(baseWidth, baseDepth, (1 - difWidth) * (1 - difDepth) * delta, false);
+            this.t.SafeRaise(baseWidth, baseDepth + 1, (1 - difWidth) * difDepth * delta, false);
+            this.t.SafeRaise(baseWidth + 1, baseDepth, difWidth * (1 - difDepth) * delta, false);
+            this.t.SafeRaise(baseWidth + 1, baseDepth + 1, difWidth * difDepth * delta, false);
+            this.t.SafeComputeNormal(baseWidth - 2, baseDepth - 2, baseWidth + 3, baseDepth + 3);
+            */
+            this.Erosion(baseWidth, baseDepth, difWidth, difDepth, -delta);
+            this.vx *= 0.1;
+            this.vz *= 0.1;
+            this.vx += normal.x * 0.5;
+            this.vz += normal.z * 0.5;
+            if (vel < 0.05 && this.frame > 10) {
+                /*
+                this.t.SafeRaise(baseWidth, baseDepth, (1 - difWidth) * (1 - difDepth) * this.soil, false);
+                this.t.SafeRaise(baseWidth, baseDepth + 1, (1 - difWidth) * difDepth * this.soil, false);
+                this.t.SafeRaise(baseWidth + 1, baseDepth, difWidth * (1 - difDepth) * this.soil, false);
+                this.t.SafeRaise(baseWidth + 1, baseDepth + 1, difWidth * difDepth * this.soil, false);
+                this.t.SafeComputeNormal(baseWidth - 2, baseDepth - 2, baseWidth + 3, baseDepth + 3);
+                */
+                this.Erosion(baseWidth, baseDepth, difWidth, difDepth, this.soil);
+                this.isAlive = false;
+                return;
+            }
+        } else {
+            this.isAlive = false;
+        }
+        if (this.frame >= 2000) { this.isAlive = false; }
+        this.x += this.vx;
+        this.z += this.vz;
+    }
+    private Erosion(baseWidth: number, baseDepth: number, difWidth: number, difDepth: number, delta: number): void {
+        // 周囲4頂点
+        this.t.SafeRaise(baseWidth, baseDepth, (1 - difWidth) * (1 - difDepth) * delta * 0.5, false);
+        this.t.SafeRaise(baseWidth, baseDepth + 1, (1 - difWidth) * difDepth * delta * 0.5, false);
+        this.t.SafeRaise(baseWidth + 1, baseDepth, difWidth * (1 - difDepth) * delta * 0.5, false);
+        this.t.SafeRaise(baseWidth + 1, baseDepth + 1, difWidth * difDepth * delta * 0.5, false);
+        // それの8近傍での合計12頂点
+        this.t.SafeRaise(baseWidth, baseDepth - 1, (1 - difWidth) * (1 - difDepth) * delta * 0.5 / 3, false);
+        this.t.SafeRaise(baseWidth - 1, baseDepth, (1 - difWidth) * (1 - difDepth) * delta * 0.5 / 3, false);
+        this.t.SafeRaise(baseWidth - 1, baseDepth - 1, (1 - difWidth) * (1 - difDepth) * delta * 0.5 / 3, false);
+
+        this.t.SafeRaise(baseWidth - 1, baseDepth + 1, (1 - difWidth) * difDepth * delta * 0.5 / 3, false);
+        this.t.SafeRaise(baseWidth - 1, baseDepth + 2, (1 - difWidth) * difDepth * delta * 0.5 / 3, false);
+        this.t.SafeRaise(baseWidth, baseDepth + 2, (1 - difWidth) * difDepth * delta * 0.5 / 3, false);
+
+        this.t.SafeRaise(baseWidth + 1, baseDepth - 1, difWidth * (1 - difDepth) * delta * 0.5 / 3, false);
+        this.t.SafeRaise(baseWidth + 2, baseDepth - 1, difWidth * (1 - difDepth) * delta * 0.5 / 3, false);
+        this.t.SafeRaise(baseWidth + 2, baseDepth, difWidth * (1 - difDepth) * delta * 0.5 / 3, false);
+
+        this.t.SafeRaise(baseWidth + 2, baseDepth + 1, difWidth * difDepth * delta * 0.5 / 3, false);
+        this.t.SafeRaise(baseWidth + 1, baseDepth + 2, difWidth * difDepth * delta * 0.5 / 3, false);
+        this.t.SafeRaise(baseWidth + 2, baseDepth + 2, difWidth * difDepth * delta * 0.5 / 3, false);
+
+        this.t.SafeComputeNormal(baseWidth - 2, baseDepth - 2, baseWidth + 3, baseDepth + 3);
+    }
+}
+
 class Cameraman extends Unit {
     private pos: THREE.Vector3;
     // 方位角
     private azimuth: number = Math.PI;
     // 仰俯角
-    private altitude: number = 0;
+    private altitude: number = -1.2;
     private mouseRightIsDown = false;
     // マウスの右ボタンが押し下げられた時のマウス座標
     private mouseRightDownScreenPos: THREE.Vector2 = null;
@@ -154,7 +266,7 @@ class Cameraman extends Unit {
     // マウスの右ボタンが押し下げられた時のカーソルの指した点からカメラ位置へ距離
     private mouseRightDownCameraDistance: number;
     public Init(): void {
-        this.pos = new THREE.Vector3(0, 20, 50);
+        this.pos = new THREE.Vector3(0, 50, 20);
     }
     public Wheel(e: WheelEvent): void {
         e.preventDefault();
