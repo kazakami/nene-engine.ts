@@ -73,6 +73,7 @@ class GameScene extends Scene {
 
 class Ground extends Unit {
     private t: Terrain;
+    private rain = false;
     public Init() {
         const widthSeg = 16;
         const depthSeg = 16;
@@ -128,7 +129,10 @@ class Ground extends Unit {
                 this.t.SafeComputeNormal(i - 3, j - 3, i + 3, j + 3);
             }
         }
-        if (this.core.IsKeyDown("KeyE")) {
+        if (this.core.IsKeyPressing("KeyE")) {
+            this.rain = !this.rain;
+        }
+        if (this.rain) {
             this.scene.AddUnit(new Droplet(this.t));
             return;
             const w = Math.random() * 50;
@@ -207,7 +211,7 @@ class Droplet extends Unit {
             this.t.SafeRaise(baseWidth + 1, baseDepth + 1, difWidth * difDepth * delta, false);
             this.t.SafeComputeNormal(baseWidth - 2, baseDepth - 2, baseWidth + 3, baseDepth + 3);
             */
-            this.Erosion(baseWidth, baseDepth, difWidth, difDepth, -delta);
+            this.Deposit(baseWidth, baseDepth, difWidth, difDepth, -delta);
             this.vx *= 0.08;
             this.vz *= 0.08;
             this.vx += normal.x * 0.4;
@@ -220,7 +224,7 @@ class Droplet extends Unit {
                 this.t.SafeRaise(baseWidth + 1, baseDepth + 1, difWidth * difDepth * this.soil, false);
                 this.t.SafeComputeNormal(baseWidth - 2, baseDepth - 2, baseWidth + 3, baseDepth + 3);
                 */
-                this.Erosion(baseWidth, baseDepth, difWidth, difDepth, this.soil);
+                this.Deposit(baseWidth, baseDepth, difWidth, difDepth, this.soil);
                 this.isAlive = false;
                 return;
             }
@@ -231,28 +235,67 @@ class Droplet extends Unit {
         this.x += this.vx;
         this.z += this.vz;
     }
-    private Erosion(baseWidth: number, baseDepth: number, difWidth: number, difDepth: number, delta: number): void {
+    private Deposit(baseWidth: number, baseDepth: number, difWidth: number, difDepth: number, delta: number): void {
+        // 周囲で最も高い点の高さを求める
+        const highest = [
+            this.t.GetHeight(baseWidth, baseDepth),
+            this.t.GetHeight(baseWidth, baseDepth + 1),
+            this.t.GetHeight(baseWidth + 1, baseDepth),
+            this.t.GetHeight(baseWidth + 1, baseDepth + 1),
+
+            this.t.GetHeight(baseWidth + 1, baseDepth + 2),
+            this.t.GetHeight(baseWidth + 2, baseDepth + 1),
+            this.t.GetHeight(baseWidth + 2, baseDepth + 2),
+
+            this.t.GetHeight(baseWidth, baseDepth - 1),
+            this.t.GetHeight(baseWidth - 1, baseDepth),
+            this.t.GetHeight(baseWidth - 1, baseDepth - 1),
+
+            this.t.GetHeight(baseWidth - 1, baseDepth + 1),
+            this.t.GetHeight(baseWidth - 1, baseDepth + 2),
+            this.t.GetHeight(baseWidth, baseDepth + 2),
+
+            this.t.GetHeight(baseWidth + 1, baseDepth - 1),
+            this.t.GetHeight(baseWidth + 2, baseDepth - 1),
+            this.t.GetHeight(baseWidth + 2, baseDepth),
+        ].filter((h) => h !== undefined).reduce((i, j) => Math.max(i, j), -Infinity);
         // 周囲4頂点
-        this.t.SafeRaise(baseWidth, baseDepth, (1 - difWidth) * (1 - difDepth) * delta * 0.5, false);
-        this.t.SafeRaise(baseWidth, baseDepth + 1, (1 - difWidth) * difDepth * delta * 0.5, false);
-        this.t.SafeRaise(baseWidth + 1, baseDepth, difWidth * (1 - difDepth) * delta * 0.5, false);
-        this.t.SafeRaise(baseWidth + 1, baseDepth + 1, difWidth * difDepth * delta * 0.5, false);
+        this.t.SafeLimitedRaise(baseWidth, baseDepth, (1 - difWidth) * (1 - difDepth) * delta * 0.5,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth, baseDepth + 1, (1 - difWidth) * difDepth * delta * 0.5,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth + 1, baseDepth, difWidth * (1 - difDepth) * delta * 0.5,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth + 1, baseDepth + 1, difWidth * difDepth * delta * 0.5,
+            -Infinity, highest, false);
         // それの8近傍での合計12頂点
-        this.t.SafeRaise(baseWidth, baseDepth - 1, (1 - difWidth) * (1 - difDepth) * delta * 0.5 / 3, false);
-        this.t.SafeRaise(baseWidth - 1, baseDepth, (1 - difWidth) * (1 - difDepth) * delta * 0.5 / 3, false);
-        this.t.SafeRaise(baseWidth - 1, baseDepth - 1, (1 - difWidth) * (1 - difDepth) * delta * 0.5 / 3, false);
+        this.t.SafeLimitedRaise(baseWidth, baseDepth - 1, (1 - difWidth) * (1 - difDepth) * delta * 0.5 / 3,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth - 1, baseDepth, (1 - difWidth) * (1 - difDepth) * delta * 0.5 / 3,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth - 1, baseDepth - 1, (1 - difWidth) * (1 - difDepth) * delta * 0.5 / 3,
+            -Infinity, highest, false);
 
-        this.t.SafeRaise(baseWidth - 1, baseDepth + 1, (1 - difWidth) * difDepth * delta * 0.5 / 3, false);
-        this.t.SafeRaise(baseWidth - 1, baseDepth + 2, (1 - difWidth) * difDepth * delta * 0.5 / 3, false);
-        this.t.SafeRaise(baseWidth, baseDepth + 2, (1 - difWidth) * difDepth * delta * 0.5 / 3, false);
+        this.t.SafeLimitedRaise(baseWidth - 1, baseDepth + 1, (1 - difWidth) * difDepth * delta * 0.5 / 3,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth - 1, baseDepth + 2, (1 - difWidth) * difDepth * delta * 0.5 / 3,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth, baseDepth + 2, (1 - difWidth) * difDepth * delta * 0.5 / 3,
+            -Infinity, highest, false);
 
-        this.t.SafeRaise(baseWidth + 1, baseDepth - 1, difWidth * (1 - difDepth) * delta * 0.5 / 3, false);
-        this.t.SafeRaise(baseWidth + 2, baseDepth - 1, difWidth * (1 - difDepth) * delta * 0.5 / 3, false);
-        this.t.SafeRaise(baseWidth + 2, baseDepth, difWidth * (1 - difDepth) * delta * 0.5 / 3, false);
+        this.t.SafeLimitedRaise(baseWidth + 1, baseDepth - 1, difWidth * (1 - difDepth) * delta * 0.5 / 3,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth + 2, baseDepth - 1, difWidth * (1 - difDepth) * delta * 0.5 / 3,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth + 2, baseDepth, difWidth * (1 - difDepth) * delta * 0.5 / 3,
+            -Infinity, highest, false);
 
-        this.t.SafeRaise(baseWidth + 2, baseDepth + 1, difWidth * difDepth * delta * 0.5 / 3, false);
-        this.t.SafeRaise(baseWidth + 1, baseDepth + 2, difWidth * difDepth * delta * 0.5 / 3, false);
-        this.t.SafeRaise(baseWidth + 2, baseDepth + 2, difWidth * difDepth * delta * 0.5 / 3, false);
+        this.t.SafeLimitedRaise(baseWidth + 2, baseDepth + 1, difWidth * difDepth * delta * 0.5 / 3,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth + 1, baseDepth + 2, difWidth * difDepth * delta * 0.5 / 3,
+            -Infinity, highest, false);
+        this.t.SafeLimitedRaise(baseWidth + 2, baseDepth + 2, difWidth * difDepth * delta * 0.5 / 3,
+            -Infinity, highest, false);
 
         this.t.SafeComputeNormal(baseWidth - 2, baseDepth - 2, baseWidth + 3, baseDepth + 3);
     }
