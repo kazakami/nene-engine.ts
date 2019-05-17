@@ -522,14 +522,12 @@ export class Terrain {
         const difDepth = depth - baseDepth;
         const heightD = this.GetHeight(baseWidth, baseDepth + 1);
         const heightW = this.GetHeight(baseWidth + 1, baseDepth);
-        // console.log(baseWidth, baseDepth, heightW, heightD);
         if (difWidth + difDepth <= 1) {
             const height = this.GetHeight(baseWidth, baseDepth);
             const difD = heightD - height;
             const difW = heightW - height;
             return height + difD * difDepth + difW * difWidth;
         } else {
-            // console.log("yaba");
             const height = this.GetHeight(baseWidth + 1, baseDepth + 1);
             const difD = heightD - height;
             const difW = heightW - height;

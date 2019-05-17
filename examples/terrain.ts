@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ImprovedNoise, OrientQuaternion, Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/nene-engine";
+import { ImprovedNoise, Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/nene-engine";
 
 const MapWidth = 100;
 const MapDepth = 100;
@@ -134,23 +134,6 @@ class Ground extends Unit {
         }
         if (this.rain) {
             this.scene.AddUnit(new Droplet(this.t));
-            return;
-            const w = Math.random() * 50;
-            const d = Math.random() * 50;
-            const h = this.t.GetInterpolatedHeight(w, d);
-            const [x, z] = this.t.GetPosition(w, d);
-            // console.log(x, h, z);
-            const geo = new THREE.BoxGeometry(1, 5, 1);
-            const mat = new THREE.MeshPhongMaterial({ color: new THREE.Color(0xffffff) });
-            const mesh = new THREE.Mesh(geo, mat);
-            mesh.position.set(x, h, z);
-            const normal = this.t.GetInterpolatedNormal(w, d);
-            const q1 = OrientQuaternion(normal.x, normal.y, normal.z);
-            const q2 = new THREE.Quaternion()
-                .setFromAxisAngle(new THREE.Vector3(normal.x, normal.y, normal.z).normalize(), 0);
-            const q3 = new THREE.Quaternion().multiplyQuaternions(q2, q1);
-            mesh.quaternion.set(q3.x, q3.y, q3.z, q3.w);
-            this.AddObject(mesh);
         }
     }
 }
@@ -173,14 +156,12 @@ class Droplet extends Unit {
         this.vx = 0;
         this.vz = 0;
         const [width, depth] = this.t.PositionToIndex(this.x, this.z);
-        // console.log(width, depth);
         const height = this.t.GetInterpolatedHeight(width, depth);
         const geo = new THREE.BoxGeometry(1, 1, 1);
         const mat = new THREE.MeshPhongMaterial({ color: this.color });
         const mesh = new THREE.Mesh(geo, mat);
         mesh.position.set(this.x, height, this.z);
         this.AddObject(mesh);
-        // const normal = this.t.GetInterpolatedNormal(width, depth);
     }
     public Update() {
         if (Math.abs(this.x) < MapWidth / 2 && Math.abs(this.z) < MapDepth / 2) {
@@ -191,7 +172,6 @@ class Droplet extends Unit {
                 const geo = new THREE.SphereGeometry(this.soil);
                 const mat = new THREE.MeshPhongMaterial({ color: this.color });
                 const mesh = new THREE.Mesh(geo, mat);
-                // const [x, z] = this.t.GetPosition(width, depth);
                 mesh.position.set(this.x, height, this.z);
                 this.AddObject(mesh);
             }
@@ -201,29 +181,13 @@ class Droplet extends Unit {
             const difDepth = depth - baseDepth;
             const vel = Math.sqrt(this.vx ** 2 + this.vz ** 2);
             const delta = vel * 3 - this.soil * 0.5; // 水滴がこの反復で削り取る量。負の場合は沈殿する量
-            // console.log(this.soil);
             this.soil += delta;
-            // console.log(difWidth * difDepth * delta);
-            /*
-            this.t.SafeRaise(baseWidth, baseDepth, (1 - difWidth) * (1 - difDepth) * delta, false);
-            this.t.SafeRaise(baseWidth, baseDepth + 1, (1 - difWidth) * difDepth * delta, false);
-            this.t.SafeRaise(baseWidth + 1, baseDepth, difWidth * (1 - difDepth) * delta, false);
-            this.t.SafeRaise(baseWidth + 1, baseDepth + 1, difWidth * difDepth * delta, false);
-            this.t.SafeComputeNormal(baseWidth - 2, baseDepth - 2, baseWidth + 3, baseDepth + 3);
-            */
             this.Deposit(baseWidth, baseDepth, difWidth, difDepth, -delta);
             this.vx *= 0.08;
             this.vz *= 0.08;
             this.vx += normal.x * 0.4;
             this.vz += normal.z * 0.4;
             if (vel < 0.05 && this.frame > 10) {
-                /*
-                this.t.SafeRaise(baseWidth, baseDepth, (1 - difWidth) * (1 - difDepth) * this.soil, false);
-                this.t.SafeRaise(baseWidth, baseDepth + 1, (1 - difWidth) * difDepth * this.soil, false);
-                this.t.SafeRaise(baseWidth + 1, baseDepth, difWidth * (1 - difDepth) * this.soil, false);
-                this.t.SafeRaise(baseWidth + 1, baseDepth + 1, difWidth * difDepth * this.soil, false);
-                this.t.SafeComputeNormal(baseWidth - 2, baseDepth - 2, baseWidth + 3, baseDepth + 3);
-                */
                 this.Deposit(baseWidth, baseDepth, difWidth, difDepth, this.soil);
                 this.isAlive = false;
                 return;
