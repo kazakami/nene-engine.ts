@@ -1,4 +1,7 @@
 {
+  "exclude": [
+    "src/test"
+  ],
   "compilerOptions": {
     "sourceMap": true,
     "target": "es2018",
