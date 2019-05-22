@@ -13,7 +13,10 @@ class LoadScene extends Scene {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
             this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
         };
-        this.core.LoadTexture("resources/images/grass.png", "grass");
+        this.core.LoadTexture("resources/images/grass2.png", "grass");
+        this.core.LoadTexture("resources/images/snow.png", "snow");
+        this.core.LoadFile("resources/shaders/ground.vert", "ground.vert");
+        this.core.LoadFile("resources/shaders/ground.frag", "ground.frag");
     }
     public Update(): void {
         if (this.core.IsAllResourcesAvailable()) {
@@ -73,6 +76,7 @@ class GameScene extends Scene {
 
 class Ground extends Unit {
     private t: Terrain;
+    private mat: THREE.ShaderMaterial;
     private rain = false;
     public Init() {
         const widthSeg = 16;
@@ -81,11 +85,19 @@ class Ground extends Unit {
         const depthTile = 8;
         this.raycastTarget = true;
         this.t = new Terrain();
+        this.mat = new THREE.ShaderMaterial({
+            fragmentShader: this.core.GetText("ground.frag"),
+            uniforms: {
+                grass: { value: this.core.GetTexture("grass") },
+                snow: { value: this.core.GetTexture("snow") },
+            },
+            vertexShader: this.core.GetText("ground.vert"),
+        });
         this.t.MakeGeometry(
             MapWidth, MapDepth,
             widthSeg, depthSeg,
             widthTile, depthTile,
-            new THREE.MeshPhongMaterial({ color: 0x448866 }));
+            this.mat);
         this.t.SetFar(200);
         this.AddObject(this.t.GetObject());
         const noise = new ImprovedNoise();
