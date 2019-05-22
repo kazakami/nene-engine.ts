@@ -162,6 +162,8 @@ class Droplet extends Unit {
         const mesh = new THREE.Mesh(geo, mat);
         mesh.position.set(this.x, height, this.z);
         this.AddObject(mesh);
+        geo.dispose();
+        mat.dispose();
     }
     public Update() {
         if (Math.abs(this.x) < MapWidth / 2 && Math.abs(this.z) < MapDepth / 2) {
@@ -174,6 +176,8 @@ class Droplet extends Unit {
                 const mesh = new THREE.Mesh(geo, mat);
                 mesh.position.set(this.x, height, this.z);
                 this.AddObject(mesh);
+                geo.dispose();
+                mat.dispose();
             }
             const baseWidth = Math.floor(width);
             const baseDepth = Math.floor(depth);
