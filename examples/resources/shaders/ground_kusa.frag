@@ -1,7 +1,7 @@
 uniform sampler2D grass; 
-uniform sampler2D kusa;
+uniform sampler2D kusa; 
 uniform sampler2D snow; 
-uniform float raise;
+uniform float raise; 
 varying vec3 worldPos; 
 varying vec2 vUv; 
 void main() {

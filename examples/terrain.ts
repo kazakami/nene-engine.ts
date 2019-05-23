@@ -82,7 +82,7 @@ class Ground extends Unit {
     private t: Terrain;
     private mat: THREE.ShaderMaterial;
     private rain = false;
-    // private copiedTerrain: THREE.Group = new THREE.Group();
+    private kusas: THREE.ShaderMaterial[] = [];
     public Init() {
         const widthSeg = 16;
         const depthSeg = 16;
@@ -127,6 +127,7 @@ class Ground extends Unit {
                     kusa: { value: this.core.GetTexture("kusa") },
                     raise: { value: i },
                     snow: { value: this.core.GetTexture("snow") },
+                    time: { value: 0 },
                 },
                 vertexShader: this.core.GetText("ground_kusa.vert"),
             });
@@ -134,9 +135,11 @@ class Ground extends Unit {
                 copiedTerrain.add(new Mesh(g, copiedTerrainMat));
             });
             this.AddObject(copiedTerrain);
+            this.kusas.push(copiedTerrainMat);
         }
     }
     public Update() {
+        this.kusas.forEach((m) => m.uniforms.time = { value: this.frame });
         this.t.SetCameraPos(this.scene.camera.position);
         if (this.core.IsMouseLeftButtonDown()) {
             const intersects = this.scene.GetIntersects();
