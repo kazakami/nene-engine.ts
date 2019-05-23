@@ -25,6 +25,14 @@ export class Terrain {
     // カメラ座標
     private pos: THREE.Vector3 = new THREE.Vector3();
     /**
+     * タイルのジオメトリの配列を返す。
+     */
+    public GetGeometries(): THREE.PlaneBufferGeometry[] {
+        const arr: THREE.PlaneBufferGeometry[] = [];
+        this.tiles.forEach((tile) => arr.push(tile[0]));
+        return arr;
+    }
+    /**
      * オブジェクトを描画する距離を設定する
      * @param d 距離
      */

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { Mesh } from "three";
 import { ImprovedNoise, Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/nene-engine";
 
 const MapWidth = 100;
@@ -15,8 +16,11 @@ class LoadScene extends Scene {
         };
         this.core.LoadTexture("resources/images/grass2.png", "grass");
         this.core.LoadTexture("resources/images/snow.png", "snow");
+        this.core.LoadTexture("resources/images/kusa2.png", "kusa");
         this.core.LoadFile("resources/shaders/ground.vert", "ground.vert");
         this.core.LoadFile("resources/shaders/ground.frag", "ground.frag");
+        this.core.LoadFile("resources/shaders/ground_kusa.vert", "ground_kusa.vert");
+        this.core.LoadFile("resources/shaders/ground_kusa.frag", "ground_kusa.frag");
     }
     public Update(): void {
         if (this.core.IsAllResourcesAvailable()) {
@@ -78,6 +82,7 @@ class Ground extends Unit {
     private t: Terrain;
     private mat: THREE.ShaderMaterial;
     private rain = false;
+    // private copiedTerrain: THREE.Group = new THREE.Group();
     public Init() {
         const widthSeg = 16;
         const depthSeg = 16;
@@ -113,6 +118,23 @@ class Ground extends Unit {
         }
         console.log("end");
         this.t.ComputeNormal(0, 0, this.t.GetWidthAllSegments(), this.t.GetDepthAllSegments());
+        for (let i = 0; i < 20; i++) {
+            const copiedTerrain = new THREE.Group();
+            const copiedTerrainMat = new THREE.ShaderMaterial({
+                fragmentShader: this.core.GetText("ground_kusa.frag"),
+                uniforms: {
+                    grass: { value: this.core.GetTexture("grass") },
+                    kusa: { value: this.core.GetTexture("kusa") },
+                    raise: { value: i },
+                    snow: { value: this.core.GetTexture("snow") },
+                },
+                vertexShader: this.core.GetText("ground_kusa.vert"),
+            });
+            this.t.GetGeometries().forEach((g) => {
+                copiedTerrain.add(new Mesh(g, copiedTerrainMat));
+            });
+            this.AddObject(copiedTerrain);
+        }
     }
     public Update() {
         this.t.SetCameraPos(this.scene.camera.position);
@@ -127,8 +149,8 @@ class Ground extends Unit {
                 const j = Math.round(d2 / this.t.GetSegmentDepth());
                 // 地形を上げるか下げるかの符号
                 const s = (this.core.IsKeyDown("KeyQ")) ? -1 : 1;
-                const min = -5;
-                const max = 5;
+                const min = -20;
+                const max = 20;
                 this.t.LimitedRaise(i, j, 0.5 * s, min, max, false);
                 this.t.SafeLimitedRaise(i - 1, j, 0.2 * s, min, max, false);
                 this.t.SafeLimitedRaise(i + 1, j, 0.2 * s, min, max, false);
