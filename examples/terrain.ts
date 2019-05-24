@@ -73,8 +73,20 @@ class GameScene extends Scene {
         this.FillText(
             "Press \"q\" and press mouse left button to lower the terrain.",
             -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 20);
-        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
+        this.FillText(
+            "\"w\", \"a\", \"s\", \"d\" to move camera.",
             -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 40);
+        this.FillText(
+            "\"r\" to reset camera position.",
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 60);
+        this.FillText(
+            "\"g\" to on/off rendering of grasses.",
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 80);
+        this.FillText(
+            "\"e\" to on/off hydraulic eroding.",
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 100);
+        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2 - 120);
     }
 }
 
@@ -82,7 +94,8 @@ class Ground extends Unit {
     private t: Terrain;
     private mat: THREE.ShaderMaterial;
     private rain = false;
-    private kusas: THREE.ShaderMaterial[] = [];
+    private kusa: THREE.Group = new THREE.Group();
+    private kusaIsOn = true;
     public Init() {
         const widthSeg = 16;
         const depthSeg = 16;
@@ -134,12 +147,14 @@ class Ground extends Unit {
             this.t.GetGeometries().forEach((g) => {
                 copiedTerrain.add(new Mesh(g, copiedTerrainMat));
             });
-            this.AddObject(copiedTerrain);
-            this.kusas.push(copiedTerrainMat);
+            this.kusa.add(copiedTerrain);
         }
+        this.AddObject(this.kusa);
     }
     public Update() {
-        this.kusas.forEach((m) => m.uniforms.time = { value: this.frame });
+        this.kusa.children.forEach((k: THREE.Group) => k.children.forEach((m: THREE.Mesh) => {
+            (m.material as THREE.ShaderMaterial).uniforms.time = { value: this.frame };
+        }));
         this.t.SetCameraPos(this.scene.camera.position);
         if (this.core.IsMouseLeftButtonDown()) {
             const intersects = this.scene.GetIntersects();
@@ -169,6 +184,14 @@ class Ground extends Unit {
         if (this.core.IsKeyPressing("KeyE")) {
             this.rain = !this.rain;
         }
+        if (this.core.IsKeyPressing("KeyG")) {
+            if (this.kusaIsOn) {
+                this.RemoveObject(this.kusa);
+            } else {
+                this.AddObject(this.kusa);
+            }
+            this.kusaIsOn = !this.kusaIsOn;
+        }
         if (this.rain) {
             this.scene.AddUnit(new Droplet(this.t));
         }
@@ -194,7 +217,7 @@ class Droplet extends Unit {
         this.vz = 0;
         const [width, depth] = this.t.PositionToIndex(this.x, this.z);
         const height = this.t.GetInterpolatedHeight(width, depth);
-        const geo = new THREE.BoxGeometry(1, 1, 1);
+        const geo = new THREE.SphereGeometry(1);
         const mat = new THREE.MeshPhongMaterial({ color: this.color });
         const mesh = new THREE.Mesh(geo, mat);
         mesh.position.set(this.x, height, this.z);
@@ -208,7 +231,7 @@ class Droplet extends Unit {
             const normal = this.t.GetInterpolatedNormal(width, depth);
             if (this.frame % 10 === 0) {
                 const height = this.t.GetInterpolatedHeight(width, depth);
-                const geo = new THREE.SphereGeometry(this.soil);
+                const geo = new THREE.BoxGeometry(this.soil, this.soil, this.soil);
                 const mat = new THREE.MeshPhongMaterial({ color: this.color });
                 const mesh = new THREE.Mesh(geo, mat);
                 mesh.position.set(this.x, height, this.z);
@@ -309,9 +332,9 @@ class Droplet extends Unit {
 class Cameraman extends Unit {
     private pos: THREE.Vector3;
     // 方位角
-    private azimuth: number = Math.PI;
+    private azimuth: number;
     // 仰俯角
-    private altitude: number = -1.2;
+    private altitude: number;
     private mouseRightIsDown = false;
     // マウスの右ボタンが押し下げられた時のマウス座標
     private mouseRightDownScreenPos: THREE.Vector2 = null;
@@ -328,7 +351,7 @@ class Cameraman extends Unit {
     // マウスの右ボタンが押し下げられた時のカーソルの指した点からカメラ位置へ距離
     private mouseRightDownCameraDistance: number;
     public Init(): void {
-        this.pos = new THREE.Vector3(0, 50, 20);
+        this.InitPosition();
     }
     public Wheel(e: WheelEvent): void {
         e.preventDefault();
@@ -444,12 +467,20 @@ class Cameraman extends Unit {
                 0,
                 Math.cos(this.azimuth + Math.PI / 2)), 1);
         }
+        if (this.core.IsKeyPressing("KeyR")) {
+            this.InitPosition();
+        }
         this.scene.camera.position.copy(this.pos);
         this.scene.camera.up.set(0, 1, 0);
         this.scene.camera.lookAt(
             this.pos.x + Math.cos(this.altitude) * Math.sin(this.azimuth),
             this.pos.y + Math.sin(this.altitude),
             this.pos.z + Math.cos(this.altitude) * Math.cos(this.azimuth));
+    }
+    private InitPosition(): void {
+        this.azimuth = Math.PI;
+        this.altitude = -1.2;
+        this.pos = new THREE.Vector3(0, 50, 20);
     }
 }
 
