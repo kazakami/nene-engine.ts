@@ -9,7 +9,7 @@ void main() {
     vec4 colorGrass = texture2D(grass, vUv);
     float a = 1.0 / (1.0 + exp(-(worldPos.y - 8.0)));
     vec4 k = texture2D(kusa, vUv);
-    if (k.r > (1.0 - raise / 20.0)) {
+    if (k.r > (1.0 - raise / 20.0)|| worldPos.y > 6.0) {
         discard;
     }
     gl_FragColor = mix(mix(colorGrass, colorSnow, a), vec4(1, 1, 1, 1), raise / 30.0);
