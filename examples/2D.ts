@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Circle, Clamp, Figure, Point, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
+import { Circle, Clamp, Figure, Random, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
 
 const attack = "KeyZ";
 const jump = "KeyX";
@@ -113,10 +113,11 @@ class GameScene extends Scene {
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
         this.AddUnit(new Chara(0, 0));
+        this.AddUnit(new Dragon());
         this.onMouseClick = () => {
             // this.core.SaveImage("ScreenShot.png");
         };
-        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        // this.onKeyKeyDown = (e) => { e.preventDefault(); };
         this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update(): void {
@@ -141,6 +142,9 @@ class Chara extends Unit {
     private jumpingHeight = 0;
     private jumpingVel = 0;
     private collide: Figure;
+    private swordCollide: Figure;
+    private invincibleTime = 0;
+    private attaking = 0;
     constructor(private x: number, private y: number) { super(); }
     public Init(): void {
         this.tts = new TiledTexturedSprite(this.core.GetTexture("knight"));
@@ -150,14 +154,33 @@ class Chara extends Unit {
         this.shadow = this.core.MakeSpriteFromTexture("shadow");
         this.shadow.scale.set(32, 16, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
-        this.collide = new Rectangle(this.x, this.y, 64, 64);
-        this.collide.onCollideCallback = (f) => console.log(f.name);
+        this.collide = new Rectangle(0, 0, 16, 48);
+        this.swordCollide = new Rectangle(0, 0, 24, 24);
+        this.swordCollide.name = "sword";
+        this.swordCollide.GenerateHelper(new THREE.Color(0xff0000));
+        this.collide.onCollideCallback = (f) => { if (f.name === "fire") { this.Hitten(); }};
         this.AddCollider(this.collide);
+        this.AddCollider(this.swordCollide);
         this.AddSprite(this.collide);
+        this.AddSprite(this.swordCollide);
         this.AddSprite(this.tts);
         this.AddSprite(this.shadow);
     }
+    public Hitten(): void {
+        if (this.invincibleTime === 0) {
+            console.log("chara damaged");
+            this.invincibleTime = 180;
+        }
+    }
     public Update(): void {
+        if (this.invincibleTime % 20 > 10) {
+            this.tts.sprite.visible = false;
+            this.collide.helper.visible = false;
+        } else {
+            this.tts.sprite.visible = true;
+            this.collide.helper.visible = true;
+        }
+        if (this.invincibleTime > 0) { this.invincibleTime--; }
         this.tts.SetTile(0, 0);
         if (this.core.IsKeyDown(up)) {
             this.y += 3;
@@ -175,12 +198,16 @@ class Chara extends Unit {
             this.x -= 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown(attack)) {
+        if (this.core.IsKeyPressing(attack) && this.attaking === 0) {
+            this.attaking = 5;
+        }
+        if (this.attaking > 0) {
             this.tts.SetTile(1, 0);
             if (this.core.IsKeyDown(down) || this.core.IsKeyDown(up) ||
                 this.core.IsKeyDown(right) || this.core.IsKeyDown(left)) {
                 this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2 + 1, 0);
             }
+            this.attaking--;
         }
         if (this.jumpingHeight !== 0) {
             this.tts.SetTile(4, 0);
@@ -197,25 +224,49 @@ class Chara extends Unit {
         }
         this.x = Clamp(this.x, -300, 300);
         this.y = Clamp(this.y, -200, 200);
-        this.collide.x = this.x;
+        this.collide.x = this.x - 10;
         this.collide.y = this.y + this.jumpingHeight;
         this.collide.SyncHelper();
+        this.swordCollide.x = this.collide.x + 30;
+        this.swordCollide.y = this.collide.y + 8;
+        this.swordCollide.SyncHelper();
         this.tts.sprite.position.set(this.x, this.y + this.jumpingHeight, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
+    }
+}
+
+class Dragon extends Unit {
+    private x: number;
+    private y: number;
+    private collide: Figure;
+    private HP = 100;
+    public Init() {
+        this.x = 100;
+        this.y = -10;
+        this.collide = new Rectangle(this.x, this.y, 64, 128);
+        this.collide.onCollideCallback = (f) => { if (f.name === "sword") {console.log("dragon damaged"); } }
+        this.AddCollider(this.collide);
+        this.AddSprite(this.collide);
+    }
+    public Update() {
+        if (this.frame % 100 === 0) {
+            const r = Random(Math.PI / 4) + Math.PI;
+            this.scene.AddUnit(new Fire(this.x, this.y, 3 * Math.cos(r), Math.sin(r)));
+        }
     }
 }
 
 class Fire extends Unit {
     public collide: Figure;
     private tts: TiledTexturedSprite;
-    constructor(private x: number, private y: number) { super(); }
+    constructor(private x: number, private y: number, private vx = 0, private vy = 0) { super(); }
     public Init(): void {
         this.tts = new TiledTexturedSprite(this.core.GetTexture("fires"));
         this.tts.SetTileNumber(4, 1);
         this.tts.sprite.scale.set(32, 32, 1);
         this.tts.sprite.position.set(this.x, this.y, 1);
         // this.collide = new Rectangle(this.x, this.y, 32, 32);
-        this.collide = new Circle(this.x, this.y, 16);
+        this.collide = new Circle(this.x, this.y, 12);
         // this.collide = new Point(this.x, this.y);
         this.collide.name = "fire";
         this.AddCollider(this.collide);
@@ -223,6 +274,11 @@ class Fire extends Unit {
         this.AddSprite(this.tts);
     }
     public Update(): void {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.collide.x = this.x;
+        this.collide.y = this.y;
+        this.tts.sprite.position.set(this.x, this.y, 1);
         this.tts.SetTile(Math.floor(this.frame / 5), 0);
         if (this.frame > 100) {
             this.isAlive = false;
