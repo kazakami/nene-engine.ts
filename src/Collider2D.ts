@@ -4,6 +4,10 @@ export abstract class Figure {
     public name: string = "";
     public helper: THREE.Object3D;
     public onCollideCallback: (figure: Figure) => void = null;
+    /**
+     * 当たり判定が有効か表す。デフォルトではtrue
+     */
+    public available = true;
     protected helperGenerated = false;
     private mX: number;
     private mY: number;
@@ -140,6 +144,9 @@ export class Rectangle extends Figure {
 }
 
 export function collideTest(f1: Figure, f2: Figure): boolean {
+    if (!f1.available || !f2.available) {
+        return false;
+    }
     if (f1 instanceof Point) {
         if (f2 instanceof Point) {
             return f1.x === f2.x && f1.y === f2.y;
