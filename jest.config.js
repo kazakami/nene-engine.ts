@@ -16,7 +16,8 @@ module.exports = {
       "imports-loader?.*": "<rootDir>/src/test/importsLoader.js",
       "GLTFLoader": "<rootDir>/src/test/emptyMock.js",
       "MTLLoader": "<rootDir>/src/test/emptyMock.js",
-      "OBJLoader": "<rootDir>/src/test/emptyMock.js"
+      "OBJLoader": "<rootDir>/src/test/emptyMock.js",
+      "EffectComposer": "<rootDir>/src/test/emptyMock.js"
     },
     "setupFiles": ["jest-canvas-mock"]
   }
