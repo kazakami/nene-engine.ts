@@ -1,6 +1,6 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
-// import { EffectComposer } from "three/examples/js/postprocessing/EffectComposer";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { collide, Figure } from "./Collider2D";
 import { Core } from "./Core";
 import { PhysicBox, PhysicObject, PhysicPlane, PhysicSphere } from "./PhysicObject";
@@ -24,8 +24,8 @@ export abstract class Scene {
     public fov: number = 75;
     public canvasSizeX: number;
     public canvasSizeY: number;
-    // public composer: EffectComposer = null;
-    // public composer2d: EffectComposer = null;
+    public composer: EffectComposer = null;
+    public composer2d: EffectComposer = null;
     public offScreenRenderTarget: THREE.WebGLRenderTarget;
     public offScreen: THREE.Sprite;
     public offScreenMat: THREE.SpriteMaterial;
@@ -172,29 +172,30 @@ export abstract class Scene {
         this.core.renderer.setClearColor(this.backgroundColor);
         this.InnerDrawText();
         this.DrawText();
-        // if (this.composer === null) {
-        if (true) {
+        if (this.composer === null) {
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
             this.core.renderer.setRenderTarget(this.offScreenRenderTarget);
             this.core.renderer.render(this.scene, this.camera);
             this.offScreenMat.map = this.offScreenRenderTarget.texture;
         } else {
             // 3D用のシーンでcomposerを使っていればcomposerの結果出力バッファを用いる
-            // this.composer.render();
-            // this.offScreenMat.map = this.composer.readBuffer.texture;
+            (this.composer as any).renderToScreen = false;
+            this.composer.render(1 / 60);
+            this.offScreenMat.map = this.composer.readBuffer.texture;
+            // this.offScreenMat.map = this.composer.renderTarget2.texture;
         }
         // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
         this.offScreen.scale.set(this.canvasSizeX, this.canvasSizeY, 1);
         this.textCanvasSprite.scale.set(this.textCanvasX, this.textCanvasY, 1);
         this.textCanvasSpriteMat.map.needsUpdate = true;
-        // if (this.composer2d === null) {
-        if (true) {
+        if (this.composer2d === null) {
             // this.core.offScreenRenderTargetに描画し、その結果をthis.core.offScreenMat.mapに設定する
             this.core.renderer.setRenderTarget(this.renderTarget);
             this.core.renderer.render(this.scene2d, this.camera2d);
         } else {
             // omposerの結果出力バッファをthis.core.offScreenMat.mapに設定する
-            // this.composer2d.render();
+            (this.composer2d as any).renderToScreen = false;
+            this.composer2d.render(1 / 60);
         }
     }
 
@@ -237,11 +238,10 @@ export abstract class Scene {
     }
 
     public RenderedTexture(): THREE.Texture {
-        // if (this.composer2d === null) {
-        if (true) {
+        if (this.composer2d === null) {
             return this.renderTarget.texture;
         } else {
-            // return this.composer2d.readBuffer.texture;
+            return this.composer2d.readBuffer.texture;
         }
     }
 
@@ -365,12 +365,12 @@ export abstract class Scene {
         this.renderTarget.setSize(
             this.canvasSizeX,
             this.canvasSizeY);
-        // if (this.composer) {
-        //     this.composer.setSize(this.canvasSizeX, this.canvasSizeY);
-        // }
-        // if (this.composer2d) {
-        //     this.composer2d.setSize(this.canvasSizeX, this.canvasSizeY);
-        // }
+        if (this.composer) {
+            this.composer.setSize(this.canvasSizeX, this.canvasSizeY);
+        }
+        if (this.composer2d) {
+            this.composer2d.setSize(this.canvasSizeX, this.canvasSizeY);
+        }
         this.textCanvasX = 2 ** Math.ceil(Math.log2(this.canvasSizeX));
         this.textCanvasY = 2 ** Math.ceil(Math.log2(this.canvasSizeY));
         this.textCanvas.setAttribute("width", this.textCanvasX + "");

@@ -8,10 +8,10 @@
 // import "imports-loader?THREE=three!three/examples/js/shaders/CopyShader.js";
 // import "imports-loader?THREE=three!three/examples/js/shaders/FilmShader.js";
 import * as THREE from "three";
-// import { EffectComposer } from "three/examples/js/postprocessing/EffectComposer";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { MTLLoader } from "three/examples/jsm/loaders/MTLLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { Scene } from "./Scene";
 import { AssociativeArrayToArray, Base64toBlob, Coalescing } from "./Util";
 
@@ -129,11 +129,11 @@ export class Core {
     /**
      * ゲームエンジンで使用しているTHREE.WebGLRendererを使うTHREE.EffectComposerを生成する
      */
-    // public MakeEffectComposer(): EffectComposer {
-    //     const c = new EffectComposer(this.renderer);
-    //     c.setSize(this.screenSizeX * this.ratio, this.screenSizeY * this.ratio);
-    //     return c;
-    // }
+    public MakeEffectComposer(): EffectComposer {
+        const c = new EffectComposer(this.renderer);
+        c.setSize(this.screenSizeX * this.ratio, this.screenSizeY * this.ratio);
+        return c;
+    }
 
     /**
      * マウス左ボタンが押し下げられているか
@@ -203,6 +203,7 @@ export class Core {
         this.offScreenCamera.bottom = -this.screenSizeY / 2;
         this.offScreenCamera.top = this.screenSizeY / 2;
         this.offScreenCamera.updateProjectionMatrix();
+        this.offScreenSprite.scale.set(this.screenSizeX, this.screenSizeY, 1);
         this.textCanvas.width = this.screenSizeX;
         this.textCanvas.height = this.screenSizeY;
         this.ctx = this.textCanvas.getContext("2d");

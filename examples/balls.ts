@@ -4,6 +4,11 @@ import {
     , Random, RandomColor, Scene, Start, Unit,
 } from "../src/nene-engine";
 
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
+
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
         this.canvasSizeX = this.core.screenSizeX;
@@ -80,7 +85,7 @@ class GameScene extends Scene {
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
             // this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
-            // this.ResizeCanvas(640, 480);
+            this.ResizeCanvas(640, 480);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };
         this.core.PixelRatio = 1 / 1;
@@ -119,22 +124,23 @@ class GameScene extends Scene {
         const wallMesh3 = new THREE.Mesh(wallGeo3, wallMat);
         this.scene.add(wallMesh3);
 
-        // this.composer = this.core.MakeEffectComposer();
-        // this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
-        // const pass = new THREE.ShaderPass({
-        //     fragmentShader: this.core.GetText("pass1.frag"),
-        //     uniforms: {
-        //         tDiffuse: { value: null },
-        //     },
-        //     vertexShader: this.core.GetText("pass1.vert"),
-        // });
-        // this.composer.addPass(pass);
+        this.composer = this.core.MakeEffectComposer();
+        this.composer.addPass(new RenderPass(this.scene, this.camera, undefined, undefined, undefined));
+        const pass = new ShaderPass({
+            fragmentShader: this.core.GetText("pass1.frag"),
+            uniforms: {
+                tDiffuse: { value: null },
+            },
+            vertexShader: this.core.GetText("pass1.vert"),
+        });
+        this.composer.addPass(pass);
         // this.composer = null;
 
-        // this.composer2d = this.core.MakeEffectComposer();
-        // this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
-        // const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
-        // this.composer2d.addPass(pass2d);
+        this.composer2d = this.core.MakeEffectComposer();
+        this.composer2d.addPass(
+            new RenderPass(this.scene2d, this.camera2d, undefined, undefined, undefined));
+        const pass2d = new FilmPass(0.5, 0.5, 480, 0);
+        this.composer2d.addPass(pass2d);
         // this.composer2d = null;
     }
     public Update(): void {
