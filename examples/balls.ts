@@ -50,6 +50,9 @@ class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public casted: string[];
     private pause: PauseScene;
+    private effect: EffectComposer = null;
+    private effect2d: EffectComposer = null;
+    private effectEnable = true;
     public Init(): void {
         this.canvasSizeX = this.core.screenSizeX;
         this.canvasSizeY = this.core.screenSizeY;
@@ -84,8 +87,8 @@ class GameScene extends Scene {
         this.scene2d.add(this.sprt);
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
-            // this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
-            this.ResizeCanvas(640, 480);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
+            // this.ResizeCanvas(640, 480);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };
         this.core.PixelRatio = 1 / 1;
@@ -124,8 +127,8 @@ class GameScene extends Scene {
         const wallMesh3 = new THREE.Mesh(wallGeo3, wallMat);
         this.scene.add(wallMesh3);
 
-        this.composer = this.core.MakeEffectComposer();
-        this.composer.addPass(new RenderPass(this.scene, this.camera, undefined, undefined, undefined));
+        this.effect = this.core.MakeEffectComposer();
+        this.effect.addPass(new RenderPass(this.scene, this.camera, undefined, undefined, undefined));
         const pass = new ShaderPass({
             fragmentShader: this.core.GetText("pass1.frag"),
             uniforms: {
@@ -133,15 +136,15 @@ class GameScene extends Scene {
             },
             vertexShader: this.core.GetText("pass1.vert"),
         });
-        this.composer.addPass(pass);
-        // this.composer = null;
+        this.effect.addPass(pass);
+        this.composer = this.effect;
 
-        this.composer2d = this.core.MakeEffectComposer();
-        this.composer2d.addPass(
+        this.effect2d = this.core.MakeEffectComposer();
+        this.effect2d.addPass(
             new RenderPass(this.scene2d, this.camera2d, undefined, undefined, undefined));
         const pass2d = new FilmPass(0.5, 0.5, 480, 0);
-        this.composer2d.addPass(pass2d);
-        // this.composer2d = null;
+        this.effect2d.addPass(pass2d);
+        this.composer2d = this.effect2d;
     }
     public Update(): void {
         this.casted = [];
@@ -153,6 +156,16 @@ class GameScene extends Scene {
                 console.log("save screenshot");
             })();
         }
+        if (this.core.IsKeyPressing("KeyE")) {
+            this.effectEnable = !this.effectEnable;
+            if (this.effectEnable) {
+                this.composer = this.effect;
+                this.composer2d = this.effect2d;
+            } else {
+                this.composer = null;
+                this.composer2d = null;
+            }
+        }
         if (this.core.IsKeyPressing("Escape")) {
             this.core.ChangeScene("pause");
         }
@@ -162,9 +175,12 @@ class GameScene extends Scene {
         this.FillText("FPS: " + Math.round(this.core.fps).toString(),
             -this.canvasSizeX / 2,
             this.canvasSizeY / 2);
-        this.FillText("Press p to save screenshot.",
+        this.FillText("Press P to save screenshot.",
             -this.canvasSizeX / 2,
             this.canvasSizeY / 2 - 50);
+        this.FillText("Press E to toggle effect.",
+            -this.canvasSizeX / 2,
+            this.canvasSizeY / 2 - 100);
         this.FillText(this.casted.join(), this.core.mouseX, this.core.mouseY);
     }
 }
