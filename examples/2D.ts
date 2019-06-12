@@ -157,8 +157,9 @@ class Chara extends Unit {
         this.collide = new Rectangle(0, 0, 16, 48);
         this.swordCollide = new Rectangle(0, 0, 24, 24);
         this.swordCollide.name = "sword";
+        this.swordCollide.available = false;
         this.swordCollide.GenerateHelper(new THREE.Color(0xff0000));
-        this.collide.onCollideCallback = (f) => { if (f.name === "fire") { this.Hitten(); }};
+        this.collide.onCollideCallback = (f) => { if (f.name === "fire") { this.Hitten(); } };
         this.AddCollider(this.collide);
         this.AddCollider(this.swordCollide);
         this.AddSprite(this.collide);
@@ -200,6 +201,7 @@ class Chara extends Unit {
         }
         if (this.core.IsKeyPressing(attack) && this.attaking === 0) {
             this.attaking = 5;
+            this.swordCollide.available = true;
         }
         if (this.attaking > 0) {
             this.tts.SetTile(1, 0);
@@ -208,6 +210,9 @@ class Chara extends Unit {
                 this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2 + 1, 0);
             }
             this.attaking--;
+            if (this.attaking === 0) {
+                this.swordCollide.available = false;
+            }
         }
         if (this.jumpingHeight !== 0) {
             this.tts.SetTile(4, 0);
@@ -244,7 +249,7 @@ class Dragon extends Unit {
         this.x = 100;
         this.y = -10;
         this.collide = new Rectangle(this.x, this.y, 64, 128);
-        this.collide.onCollideCallback = (f) => { if (f.name === "sword") {console.log("dragon damaged"); } }
+        this.collide.onCollideCallback = (f) => { if (f.name === "sword") { console.log("dragon damaged"); } };
         this.AddCollider(this.collide);
         this.AddSprite(this.collide);
     }
