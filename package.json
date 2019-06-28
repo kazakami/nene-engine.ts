@@ -20,7 +20,6 @@
   "dependencies": {
     "@types/cannon": "^0.1.4",
     "cannon": "^0.6.2",
-    "imports-loader": "^0.8.0",
     "three": "^0.106.0",
     "typescript": "^3.5.2"
   },
