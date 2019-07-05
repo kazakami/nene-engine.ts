@@ -152,6 +152,8 @@ class Chara extends Unit {
     private swordCollide: Figure;
     private invincibleTime = 0;
     private attaking = 0;
+    private HP = 5;
+    private HPView: THREE.Group = new THREE.Group();
     constructor(private x: number, private y: number) { super(); }
     public Init(): void {
         this.tts = new TiledTexturedSprite(this.core.GetTexture("knight"));
@@ -173,11 +175,27 @@ class Chara extends Unit {
         this.AddSprite(this.swordCollide);
         this.AddSprite(this.tts);
         this.AddSprite(this.shadow);
+        for (let i = 0; i < this.HP; i++) {
+            const s = this.core.MakeSpriteFromTexture("star");
+            s.position.set(i * 40, 0, 1);
+            s.scale.set(40, 40, 1);
+            s.name = i.toString(); // 番号を振る
+            this.HPView.add(s);
+        }
+        this.HPView.position.set(-230, -205, 1);
+        this.AddSprite(this.HPView);
+    }
+    public DrawText(): void {
+        this.core.DrawText("HP", -320, -180);
     }
     public Hitten(): void {
         if (this.invincibleTime === 0) {
             console.log("chara damaged");
             this.invincibleTime = 180;
+            this.HP--;
+            // 今回減るHPマーカを探す。0オリジンなので1減ってる状態で正しいものが示される。
+            const h = this.HPView.getObjectByName(this.HP.toString());
+            this.HPView.remove(h);
         }
     }
     public Update(): void {
