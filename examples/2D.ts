@@ -117,7 +117,14 @@ class GameScene extends Scene {
         this.onMouseClick = () => {
             // this.core.SaveImage("ScreenShot.png");
         };
-        // this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onKeyKeyDown = (e) => {
+            if (this.core.IsKeyDown("ArrowUp") ||
+                this.core.IsKeyDown("ArrowDown") ||
+                this.core.IsKeyDown("ArrowRight") ||
+                this.core.IsKeyDown("ArrowLeft")) {
+                e.preventDefault();
+            }
+        };
         this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update(): void {
@@ -130,7 +137,7 @@ class GameScene extends Scene {
         }
     }
     public DrawText(): void {
-        this.FillText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
+        // this.FillText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
         this.FillText("FPS: " + Math.round(this.core.fps).toString(),
             -this.core.screenSizeX / 2, this.core.screenSizeY / 2);
     }
