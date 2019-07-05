@@ -300,7 +300,9 @@ class Dragon extends Unit {
     private x: number;
     private y: number;
     private collide: Figure;
-    private HP = 40;
+    private sprite: THREE.Sprite;
+    private HPMax = 40;
+    private HP = this.HPMax;
     public Init() {
         this.x = 100;
         this.y = -10;
@@ -313,9 +315,24 @@ class Dragon extends Unit {
         };
         this.AddCollider(this.collide);
         this.AddSprite(this.collide);
+        const mat = new THREE.SpriteMaterial({ color: new THREE.Color(0x00ff00) });
+        this.sprite = new THREE.Sprite(mat);
+        this.sprite.scale.set(64 * (this.HP / this.HPMax), 5, 1);
+        this.sprite.position.set(this.x, this.y + 80, 1);
+        mat.dispose();
+        this.AddSprite(this.sprite);
     }
     public Update() {
-        if (this.frame % 100 === 0) {
+        if ((this.HP / this.HPMax) > 1 / 2) {
+            this.sprite.material.color = new THREE.Color(0x00ff00);
+        } else if ((this.HP / this.HPMax) > 1 / 4) {
+            this.sprite.material.color = new THREE.Color(0xffff00);
+        } else {
+            this.sprite.material.color = new THREE.Color(0xff0000);
+        }
+        this.sprite.scale.set(64 * (this.HP / this.HPMax), 5, 1);
+        this.sprite.position.set(this.x, this.y + 80, 1);
+        if (this.frame % 100 === 0 || this.frame % 100 === 5 || this.frame % 100 === 10) {
             const r = Random(Math.PI / 4) + Math.PI;
             this.scene.AddUnit(new Fire(this.x, this.y, 3 * Math.cos(r), Math.sin(r)));
         }
@@ -373,7 +390,9 @@ pauseButton.onclick = () => {
 
 const titleButton = document.getElementById("title");
 titleButton.onclick = () => {
-    if (core.GetActiveSceneName() === "pause" || core.GetActiveSceneName() === "game") {
+    if (core.GetActiveSceneName() === "pause" ||
+        core.GetActiveSceneName() === "game" ||
+        core.GetActiveSceneName() === "gameOver") {
         if (core.GetScene("title")) {
             core.ChangeScene("title");
         }
