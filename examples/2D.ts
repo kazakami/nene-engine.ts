@@ -143,6 +143,34 @@ class GameScene extends Scene {
     }
 }
 
+class GameOverScene extends Scene {
+    private sprite: THREE.Sprite;
+    private spriteMat: THREE.SpriteMaterial;
+    constructor(private gameScene: GameScene, private win: boolean) {
+        super();
+    }
+    public Init() {
+        this.spriteMat = new THREE.SpriteMaterial({ color: 0x888888 });
+        this.sprite = new THREE.Sprite(this.spriteMat);
+        this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
+        this.sprite.position.set(0, 0, 1);
+        this.scene2d.add(this.sprite);
+        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onTouchMove = (e) => { e.preventDefault(); };
+        this.spriteMat.map = this.gameScene.RenderedTexture();
+        this.core.SetTextColor(new THREE.Color(0xffffff));
+    }
+    public Update() {
+        if (this.core.IsKeyPressing(pause)) {
+            this.core.ChangeScene("title");
+        }
+    }
+    public DrawText() {
+        this.core.SetTextColor(new THREE.Color(0xffffff));
+        this.core.DrawText(this.win ? "YOU WIN" : "YOU LOOSE", 0, 0);
+    }
+}
+
 class Chara extends Unit {
     private tts: TiledTexturedSprite;
     private shadow: THREE.Sprite;
@@ -152,7 +180,7 @@ class Chara extends Unit {
     private swordCollide: Figure;
     private invincibleTime = 0;
     private attaking = 0;
-    private HP = 5;
+    private HP = 1;
     private HPView: THREE.Group = new THREE.Group();
     constructor(private x: number, private y: number) { super(); }
     public Init(): void {
@@ -196,6 +224,9 @@ class Chara extends Unit {
             // 今回減るHPマーカを探す。0オリジンなので1減ってる状態で正しいものが示される。
             const h = this.HPView.getObjectByName(this.HP.toString());
             this.HPView.remove(h);
+            if (this.HP === -1) {
+                this.core.AddAndChangeScene("gameOver", new GameOverScene(this.scene as GameScene, false));
+            }
         }
     }
     public Update(): void {
@@ -269,12 +300,17 @@ class Dragon extends Unit {
     private x: number;
     private y: number;
     private collide: Figure;
-    private HP = 100;
+    private HP = 40;
     public Init() {
         this.x = 100;
         this.y = -10;
         this.collide = new Rectangle(this.x, this.y, 64, 128);
-        this.collide.onCollideCallback = (f) => { if (f.name === "sword") { console.log("dragon damaged"); } };
+        this.collide.onCollideCallback = (f) => {
+            if (f.name === "sword") {
+                this.HP--;
+                console.log("dragon damaged");
+            }
+        };
         this.AddCollider(this.collide);
         this.AddSprite(this.collide);
     }
@@ -282,6 +318,9 @@ class Dragon extends Unit {
         if (this.frame % 100 === 0) {
             const r = Random(Math.PI / 4) + Math.PI;
             this.scene.AddUnit(new Fire(this.x, this.y, 3 * Math.cos(r), Math.sin(r)));
+        }
+        if (this.HP <= 0) {
+            this.core.AddAndChangeScene("gameOver", new GameOverScene(this.scene as GameScene, true));
         }
     }
 }
