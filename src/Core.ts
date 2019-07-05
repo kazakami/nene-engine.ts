@@ -624,9 +624,6 @@ export class Core {
             }
         });
         document.addEventListener("keydown", (e) => {
-            if (this.activeScene.onKeyKeyDown !== null) {
-                this.activeScene.onKeyKeyDown(e);
-            }
             if (!e.repeat) {
                 if (e.code === undefined) {
                     let key: string;
@@ -648,6 +645,9 @@ export class Core {
                 } else {
                     this.keyState[e.code] = true;
                 }
+            }
+            if (this.activeScene.onKeyKeyDown !== null) {
+                this.activeScene.onKeyKeyDown(e);
             }
         });
         document.addEventListener("keyup", (e) => {
