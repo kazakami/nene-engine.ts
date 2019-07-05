@@ -813,7 +813,7 @@ export class Core {
      * @param color 指定する色
      */
     public SetTextColor(color: THREE.Color): void {
-        this.ctx.fillStyle = "rgb(" + color.r + ", " + color.g + ", " + color.b + ")";
+        this.ctx.fillStyle = "rgb(" + color.r * 255 + ", " + color.g * 255 + ", " + color.b * 255 + ")";
     }
 
     /**
