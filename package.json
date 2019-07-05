@@ -20,7 +20,7 @@
   "dependencies": {
     "@types/cannon": "^0.1.4",
     "cannon": "^0.6.2",
-    "three": "^0.106.0",
+    "three": "^0.106.2",
     "typescript": "^3.5.2"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
     "typedoc": "^0.14.2",
-    "webpack": "^4.35.0",
+    "webpack": "^4.35.2",
     "webpack-cli": "^3.3.5"
   }
 }
