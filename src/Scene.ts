@@ -1,5 +1,6 @@
 import * as Cannon from "cannon";
 import * as THREE from "three";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { collide, Figure } from "./Collider2D";
 import { Core } from "./Core";
 import { PhysicBox, PhysicObject, PhysicPlane, PhysicSphere } from "./PhysicObject";
@@ -23,8 +24,8 @@ export abstract class Scene {
     public fov: number = 75;
     public canvasSizeX: number;
     public canvasSizeY: number;
-    public composer: THREE.EffectComposer = null;
-    public composer2d: THREE.EffectComposer = null;
+    public composer: EffectComposer = null;
+    public composer2d: EffectComposer = null;
     public offScreenRenderTarget: THREE.WebGLRenderTarget;
     public offScreen: THREE.Sprite;
     public offScreenMat: THREE.SpriteMaterial;
@@ -136,7 +137,7 @@ export abstract class Scene {
         if (data.position === null || data.position === undefined) {
             data.position = {
                 x: this.core.mouseX / (this.core.screenSizeX / 2),
-                y: this.core.mouseY / (this.core.screenSizeY / 2)
+                y: this.core.mouseY / (this.core.screenSizeY / 2),
             };
         }
         this.raycaster.setFromCamera(data.position, this.camera);
@@ -156,7 +157,7 @@ export abstract class Scene {
         if (position === null || position === undefined) {
             position = {
                 x: this.core.mouseX / (this.core.screenSizeX / 2),
-                y: this.core.mouseY / (this.core.screenSizeY / 2)
+                y: this.core.mouseY / (this.core.screenSizeY / 2),
             };
         }
         this.raycaster.setFromCamera(position, this.camera);
@@ -173,12 +174,15 @@ export abstract class Scene {
         this.DrawText();
         if (this.composer === null) {
             // 3D用のシーンでcomposerを使っていなければオフスクリーンレンダリングの結果を用いる
-            this.core.renderer.render(this.scene, this.camera, this.offScreenRenderTarget);
+            this.core.renderer.setRenderTarget(this.offScreenRenderTarget);
+            this.core.renderer.render(this.scene, this.camera);
             this.offScreenMat.map = this.offScreenRenderTarget.texture;
         } else {
             // 3D用のシーンでcomposerを使っていればcomposerの結果出力バッファを用いる
-            this.composer.render();
+            (this.composer as any).renderToScreen = false;
+            this.composer.render(1 / 60);
             this.offScreenMat.map = this.composer.readBuffer.texture;
+            // this.offScreenMat.map = this.composer.renderTarget2.texture;
         }
         // 3Dの描画結果を入れたspriteの大きさを画面サイズにセット
         this.offScreen.scale.set(this.canvasSizeX, this.canvasSizeY, 1);
@@ -186,10 +190,12 @@ export abstract class Scene {
         this.textCanvasSpriteMat.map.needsUpdate = true;
         if (this.composer2d === null) {
             // this.core.offScreenRenderTargetに描画し、その結果をthis.core.offScreenMat.mapに設定する
-            this.core.renderer.render(this.scene2d, this.camera2d, this.renderTarget);
+            this.core.renderer.setRenderTarget(this.renderTarget);
+            this.core.renderer.render(this.scene2d, this.camera2d);
         } else {
             // omposerの結果出力バッファをthis.core.offScreenMat.mapに設定する
-            this.composer2d.render();
+            (this.composer2d as any).renderToScreen = false;
+            this.composer2d.render(1 / 60);
         }
     }
 
@@ -305,7 +311,7 @@ export abstract class Scene {
         this.textCanvas.setAttribute("height", this.textCanvasY + "");
         this.ctx = this.textCanvas.getContext("2d");
         this.textCanvasSpriteMat = new THREE.SpriteMaterial({
-            color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas)
+            color: 0xffffff, map: new THREE.CanvasTexture(this.textCanvas),
         });
         this.textCanvasSprite = new THREE.Sprite(this.textCanvasSpriteMat);
         this.textCanvasSprite.position.set(0, 0, 9);
@@ -452,11 +458,14 @@ export abstract class Scene {
             u.sprites.forEach((s) => u.RemoveSprite(s));
             u.physicObjects.forEach((p) => u.RemovePhysicObject(p));
             u.colliders.forEach((f) => u.RemoveCollider(f));
+            u.allParticles.forEach((p) => u.RemoveParticle(p));
             u.Fin();
             u.objects = [];
             u.allObject3D = [];
             u.sprites = [];
             u.physicObjects = [];
+            u.colliders = [];
+            u.allParticles = [];
             u.scene = null;
             u.core = null;
         });

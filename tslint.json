@@ -9,7 +9,8 @@
         "max-classes-per-file": false,
         "no-console": false,
         "forin": false,
-        "no-string-literal": false
+        "no-string-literal": false,
+        "no-bitwise": false
     },
     "rulesDirectory": []
 }

@@ -1,8 +1,15 @@
 {
+  "exclude": [
+    "src/test"
+  ],
   "compilerOptions": {
     "sourceMap": true,
     "target": "es2018",
     "module": "commonjs",
-    "lib": ["webworker", "es2018", "dom"]
+    "lib": [
+      "es2018",
+      "dom",
+      "webworker"
+    ]
   }
 }

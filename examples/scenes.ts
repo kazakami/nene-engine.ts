@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { collideTest, Point, Rectangle, Scene, Start } from "../src/nene-engine";
 
-class LoaddScene extends Scene {
+class LoadScene extends Scene {
     public async Init() {
         this.canvasSizeX = this.core.screenSizeX;
         this.canvasSizeY = this.core.screenSizeY;
@@ -114,4 +114,4 @@ class MiniWindowScene extends Scene {
     }
 }
 
-Start("init", new LoaddScene());
+Start("init", new LoadScene());

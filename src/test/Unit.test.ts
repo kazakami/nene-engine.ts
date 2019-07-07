@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { Rectangle } from "../Collider2D";
+import { Particles } from "../Particles";
 import { PhysicSphere } from "../PhysicObject";
 import { Scene } from "../Scene";
 import { TiledTexturedSprite } from "../TiledTexturedSprite";
@@ -91,4 +92,24 @@ test("Add nad remove Figure in sprites 2", () => {
     unit.RemoveSprite(fig);
     expect(unit.sprites.indexOf(fig)).toBe(-1);
     expect(scene.scene2d.children).toEqual([]);
+});
+
+class TestParticles extends Particles {
+    public finned = false;
+    public Fin() {
+        this.finned = true;
+        super.Fin();
+    }
+}
+
+test("Add and remove particles", () => {
+    const particles = new TestParticles();
+    particles.GenerateParticles(1);
+    const unit = new TestUnit();
+    const scene = new TestScene();
+    unit.scene = scene;
+    unit.AddParticle(particles);
+    expect(particles.finned).toBeFalsy();
+    unit.RemoveParticle(particles);
+    expect(particles.finned).toBeTruthy();
 });

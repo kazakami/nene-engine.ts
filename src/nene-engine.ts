@@ -1,5 +1,7 @@
 export * from "./Collider2D";
 export * from "./Core";
+export * from "./ImprovedNoise";
+export * from "./Particles";
 export * from "./PhysicObject";
 export * from "./Scene";
 export * from "./Terrain";

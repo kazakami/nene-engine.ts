@@ -4,7 +4,8 @@ module.exports = {
     readme: 'none',
     exclude: [
         '**/test/*',
-        '**/examples/*'
+        '**/examples/*',
+        '**/node_modules/**'
     ],
     mode: 'file',
     excludeExternals: true,

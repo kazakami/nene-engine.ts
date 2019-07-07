@@ -1,5 +1,13 @@
 import * as THREE from "three";
-import { EachMesh, PhysicObjects, PhysicSphere, Random, RandomColor, Scene, Start, Unit } from "../src/nene-engine";
+import {
+    EachMesh, Particles, PhysicObjects, PhysicSphere
+    , Random, RandomColor, Scene, Start, Unit,
+} from "../src/nene-engine";
+
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 
 class LoadScene extends Scene {
     public async Init(): Promise<void> {
@@ -18,8 +26,8 @@ class LoadScene extends Scene {
             this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball"),
             this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle"),
             this.core.LoadTexture("resources/images/star.png", "star"),
-            this.core.LoadTexture("resources/images/floor.png", "floor"),
-            this.core.LoadTexture("resources/images/wall.png", "wall"),
+            this.core.LoadTexture("resources/images/floor.jpg", "floor"),
+            this.core.LoadTexture("resources/images/wall.jpg", "wall"),
             this.core.LoadTexture("resources/images/tile.png", "tile"),
             this.core.LoadFile("resources/shaders/sample1.vert", "sample1.vert"),
             this.core.LoadFile("resources/shaders/sample1.frag", "sample1.frag"),
@@ -42,6 +50,9 @@ class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public casted: string[];
     private pause: PauseScene;
+    private effect: EffectComposer = null;
+    private effect2d: EffectComposer = null;
+    private effectEnable = true;
     public Init(): void {
         this.canvasSizeX = this.core.screenSizeX;
         this.canvasSizeY = this.core.screenSizeY;
@@ -76,7 +87,7 @@ class GameScene extends Scene {
         this.scene2d.add(this.sprt);
         this.onWindowResize = () => {
             this.core.ChangeScreenSize(window.innerWidth, window.innerHeight);
-            // this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
+            this.ResizeCanvas(this.core.screenSizeX, this.core.screenSizeY);
             // this.ResizeCanvas(640, 480);
         };
         this.onTouchMove = (e) => { e.preventDefault(); };
@@ -116,23 +127,24 @@ class GameScene extends Scene {
         const wallMesh3 = new THREE.Mesh(wallGeo3, wallMat);
         this.scene.add(wallMesh3);
 
-        this.composer = this.core.MakeEffectComposer();
-        this.composer.addPass(new THREE.RenderPass(this.scene, this.camera));
-        const pass = new THREE.ShaderPass({
+        this.effect = this.core.MakeEffectComposer();
+        this.effect.addPass(new RenderPass(this.scene, this.camera, undefined, undefined, undefined));
+        const pass = new ShaderPass({
             fragmentShader: this.core.GetText("pass1.frag"),
             uniforms: {
                 tDiffuse: { value: null },
             },
             vertexShader: this.core.GetText("pass1.vert"),
         });
-        this.composer.addPass(pass);
-        // this.composer = null;
+        this.effect.addPass(pass);
+        this.composer = this.effect;
 
-        this.composer2d = this.core.MakeEffectComposer();
-        this.composer2d.addPass(new THREE.RenderPass(this.scene2d, this.camera2d));
-        const pass2d = new THREE.FilmPass(0.5, 0.5, 480, false);
-        this.composer2d.addPass(pass2d);
-        // this.composer2d = null;
+        this.effect2d = this.core.MakeEffectComposer();
+        this.effect2d.addPass(
+            new RenderPass(this.scene2d, this.camera2d, undefined, undefined, undefined));
+        const pass2d = new FilmPass(0.5, 0.5, 480, 0);
+        this.effect2d.addPass(pass2d);
+        this.composer2d = this.effect2d;
     }
     public Update(): void {
         this.casted = [];
@@ -144,6 +156,16 @@ class GameScene extends Scene {
                 console.log("save screenshot");
             })();
         }
+        if (this.core.IsKeyPressing("KeyE")) {
+            this.effectEnable = !this.effectEnable;
+            if (this.effectEnable) {
+                this.composer = this.effect;
+                this.composer2d = this.effect2d;
+            } else {
+                this.composer = null;
+                this.composer2d = null;
+            }
+        }
         if (this.core.IsKeyPressing("Escape")) {
             this.core.ChangeScene("pause");
         }
@@ -153,9 +175,12 @@ class GameScene extends Scene {
         this.FillText("FPS: " + Math.round(this.core.fps).toString(),
             -this.canvasSizeX / 2,
             this.canvasSizeY / 2);
-        this.FillText("Press p to save screenshot.",
+        this.FillText("Press P to save screenshot.",
             -this.canvasSizeX / 2,
             this.canvasSizeY / 2 - 50);
+        this.FillText("Press E to toggle effect.",
+            -this.canvasSizeX / 2,
+            this.canvasSizeY / 2 - 100);
         this.FillText(this.casted.join(), this.core.mouseX, this.core.mouseY);
     }
 }
@@ -199,23 +224,46 @@ class PauseScene extends Scene {
 }
 
 class Particle extends Unit {
-    private sprite: THREE.Object3D;
-    constructor(private x: number, private y: number, private z: number,
-        private vx: number, private vy: number, private vz: number) {
+    private particles: Particles;
+    private num: number = 50;
+    private vel: THREE.Vector3[] = [];
+    private pos: THREE.Vector3[] = [];
+    private col: THREE.Color[] = [];
+    constructor(private x: number, private y: number, private z: number) {
         super();
     }
     public Init(): void {
-        this.sprite = new THREE.Object3D();
-        this.sprite.add(this.core.MakeSpriteFromTexture("star", RandomColor()));
-        this.sprite.position.set(this.x, this.y, this.z);
-        this.AddObject(this.sprite);
+        this.particles = new Particles();
+        this.particles.GenerateParticles(this.num);
+        for (let i = 0; i < this.num; i++) {
+            const rad = Math.random() * 2 * Math.PI;
+            const d = Math.random() * 0.2;
+            const v = new THREE.Vector3(d * Math.sin(rad), 0.5 + Random(0.1), d * Math.cos(rad));
+            const p = new THREE.Vector3(0, 0, 0);
+            this.vel.push(v);
+            this.pos.push(p);
+            this.particles.SetPosition(i, p.x, p.y, p.z, false);
+            const c = RandomColor();
+            this.col.push(c);
+            this.particles.SetColor(i, c.r, c.g, c.b, false);
+        }
+        // this.particles.SetPointDisable(0);
+        this.particles.SetGlobalPosition(this.x, this.y, this.z);
+        this.particles.GeometryUpdate();
+        this.AddParticle(this.particles);
+        this.particles.material.map = this.core.GetTexture("star");
+        this.particles.material.blending = THREE.AdditiveBlending;
     }
     public Update(): void {
-        this.vy -= 9.8 / 60 / 60;
-        this.x += this.vx;
-        this.y += this.vy;
-        this.z += this.vz;
-        this.sprite.position.set(this.x, this.y, this.z);
+        for (let i = 0; i < this.num; i++) {
+            this.vel[i].setY(this.vel[i].y - 0.02);
+            this.pos[i].add(this.vel[i]);
+            const c = this.col[i];
+            c.setRGB(c.r * 0.95, c.g * 0.95, c.b * 0.95);
+            this.particles.SetPosition(i, this.pos[i].x, this.pos[i].y, this.pos[i].z, false);
+            this.particles.SetColor(i, c.r, c.g, c.b, false);
+        }
+        this.particles.GeometryUpdate();
         if (this.frame > 100) {
             this.isAlive = false;
         }
@@ -253,11 +301,7 @@ class Ball extends Unit {
         this.AddPhysicObject(this.ball);
         this.ball.SetCollideCallback((c) => {
             const p = c.collidePosition;
-            for (let i = 0; i < 10; i++) {
-                this.scene.AddUnit(new Particle(
-                    p.x, p.y, p.z,
-                    Random(0.1), Random(0.1), Random(0.1)));
-            }
+            this.scene.AddUnit(new Particle(p.x, p.y, p.z));
         });
         this.onRaycastedCallback = (ints, message) => {
             (this.scene as GameScene).casted.push("Ball");
