@@ -19,6 +19,7 @@ class LoadScene extends Scene {
         this.core.LoadTexture("resources/images/fires.png", "fires");
         this.core.LoadTexture("resources/images/knight.png", "knight");
         this.core.LoadTexture("resources/images/shadow.png", "shadow");
+        this.core.LoadTexture("resources/images/dragon.png", "dragon");
         this.onKeyKeyDown = (e) => { e.preventDefault(); };
         this.onTouchMove = (e) => { e.preventDefault(); };
     }
@@ -167,7 +168,8 @@ class GameOverScene extends Scene {
     }
     public DrawText() {
         this.core.SetTextColor(new THREE.Color(0xffffff));
-        this.core.DrawText(this.win ? "YOU WIN" : "YOU LOOSE", 0, 0);
+        this.core.DrawText(this.win ? "YOU WIN" : "YOU LOOSE", -150, 0);
+        this.core.DrawText("Press Escape to back to title", -300, -100);
     }
 }
 
@@ -180,7 +182,7 @@ class Chara extends Unit {
     private swordCollide: Figure;
     private invincibleTime = 0;
     private attaking = 0;
-    private HP = 1;
+    private HP = 5;
     private HPView: THREE.Group = new THREE.Group();
     constructor(private x: number, private y: number) { super(); }
     public Init(): void {
@@ -300,13 +302,14 @@ class Dragon extends Unit {
     private x: number;
     private y: number;
     private collide: Figure;
+    private HPsprite: THREE.Sprite;
     private sprite: THREE.Sprite;
     private HPMax = 40;
     private HP = this.HPMax;
     public Init() {
         this.x = 100;
         this.y = -10;
-        this.collide = new Rectangle(this.x, this.y, 64, 128);
+        this.collide = new Rectangle(this.x, this.y, 128, 128);
         this.collide.onCollideCallback = (f) => {
             if (f.name === "sword") {
                 this.HP--;
@@ -316,29 +319,36 @@ class Dragon extends Unit {
         this.AddCollider(this.collide);
         this.AddSprite(this.collide);
         const mat = new THREE.SpriteMaterial({ color: new THREE.Color(0x00ff00) });
-        this.sprite = new THREE.Sprite(mat);
-        this.sprite.scale.set(64 * (this.HP / this.HPMax), 5, 1);
-        this.sprite.position.set(this.x, this.y + 80, 1);
+        this.HPsprite = new THREE.Sprite(mat);
+        this.HPsprite.scale.set(64 * (this.HP / this.HPMax), 5, 1);
+        this.HPsprite.position.set(this.x + 32, this.y + 80, 1);
         mat.dispose();
+        this.AddSprite(this.HPsprite);
+        this.sprite = this.core.MakeSpriteFromTexture("dragon");
+        this.sprite.scale.set(128, 128, 1);
+        this.sprite.position.set(this.x + 32, this.y, 1);
         this.AddSprite(this.sprite);
     }
     public Update() {
         if ((this.HP / this.HPMax) > 1 / 2) {
-            this.sprite.material.color = new THREE.Color(0x00ff00);
+            this.HPsprite.material.color = new THREE.Color(0x00ff00);
         } else if ((this.HP / this.HPMax) > 1 / 4) {
-            this.sprite.material.color = new THREE.Color(0xffff00);
+            this.HPsprite.material.color = new THREE.Color(0xffff00);
         } else {
-            this.sprite.material.color = new THREE.Color(0xff0000);
+            this.HPsprite.material.color = new THREE.Color(0xff0000);
         }
-        this.sprite.scale.set(64 * (this.HP / this.HPMax), 5, 1);
-        this.sprite.position.set(this.x, this.y + 80, 1);
-        if (this.frame % 100 === 0 || this.frame % 100 === 5 || this.frame % 100 === 10) {
-            const r = Random(Math.PI / 4) + Math.PI;
-            this.scene.AddUnit(new Fire(this.x, this.y, 3 * Math.cos(r), Math.sin(r)));
+        this.HPsprite.scale.set(64 * (this.HP / this.HPMax), 5, 1);
+        this.HPsprite.position.set(this.x + 32, this.y + 80, 1);
+        if ((this.frame % 100 === 0 || this.frame % 100 === 5 || this.frame % 100 === 10) && this.frame > 100) {
+            const r = Random(Math.PI / 3) + Math.PI;
+            this.scene.AddUnit(new Fire(this.x - 15, this.y + 25, 3 * Math.cos(r), Math.sin(r)));
         }
         if (this.HP <= 0) {
             this.core.AddAndChangeScene("gameOver", new GameOverScene(this.scene as GameScene, true));
         }
+        this.sprite.position.set(this.x + 32, this.y, 1);
+        this.collide.x = this.x + 32;
+        this.collide.y = this.y;
     }
 }
 
