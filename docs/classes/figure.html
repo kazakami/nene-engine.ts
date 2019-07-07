@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PhysicObjectAttribute | nene-engine.ts</title>
+	<title>Figure | nene-engine.ts</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -52,10 +52,10 @@
 					<a href="../index.html">Globals</a>
 				</li>
 				<li>
-					<a href="physicobjectattribute.html">PhysicObjectAttribute</a>
+					<a href="figure.html">Figure</a>
 				</li>
 			</ul>
-			<h1>Class PhysicObjectAttribute</h1>
+			<h1>Class Figure</h1>
 		</div>
 	</div>
 </header>
@@ -66,16 +66,16 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">PhysicObjectAttribute</span>
+						<span class="target">Figure</span>
 						<ul class="tsd-hierarchy">
 							<li>
-								<a href="physicobjectsphereattribute.html" class="tsd-signature-type">PhysicObjectSphereAttribute</a>
+								<a href="point.html" class="tsd-signature-type">Point</a>
 							</li>
 							<li>
-								<a href="physicobjectboxattribute.html" class="tsd-signature-type">PhysicObjectBoxAttribute</a>
+								<a href="circle.html" class="tsd-signature-type">Circle</a>
 							</li>
 							<li>
-								<a href="physicobjectplaneattribute.html" class="tsd-signature-type">PhysicObjectPlaneAttribute</a>
+								<a href="rectangle.html" class="tsd-signature-type">Rectangle</a>
 							</li>
 						</ul>
 					</li>
@@ -88,16 +88,25 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#angle" class="tsd-kind-icon">angle</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#axisx" class="tsd-kind-icon">axisx</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#axisy" class="tsd-kind-icon">axisy</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#axisz" class="tsd-kind-icon">axisz</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#mass" class="tsd-kind-icon">mass</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#name" class="tsd-kind-icon">name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#type" class="tsd-kind-icon">type</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#x" class="tsd-kind-icon">x</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#y" class="tsd-kind-icon">y</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="physicobjectattribute.html#z" class="tsd-kind-icon">z</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="figure.html#available" class="tsd-kind-icon">available</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="figure.html#helper" class="tsd-kind-icon">helper</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a href="figure.html#helpergenerated" class="tsd-kind-icon">helper<wbr>Generated</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="figure.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="figure.html#oncollidecallback" class="tsd-kind-icon">on<wbr>Collide<wbr>Callback</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Accessors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="figure.html#x" class="tsd-kind-icon">x</a></li>
+								<li class="tsd-kind-accessor tsd-parent-kind-class"><a href="figure.html#y" class="tsd-kind-icon">y</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="figure.html#generatehelper" class="tsd-kind-icon">Generate<wbr>Helper</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="figure.html#synchelper" class="tsd-kind-icon">Sync<wbr>Helper</a></li>
 							</ul>
 						</section>
 					</div>
@@ -106,104 +115,198 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="angle" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> angle</h3>
-					<div class="tsd-signature tsd-kind-icon">angle<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="available" class="tsd-anchor"></a>
+					<h3>available</h3>
+					<div class="tsd-signature tsd-kind-icon">available<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L159">Util.ts:159</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L10">Collider2D.ts:10</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>当たり判定が有効か表す。デフォルトではtrue</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="helper" class="tsd-anchor"></a>
+					<h3>helper</h3>
+					<div class="tsd-signature tsd-kind-icon">helper<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">THREE.Object3D</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L5">Collider2D.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="axisx" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> axisx</h3>
-					<div class="tsd-signature tsd-kind-icon">axisx<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+					<a name="helpergenerated" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagProtected">Protected</span> helper<wbr>Generated</h3>
+					<div class="tsd-signature tsd-kind-icon">helper<wbr>Generated<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L156">Util.ts:156</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="axisy" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> axisy</h3>
-					<div class="tsd-signature tsd-kind-icon">axisy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L157">Util.ts:157</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="axisz" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> axisz</h3>
-					<div class="tsd-signature tsd-kind-icon">axisz<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L158">Util.ts:158</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="mass" class="tsd-anchor"></a>
-					<h3>mass</h3>
-					<div class="tsd-signature tsd-kind-icon">mass<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L155">Util.ts:155</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L11">Collider2D.ts:11</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="name" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> name</h3>
-					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<h3>name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L150">Util.ts:150</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L4">Collider2D.ts:4</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="type" class="tsd-anchor"></a>
-					<h3>type</h3>
-					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">"plane"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"sphere"</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">"box"</span></div>
+					<a name="oncollidecallback" class="tsd-anchor"></a>
+					<h3>on<wbr>Collide<wbr>Callback</h3>
+					<div class="tsd-signature tsd-kind-icon">on<wbr>Collide<wbr>Callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">function</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L151">Util.ts:151</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L6">Collider2D.ts:6</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-siganture">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-property tsd-is-not-exported">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>figure<span class="tsd-signature-symbol">: </span><a href="figure.html" class="tsd-signature-type">Figure</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>figure: <a href="figure.html" class="tsd-signature-type">Figure</a></h5>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
 					<a name="x" class="tsd-anchor"></a>
 					<h3>x</h3>
-					<div class="tsd-signature tsd-kind-icon">x<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L152">Util.ts:152</a></li>
-						</ul>
-					</aside>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> x<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> x<span class="tsd-signature-symbol">(</span>x<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L14">Collider2D.ts:14</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L15">Collider2D.ts:15</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>x: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+				<section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class">
 					<a name="y" class="tsd-anchor"></a>
 					<h3>y</h3>
-					<div class="tsd-signature tsd-kind-icon">y<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L153">Util.ts:153</a></li>
-						</ul>
-					</aside>
+					<ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> y<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">set</span> y<span class="tsd-signature-symbol">(</span>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L21">Collider2D.ts:21</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L22">Collider2D.ts:22</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>y: <span class="tsd-signature-type">number</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="z" class="tsd-anchor"></a>
-					<h3>z</h3>
-					<div class="tsd-signature tsd-kind-icon">z<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Util.ts#L154">Util.ts:154</a></li>
-						</ul>
-					</aside>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="generatehelper" class="tsd-anchor"></a>
+					<h3>Generate<wbr>Helper</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">Generate<wbr>Helper<span class="tsd-signature-symbol">(</span>color<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">THREE.Color</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L32">Collider2D.ts:32</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>当たり判定の範囲を表示するmeshを生成する</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> color: <span class="tsd-signature-type">THREE.Color</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>線の色。初期値は0xffffff</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="synchelper" class="tsd-anchor"></a>
+					<h3>Sync<wbr>Helper</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">Sync<wbr>Helper<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Collider2D.ts#L33">Collider2D.ts:33</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -229,9 +332,42 @@
 					<li class=" tsd-kind-class">
 						<a href="coreoption.html" class="tsd-kind-icon">Core<wbr>Option</a>
 					</li>
-					<li class=" tsd-kind-class">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class">
 						<a href="figure.html" class="tsd-kind-icon">Figure</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="figure.html#available" class="tsd-kind-icon">available</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="figure.html#helper" class="tsd-kind-icon">helper</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-protected">
+								<a href="figure.html#helpergenerated" class="tsd-kind-icon">helper<wbr>Generated</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="figure.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="figure.html#oncollidecallback" class="tsd-kind-icon">on<wbr>Collide<wbr>Callback</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="figure.html#x" class="tsd-kind-icon">x</a>
+							</li>
+							<li class=" tsd-kind-accessor tsd-parent-kind-class">
+								<a href="figure.html#y" class="tsd-kind-icon">y</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="figure.html#generatehelper" class="tsd-kind-icon">Generate<wbr>Helper</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="figure.html#synchelper" class="tsd-kind-icon">Sync<wbr>Helper</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-class">
 						<a href="improvednoise.html" class="tsd-kind-icon">Improved<wbr>Noise</a>
 					</li>
@@ -244,45 +380,9 @@
 					<li class=" tsd-kind-class">
 						<a href="physicobject.html" class="tsd-kind-icon">Physic<wbr>Object</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-class">
+					<li class=" tsd-kind-class">
 						<a href="physicobjectattribute.html" class="tsd-kind-icon">Physic<wbr>Object<wbr>Attribute</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#angle" class="tsd-kind-icon">angle</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#axisx" class="tsd-kind-icon">axisx</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#axisy" class="tsd-kind-icon">axisy</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#axisz" class="tsd-kind-icon">axisz</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#mass" class="tsd-kind-icon">mass</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#name" class="tsd-kind-icon">name</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#type" class="tsd-kind-icon">type</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#x" class="tsd-kind-icon">x</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#y" class="tsd-kind-icon">y</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="physicobjectattribute.html#z" class="tsd-kind-icon">z</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-class">
 						<a href="physicobjectboxattribute.html" class="tsd-kind-icon">Physic<wbr>Object<wbr>Box<wbr>Attribute</a>
 					</li>

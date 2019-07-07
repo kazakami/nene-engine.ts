@@ -89,6 +89,8 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#allobject3d" class="tsd-kind-icon">all<wbr>Object3D</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#allparticles" class="tsd-kind-icon">all<wbr>Particles</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#colliders" class="tsd-kind-icon">colliders</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#core" class="tsd-kind-icon">core</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#frame" class="tsd-kind-icon">frame</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#id" class="tsd-kind-icon">id</a></li>
@@ -105,15 +107,19 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#addcollider" class="tsd-kind-icon">Add<wbr>Collider</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#addobject" class="tsd-kind-icon">Add<wbr>Object</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#addparticle" class="tsd-kind-icon">Add<wbr>Particle</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#addphysicobject" class="tsd-kind-icon">Add<wbr>Physic<wbr>Object</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#addsprite" class="tsd-kind-icon">Add<wbr>Sprite</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#drawtext" class="tsd-kind-icon">Draw<wbr>Text</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="physicunit.html#fin" class="tsd-kind-icon">Fin</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="physicunit.html#init" class="tsd-kind-icon">Init</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#innerupdate" class="tsd-kind-icon">Inner<wbr>Update</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#removecollider" class="tsd-kind-icon">Remove<wbr>Collider</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#removeobject" class="tsd-kind-icon">Remove<wbr>Object</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#removephysiconject" class="tsd-kind-icon">Remove<wbr>Physic<wbr>Onject</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#removeparticle" class="tsd-kind-icon">Remove<wbr>Particle</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#removephysicobject" class="tsd-kind-icon">Remove<wbr>Physic<wbr>Object</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="physicunit.html#removesprite" class="tsd-kind-icon">Remove<wbr>Sprite</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-overwrite"><a href="physicunit.html#update" class="tsd-kind-icon">Update</a></li>
 							</ul>
@@ -134,7 +140,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L39">Unit.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L45">Unit.ts:45</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="physicunit.html" class="tsd-signature-type">PhysicUnit</a></h4>
@@ -151,12 +157,44 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#allobject3d">allObject3D</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L23">Unit.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L25">Unit.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>このUnitに紐づけられているすべての3Dオブジェクト。</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="allparticles" class="tsd-anchor"></a>
+					<h3>all<wbr>Particles</h3>
+					<div class="tsd-signature tsd-kind-icon">all<wbr>Particles<span class="tsd-signature-symbol">:</span> <a href="particles.html" class="tsd-signature-type">Particles</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#allparticles">allParticles</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L29">Unit.ts:29</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>このUnitに紐づけられているすべてのParticles</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="colliders" class="tsd-anchor"></a>
+					<h3>colliders</h3>
+					<div class="tsd-signature tsd-kind-icon">colliders<span class="tsd-signature-symbol">:</span> <a href="figure.html" class="tsd-signature-type">Figure</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#colliders">colliders</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L35">Unit.ts:35</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>このUnitに紐づけられているすべての2次元当たり判定用の図形。</p>
 						</div>
 					</div>
 				</section>
@@ -167,7 +205,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#core">core</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L17">Unit.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L19">Unit.ts:19</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -183,7 +221,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#frame">frame</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L21">Unit.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L23">Unit.ts:23</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -199,7 +237,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#id">id</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L33">Unit.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L39">Unit.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -215,7 +253,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#isalive">isAlive</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L13">Unit.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L15">Unit.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -231,12 +269,12 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#objects">objects</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L25">Unit.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L27">Unit.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>このUnitに紐づけられているすべての立体オブジェクト。ただし物理オブジェクトの描画用のオブジェクトを除く。</p>
+							<p>物理オブジェクトの描画用のオブジェクトを除くこのUnitに紐づけられているすべての立体オブジェクト。</p>
 						</div>
 					</div>
 				</section>
@@ -247,7 +285,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#onraycastedcallback">onRaycastedCallback</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L39">Unit.ts:39</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L45">Unit.ts:45</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -289,7 +327,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#physicobjects">physicObjects</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L29">Unit.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L33">Unit.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -305,7 +343,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#priority">priority</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L15">Unit.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L17">Unit.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -321,7 +359,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#raycasttarget">raycastTarget</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L31">Unit.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L37">Unit.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -337,7 +375,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#scene">scene</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L19">Unit.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L21">Unit.ts:21</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -349,11 +387,11 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 					<a name="sprites" class="tsd-anchor"></a>
 					<h3>sprites</h3>
-					<div class="tsd-signature tsd-kind-icon">sprites<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
+					<div class="tsd-signature tsd-kind-icon">sprites<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Array</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a><span class="tsd-signature-symbol"> | </span><a href="figure.html" class="tsd-signature-type">Figure</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#sprites">sprites</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L27">Unit.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L31">Unit.ts:31</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -366,6 +404,40 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="addcollider" class="tsd-anchor"></a>
+					<h3>Add<wbr>Collider</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">Add<wbr>Collider<span class="tsd-signature-symbol">(</span>f<span class="tsd-signature-symbol">: </span><a href="figure.html" class="tsd-signature-type">Figure</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#addcollider">AddCollider</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L116">Unit.ts:116</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>sceneに当たり判定用の図形を登録し、このUnitに紐づける
+										追加された図形はこのUnitの削除時に自動でシーンから除外される
+									追加された図形は毎フレーム当たり判定が行われ、当たっているとonCollideCallbackが呼ばれる</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>f: <a href="figure.html" class="tsd-signature-type">Figure</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>追加する当たり判定用の図形</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="addobject" class="tsd-anchor"></a>
 					<h3>Add<wbr>Object</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -376,7 +448,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#addobject">AddObject</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L69">Unit.ts:69</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L76">Unit.ts:76</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -399,6 +471,30 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="addparticle" class="tsd-anchor"></a>
+					<h3>Add<wbr>Particle</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">Add<wbr>Particle<span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="particles.html" class="tsd-signature-type">Particles</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#addparticle">AddParticle</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L165">Unit.ts:165</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>p: <a href="particles.html" class="tsd-signature-type">Particles</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a name="addphysicobject" class="tsd-anchor"></a>
 					<h3>Add<wbr>Physic<wbr>Object</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -409,7 +505,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#addphysicobject">AddPhysicObject</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L92">Unit.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L104">Unit.ts:104</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -435,14 +531,14 @@
 					<a name="addsprite" class="tsd-anchor"></a>
 					<h3>Add<wbr>Sprite</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">Add<wbr>Sprite<span class="tsd-signature-symbol">(</span>o<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">Add<wbr>Sprite<span class="tsd-signature-symbol">(</span>o<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a><span class="tsd-signature-symbol"> | </span><a href="figure.html" class="tsd-signature-type">Figure</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#addsprite">AddSprite</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L79">Unit.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L86">Unit.ts:86</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -454,7 +550,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>o: <span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a></h5>
+									<h5>o: <span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a><span class="tsd-signature-symbol"> | </span><a href="figure.html" class="tsd-signature-type">Figure</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>追加するObject3D</p>
 									</div>
@@ -475,7 +571,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#drawtext">DrawText</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L55">Unit.ts:55</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L62">Unit.ts:62</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -498,7 +594,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="unit.html">Unit</a>.<a href="unit.html#fin">Fin</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L139">Unit.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L183">Unit.ts:183</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -516,7 +612,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="unit.html">Unit</a>.<a href="unit.html#init">Init</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L133">Unit.ts:133</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L177">Unit.ts:177</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -534,7 +630,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#innerupdate">InnerUpdate</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L44">Unit.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L50">Unit.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -542,6 +638,38 @@
 									<p>この関数は基本的にオーバーライドすべきでない</p>
 								</div>
 							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="removecollider" class="tsd-anchor"></a>
+					<h3>Remove<wbr>Collider</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">Remove<wbr>Collider<span class="tsd-signature-symbol">(</span>f<span class="tsd-signature-symbol">: </span><a href="figure.html" class="tsd-signature-type">Figure</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#removecollider">RemoveCollider</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L160">Unit.ts:160</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>指定した当たり判定用の図形を削除する</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>f: <a href="figure.html" class="tsd-signature-type">Figure</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>削除する当たり判定用の図形</p>
+									</div>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -557,7 +685,7 @@
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#removeobject">RemoveObject</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L102">Unit.ts:102</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L124">Unit.ts:124</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -579,17 +707,41 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<a name="removephysiconject" class="tsd-anchor"></a>
-					<h3>Remove<wbr>Physic<wbr>Onject</h3>
+					<a name="removeparticle" class="tsd-anchor"></a>
+					<h3>Remove<wbr>Particle</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">Remove<wbr>Physic<wbr>Onject<span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="physicobject.html" class="tsd-signature-type">PhysicObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">Remove<wbr>Particle<span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="particles.html" class="tsd-signature-type">Particles</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#removephysiconject">RemovePhysicOnject</a></p>
+								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#removeparticle">RemoveParticle</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L124">Unit.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L169">Unit.ts:169</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>p: <a href="particles.html" class="tsd-signature-type">Particles</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+					<a name="removephysicobject" class="tsd-anchor"></a>
+					<h3>Remove<wbr>Physic<wbr>Object</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon">Remove<wbr>Physic<wbr>Object<span class="tsd-signature-symbol">(</span>p<span class="tsd-signature-symbol">: </span><a href="physicobject.html" class="tsd-signature-type">PhysicObject</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#removephysicobject">RemovePhysicObject</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L150">Unit.ts:150</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -614,14 +766,14 @@
 					<a name="removesprite" class="tsd-anchor"></a>
 					<h3>Remove<wbr>Sprite</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">Remove<wbr>Sprite<span class="tsd-signature-symbol">(</span>o<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">Remove<wbr>Sprite<span class="tsd-signature-symbol">(</span>o<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a><span class="tsd-signature-symbol"> | </span><a href="figure.html" class="tsd-signature-type">Figure</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="unit.html">Unit</a>.<a href="unit.html#removesprite">RemoveSprite</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L111">Unit.ts:111</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L133">Unit.ts:133</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -632,7 +784,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>o: <span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a></h5>
+									<h5>o: <span class="tsd-signature-type">THREE.Object3D</span><span class="tsd-signature-symbol"> | </span><a href="tiledtexturedsprite.html" class="tsd-signature-type">TiledTexturedSprite</a><span class="tsd-signature-symbol"> | </span><a href="figure.html" class="tsd-signature-type">Figure</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>削除するObject3D</p>
 									</div>
@@ -653,7 +805,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides <a href="unit.html">Unit</a>.<a href="unit.html#update">Update</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/55f43d5/src/Unit.ts#L136">Unit.ts:136</a></li>
+									<li>Defined in <a href="https://github.com/kazakami/nene-engine.ts/blob/c41e56c/src/Unit.ts#L180">Unit.ts:180</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -673,6 +825,9 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-class">
+						<a href="circle.html" class="tsd-kind-icon">Circle</a>
+					</li>
+					<li class=" tsd-kind-class">
 						<a href="collidedata.html" class="tsd-kind-icon">Collide<wbr>Data</a>
 					</li>
 					<li class=" tsd-kind-class">
@@ -680,6 +835,15 @@
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="coreoption.html" class="tsd-kind-icon">Core<wbr>Option</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="figure.html" class="tsd-kind-icon">Figure</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="improvednoise.html" class="tsd-kind-icon">Improved<wbr>Noise</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="particles.html" class="tsd-kind-icon">Particles</a>
 					</li>
 					<li class=" tsd-kind-class">
 						<a href="physicbox.html" class="tsd-kind-icon">Physic<wbr>Box</a>
@@ -720,6 +884,12 @@
 								<a href="physicunit.html#allobject3d" class="tsd-kind-icon">all<wbr>Object3D</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="physicunit.html#allparticles" class="tsd-kind-icon">all<wbr>Particles</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="physicunit.html#colliders" class="tsd-kind-icon">colliders</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
 								<a href="physicunit.html#core" class="tsd-kind-icon">core</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
@@ -753,7 +923,13 @@
 								<a href="physicunit.html#sprites" class="tsd-kind-icon">sprites</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="physicunit.html#addcollider" class="tsd-kind-icon">Add<wbr>Collider</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="physicunit.html#addobject" class="tsd-kind-icon">Add<wbr>Object</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="physicunit.html#addparticle" class="tsd-kind-icon">Add<wbr>Particle</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="physicunit.html#addphysicobject" class="tsd-kind-icon">Add<wbr>Physic<wbr>Object</a>
@@ -774,10 +950,16 @@
 								<a href="physicunit.html#innerupdate" class="tsd-kind-icon">Inner<wbr>Update</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="physicunit.html#removecollider" class="tsd-kind-icon">Remove<wbr>Collider</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="physicunit.html#removeobject" class="tsd-kind-icon">Remove<wbr>Object</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="physicunit.html#removephysiconject" class="tsd-kind-icon">Remove<wbr>Physic<wbr>Onject</a>
+								<a href="physicunit.html#removeparticle" class="tsd-kind-icon">Remove<wbr>Particle</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="physicunit.html#removephysicobject" class="tsd-kind-icon">Remove<wbr>Physic<wbr>Object</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 								<a href="physicunit.html#removesprite" class="tsd-kind-icon">Remove<wbr>Sprite</a>
@@ -789,6 +971,12 @@
 					</li>
 				</ul>
 				<ul class="after-current">
+					<li class=" tsd-kind-class">
+						<a href="point.html" class="tsd-kind-icon">Point</a>
+					</li>
+					<li class=" tsd-kind-class">
+						<a href="rectangle.html" class="tsd-kind-icon">Rectangle</a>
+					</li>
 					<li class=" tsd-kind-class">
 						<a href="scene.html" class="tsd-kind-icon">Scene</a>
 					</li>
@@ -813,6 +1001,9 @@
 					<li class=" tsd-kind-function">
 						<a href="../index.html#booleantostring" class="tsd-kind-icon">Boolean<wbr>ToString</a>
 					</li>
+					<li class=" tsd-kind-function">
+						<a href="../index.html#clamp" class="tsd-kind-icon">Clamp</a>
+					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="../index.html#coalescing" class="tsd-kind-icon">Coalescing</a>
 					</li>
@@ -836,6 +1027,15 @@
 					</li>
 					<li class=" tsd-kind-function tsd-has-type-parameter">
 						<a href="../index.html#undefcoalescing" class="tsd-kind-icon">Undef<wbr>Coalescing</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../index.html#collide" class="tsd-kind-icon">collide</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../index.html#collide2" class="tsd-kind-icon">collide2</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="../index.html#collidetest" class="tsd-kind-icon">collide<wbr>Test</a>
 					</li>
 				</ul>
 			</nav>
