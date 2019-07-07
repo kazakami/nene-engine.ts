@@ -31,11 +31,11 @@ export abstract class PhysicObject {
     public constructor(name: string, mass: number) {
         this.collideCallBack = null;
         const phyMat = new Cannon.Material(name);
-        this.phyBody = new Cannon.Body({mass: mass, material: phyMat});
+        this.phyBody = new Cannon.Body({ mass: mass, material: phyMat });
         this.phyBody.addEventListener("collide", (e) => {
             if (this.collideCallBack !== null) {
                 const b: Cannon.Body = e.body;
-                const c: Cannon.ContactEquation = e. contact;
+                const c: Cannon.ContactEquation = e.contact;
                 const t: Cannon.Body = e.target;
                 this.collideCallBack(new CollideData(b, c, t));
             }
@@ -95,7 +95,7 @@ export class PhysicSphere extends PhysicObject {
         super(name, mass);
         if (obj === null) {
             const geo = new THREE.SphereBufferGeometry(radius, 50, 50);
-            const mat = new THREE.MeshPhongMaterial({color: 0xffffff});
+            const mat = new THREE.MeshPhongMaterial({ color: 0xffffff });
             this.viewBody = new THREE.Mesh(geo, mat);
             geo.dispose();
             mat.dispose();
@@ -114,7 +114,7 @@ export class PhysicPlane extends PhysicObject {
         super(name, mass);
         if (obj === null) {
             const geo = new THREE.PlaneGeometry(300, 300);
-            const mat = new THREE.MeshLambertMaterial({color: 0x333333});
+            const mat = new THREE.MeshLambertMaterial({ color: 0x333333 });
             this.viewBody = new THREE.Mesh(geo, mat);
             geo.dispose();
             mat.dispose();
@@ -129,12 +129,13 @@ export class PhysicPlane extends PhysicObject {
 }
 
 export class PhysicBox extends PhysicObject {
-    constructor(mass: number, width: number, height: number, depth: number,
-                name: string = "box", obj: THREE.Object3D = null) {
+    constructor(
+        mass: number, width: number, height: number, depth: number,
+        name: string = "box", obj: THREE.Object3D = null) {
         super(name, mass);
         if (obj === null) {
             const geo = new THREE.BoxGeometry(width, height, depth);
-            const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
+            const mat = new THREE.MeshLambertMaterial({ color: 0xffffff });
             this.viewBody = new THREE.Mesh(geo, mat);
             geo.dispose();
             mat.dispose();
@@ -156,14 +157,15 @@ export class PhysicObjects extends PhysicObject {
     public Update(): void {
         this.Sync();
     }
-    public AddBox(width: number, height: number, depth: number,
-                  x: number, y: number, z: number,
-                  addMesh: boolean = false,
-                  material: THREE.Material = null): void {
+    public AddBox(
+        width: number, height: number, depth: number,
+        x: number, y: number, z: number,
+        addMesh: boolean = false,
+        material: THREE.Material = null): void {
         if (addMesh) {
             if (material === null) {
                 const geo = new THREE.BoxBufferGeometry(width, height, depth);
-                const mat = new THREE.MeshLambertMaterial({color: 0xffffff});
+                const mat = new THREE.MeshLambertMaterial({ color: 0xffffff });
                 const mesh = new THREE.Mesh(geo, mat);
                 mesh.position.set(x, y, z);
                 this.viewBody.add(mesh);
@@ -178,7 +180,7 @@ export class PhysicObjects extends PhysicObject {
             }
         }
         this.phyBody.addShape(new Cannon.Box(new Cannon.Vec3(width / 2, height / 2, depth / 2))
-        , new Cannon.Vec3(x, y, z));
+            , new Cannon.Vec3(x, y, z));
         return;
     }
     public AddShapeFromJSON(data: string, mat: THREE.Material = null): void {
@@ -205,5 +207,5 @@ export class PhysicObjects extends PhysicObject {
                 throw new Error("type is needed");
             }
         });
-}
+    }
 }

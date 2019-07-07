@@ -288,14 +288,12 @@ test("keyState copy to previousKeyState when Update() called", () => {
     expect(c["previousKeyState"]["c"]).toBeTruthy();
 });
 
-test("Draw() calls activeScene.Render() and activeScene.DrawText()", () => {
+test("Draw() calls activeScene.Render()", () => {
     const c = new Core({});
     const s = new TestScene();
     c["activeScene"] = s;
-    expect(s.IsDrawedText).toBeFalsy();
     expect(s.IsRendered).toBeFalsy();
     c["Draw"]();
-    expect(s.IsDrawedText).toBeTruthy();
     expect(s.IsRendered).toBeTruthy();
 });
 
@@ -319,16 +317,16 @@ test("core option", () => {
     const op = new CoreOption({});
     expect(op.antialias).toBeTruthy();
     expect(op.parent).toEqual(document.body);
-    expect(op.windowSizeX).toEqual(window.innerWidth);
-    expect(op.windowSizeY).toEqual(window.innerHeight);
+    expect(op.screenSizeX).toEqual(window.innerWidth);
+    expect(op.screenSizeY).toEqual(window.innerHeight);
     const op2 = new CoreOption({
-        windowSizeX: 100,
-        windowSizeY: 200,
+        screenSizeX: 100,
+        screenSizeY: 200,
     });
     expect(op2.antialias).toBeTruthy();
     expect(op2.parent).toEqual(document.body);
-    expect(op2.windowSizeX).toEqual(100);
-    expect(op2.windowSizeY).toEqual(200);
+    expect(op2.screenSizeX).toEqual(100);
+    expect(op2.screenSizeY).toEqual(200);
 });
 
 test("MakeSpriteFromTexture", () => {

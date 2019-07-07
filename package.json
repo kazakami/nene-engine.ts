@@ -1,6 +1,6 @@
 {
   "name": "nene-engine.ts",
-  "version": "0.2.1",
+  "version": "0.5.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/kazakami/nene-engine.ts"
@@ -11,28 +11,29 @@
     "build": "webpack --verbose",
     "docs": "rm -rf docs && typedoc",
     "test": "jest",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "watch": "webpack --watch --watch-poll",
+    "lint": "tslint -p tsconfig.json"
   },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
   "license": "MIT",
   "dependencies": {
-    "@types/cannon": "^0.1.3",
-    "@types/jest": "^23.3.12",
-    "@types/three": "^0.93.15",
+    "@types/cannon": "^0.1.4",
     "cannon": "^0.6.2",
-    "imports-loader": "^0.8.0",
-    "three": "^0.100.0",
-    "typescript": "^3.2.4"
+    "three": "^0.106.2",
+    "typescript": "^3.5.2"
   },
   "devDependencies": {
-    "coveralls": "^3.0.2",
-    "jest": "^23.6.0",
-    "ts-jest": "^23.10.5",
-    "ts-loader": "^5.3.3",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.12.1",
+    "@types/jest": "^24.0.15",
+    "coveralls": "^3.0.4",
+    "jest": "^24.8.0",
+    "jest-canvas-mock": "^2.1.0",
+    "ts-jest": "^24.0.2",
+    "ts-loader": "^6.0.4",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
     "typedoc": "^0.14.2",
-    "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1"
+    "webpack": "^4.35.2",
+    "webpack-cli": "^3.3.5"
   }
 }

@@ -1,3 +1,20 @@
 body {
     margin: 0px;
 }
+div#screen {
+    width: 640px;
+    height: 480px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 1;
+}
+.center{
+    width: 640px;
+    margin: auto;
+    padding: 20px;
+}
+.center2{
+    display: flex;
+    justify-content: center;
+}

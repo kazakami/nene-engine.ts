@@ -1,5 +1,13 @@
 import * as THREE from "three";
-import { Random, RandomColor, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
+import { Circle, Clamp, Figure, Random, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
+
+const attack = "KeyZ";
+const jump = "KeyX";
+const up = "ArrowUp";
+const left = "ArrowLeft";
+const down = "ArrowDown";
+const right = "ArrowRight";
+const pause = "Escape";
 
 class LoadScene extends Scene {
     public Init(): void {
@@ -11,42 +19,157 @@ class LoadScene extends Scene {
         this.core.LoadTexture("resources/images/fires.png", "fires");
         this.core.LoadTexture("resources/images/knight.png", "knight");
         this.core.LoadTexture("resources/images/shadow.png", "shadow");
+        this.core.LoadTexture("resources/images/dragon.png", "dragon");
+        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update(): void {
         if (this.core.IsAllResourcesAvailable()) {
             // オブジェクトenteが読み込まれればシーン遷移
-            this.core.AddAndChangeScene("game", new GameScene());
+            this.core.AddAndChangeScene("title", new TitleScene());
         }
     }
     public DrawText(): void {
         const [a, b] = this.core.GetAllResourcesLoadingProgress();
-        this.core.DrawText("Now Loading " + a + "/" + b, 0, 0);
+        this.FillText("Now Loading " + a + "/" + b, 0, 0);
+    }
+}
+
+class TitleScene extends Scene {
+    private selected: number = 0;
+    public Init(): void {
+        this.backgroundColor = new THREE.Color(0x667788);
+        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onTouchMove = (e) => { e.preventDefault(); };
+    }
+    public Update(): void {
+        if (this.core.IsKeyPressing(attack)) {
+            this.core.AddAndChangeScene("game", new GameScene());
+        }
+    }
+    public DrawText(): void {
+        this.FillText("Press Z key to start", -240, 0);
+    }
+}
+
+class PauseScene extends Scene {
+    private gameScene: GameScene;
+    private sprite: THREE.Sprite;
+    private spriteMat: THREE.SpriteMaterial;
+    private selected: number = 0;
+    constructor(gameScene: GameScene) {
+        super();
+        this.gameScene = gameScene;
+    }
+    public Init() {
+        this.spriteMat = new THREE.SpriteMaterial({ color: 0x888888 });
+        this.sprite = new THREE.Sprite(this.spriteMat);
+        this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
+        this.sprite.position.set(0, 0, 1);
+        this.scene2d.add(this.sprite);
+        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onTouchMove = (e) => { e.preventDefault(); };
+    }
+    public Update() {
+        // このコメントを解除すれば裏でgameSceneが動く
+        // this.gameScene.InnerUpdate();
+        // this.gameScene.Update();
+        this.gameScene.Render();
+        this.spriteMat.map = this.gameScene.RenderedTexture();
+        if (this.core.IsKeyPressing(pause)) {
+            this.core.ChangeScene("game");
+        }
+        if (this.core.IsKeyPressing(up)) {
+            this.selected--;
+        }
+        if (this.core.IsKeyPressing(down)) {
+            this.selected++;
+        }
+        this.selected = (this.selected + 2) % 2;
+        if (this.core.IsKeyPressing(attack)) {
+            switch (this.selected) {
+                case 0:
+                    this.core.ChangeScene("game");
+                    break;
+                case 1:
+                    this.core.ChangeScene("title");
+                    break;
+            }
+        }
+    }
+    public DrawText() {
+        this.SetTextColor(new THREE.Color(0xffffff));
+        this.FillText("Resume", 0, 0);
+        this.FillText("Back to title", 0, -50);
+        this.FillText("👉", -50, -50 * this.selected);
     }
 }
 
 class GameScene extends Scene {
     public sprt: THREE.Sprite;
     public Init(): void {
+        this.core.AddScene("pause", new PauseScene(this));
         this.backgroundColor = new THREE.Color(0x887766);
         this.sprt = this.core.MakeSpriteFromTexture("circle");
         this.sprt.scale.set(100, 100, 1);
         this.scene2d.add(this.sprt);
         this.AddUnit(new Chara(0, 0));
+        this.AddUnit(new Dragon());
         this.onMouseClick = () => {
             // this.core.SaveImage("ScreenShot.png");
         };
-        this.onWindowResize = () => {
-            this.core.ChangeCanvasSize(window.innerWidth, window.innerHeight);
+        this.onKeyKeyDown = (e) => {
+            if (this.core.IsKeyDown("ArrowUp") ||
+                this.core.IsKeyDown("ArrowDown") ||
+                this.core.IsKeyDown("ArrowRight") ||
+                this.core.IsKeyDown("ArrowLeft")) {
+                e.preventDefault();
+            }
         };
+        this.onTouchMove = (e) => { e.preventDefault(); };
     }
     public Update(): void {
         this.sprt.position.set(this.core.mouseX, this.core.mouseY, 1);
-        if (this.core.IsKeyPressing("q")) {
+        if (this.core.IsKeyPressing("KeyQ")) {
             this.AddUnit(new Fire(this.core.mouseX, this.core.mouseY));
+        }
+        if (this.core.IsKeyPressing(pause)) {
+            this.core.ChangeScene("pause");
         }
     }
     public DrawText(): void {
-        this.core.DrawText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
+        // this.FillText(this.core.GetAllDownKey().join(), this.core.mouseX, this.core.mouseY);
+        this.FillText("FPS: " + Math.round(this.core.fps).toString(),
+            -this.core.screenSizeX / 2, this.core.screenSizeY / 2);
+    }
+}
+
+class GameOverScene extends Scene {
+    private sprite: THREE.Sprite;
+    private spriteMat: THREE.SpriteMaterial;
+    constructor(private gameScene: GameScene, private win: boolean) {
+        super();
+    }
+    public Init() {
+        this.spriteMat = new THREE.SpriteMaterial({ color: 0x888888 });
+        this.sprite = new THREE.Sprite(this.spriteMat);
+        this.sprite.scale.set(this.core.screenSizeX, this.core.screenSizeY, 1);
+        this.sprite.position.set(0, 0, 1);
+        this.scene2d.add(this.sprite);
+        this.onKeyKeyDown = (e) => { e.preventDefault(); };
+        this.onTouchMove = (e) => { e.preventDefault(); };
+        this.spriteMat.map = this.gameScene.RenderedTexture();
+        this.core.SetTextColor(new THREE.Color(0xffffff));
+    }
+    public Update() {
+        if (this.core.IsKeyPressing(pause)) {
+            this.core.ChangeScene("title");
+        }
+    }
+    public DrawText() {
+        this.core.SetTextColor(new THREE.Color(0xffffff));
+        this.core.DrawText(this.win ? "YOU WIN" : "YOU LOOSE", -150, 0);
+        this.core.DrawText("Press Escape to back to title", -300, -100);
     }
 }
 
@@ -55,7 +178,13 @@ class Chara extends Unit {
     private shadow: THREE.Sprite;
     private jumpingHeight = 0;
     private jumpingVel = 0;
-    constructor(private x, private y) { super(); }
+    private collide: Figure;
+    private swordCollide: Figure;
+    private invincibleTime = 0;
+    private attaking = 0;
+    private HP = 5;
+    private HPView: THREE.Group = new THREE.Group();
+    constructor(private x: number, private y: number) { super(); }
     public Init(): void {
         this.tts = new TiledTexturedSprite(this.core.GetTexture("knight"));
         this.tts.SetTileNumber(5, 1);
@@ -64,32 +193,83 @@ class Chara extends Unit {
         this.shadow = this.core.MakeSpriteFromTexture("shadow");
         this.shadow.scale.set(32, 16, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
+        this.collide = new Rectangle(0, 0, 16, 48);
+        this.swordCollide = new Rectangle(0, 0, 24, 24);
+        this.swordCollide.name = "sword";
+        this.swordCollide.available = false;
+        this.swordCollide.GenerateHelper(new THREE.Color(0xff0000));
+        this.collide.onCollideCallback = (f) => { if (f.name === "fire") { this.Hitten(); } };
+        this.AddCollider(this.collide);
+        this.AddCollider(this.swordCollide);
+        this.AddSprite(this.collide);
+        this.AddSprite(this.swordCollide);
         this.AddSprite(this.tts);
         this.AddSprite(this.shadow);
+        for (let i = 0; i < this.HP; i++) {
+            const s = this.core.MakeSpriteFromTexture("star");
+            s.position.set(i * 40, 0, 1);
+            s.scale.set(40, 40, 1);
+            s.name = i.toString(); // 番号を振る
+            this.HPView.add(s);
+        }
+        this.HPView.position.set(-230, -205, 1);
+        this.AddSprite(this.HPView);
+    }
+    public DrawText(): void {
+        this.core.DrawText("HP", -320, -180);
+    }
+    public Hitten(): void {
+        if (this.invincibleTime === 0) {
+            console.log("chara damaged");
+            this.invincibleTime = 180;
+            this.HP--;
+            // 今回減るHPマーカを探す。0オリジンなので1減ってる状態で正しいものが示される。
+            const h = this.HPView.getObjectByName(this.HP.toString());
+            this.HPView.remove(h);
+            if (this.HP === -1) {
+                this.core.AddAndChangeScene("gameOver", new GameOverScene(this.scene as GameScene, false));
+            }
+        }
     }
     public Update(): void {
+        if (this.invincibleTime % 20 > 10) {
+            this.tts.sprite.visible = false;
+            this.collide.helper.visible = false;
+        } else {
+            this.tts.sprite.visible = true;
+            this.collide.helper.visible = true;
+        }
+        if (this.invincibleTime > 0) { this.invincibleTime--; }
         this.tts.SetTile(0, 0);
-        if (this.core.IsKeyDown("w")) {
+        if (this.core.IsKeyDown(up)) {
             this.y += 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("s")) {
+        if (this.core.IsKeyDown(down)) {
             this.y -= 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("d")) {
+        if (this.core.IsKeyDown(right)) {
             this.x += 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("a")) {
+        if (this.core.IsKeyDown(left)) {
             this.x -= 3;
             this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2, 0);
         }
-        if (this.core.IsKeyDown("k")) {
+        if (this.core.IsKeyPressing(attack) && this.attaking === 0) {
+            this.attaking = 5;
+            this.swordCollide.available = true;
+        }
+        if (this.attaking > 0) {
             this.tts.SetTile(1, 0);
-            if (this.core.IsKeyDown("a") || this.core.IsKeyDown("s") ||
-                this.core.IsKeyDown("d") || this.core.IsKeyDown("w")) {
-                    this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2 + 1, 0);
+            if (this.core.IsKeyDown(down) || this.core.IsKeyDown(up) ||
+                this.core.IsKeyDown(right) || this.core.IsKeyDown(left)) {
+                this.tts.SetTile((Math.floor(this.frame / 5) % 2) * 2 + 1, 0);
+            }
+            this.attaking--;
+            if (this.attaking === 0) {
+                this.swordCollide.available = false;
             }
         }
         if (this.jumpingHeight !== 0) {
@@ -101,26 +281,100 @@ class Chara extends Unit {
                 this.jumpingVel = 0;
             }
         }
-        if (this.core.IsKeyDown("j") && this.jumpingHeight === 0) {
+        if (this.core.IsKeyDown(jump) && this.jumpingHeight === 0) {
             this.jumpingVel = 5;
             this.jumpingHeight += this.jumpingVel;
         }
+        this.x = Clamp(this.x, -300, 300);
+        this.y = Clamp(this.y, -200, 200);
+        this.collide.x = this.x - 10;
+        this.collide.y = this.y + this.jumpingHeight;
+        this.collide.SyncHelper();
+        this.swordCollide.x = this.collide.x + 30;
+        this.swordCollide.y = this.collide.y + 8;
+        this.swordCollide.SyncHelper();
         this.tts.sprite.position.set(this.x, this.y + this.jumpingHeight, 1);
         this.shadow.position.set(this.x - 12, this.y - 32, 1);
     }
 }
 
+class Dragon extends Unit {
+    private x: number;
+    private y: number;
+    private collide: Figure;
+    private HPsprite: THREE.Sprite;
+    private sprite: THREE.Sprite;
+    private HPMax = 40;
+    private HP = this.HPMax;
+    public Init() {
+        this.x = 100;
+        this.y = -10;
+        this.collide = new Rectangle(this.x, this.y, 128, 128);
+        this.collide.onCollideCallback = (f) => {
+            if (f.name === "sword") {
+                this.HP--;
+                console.log("dragon damaged");
+            }
+        };
+        this.AddCollider(this.collide);
+        this.AddSprite(this.collide);
+        const mat = new THREE.SpriteMaterial({ color: new THREE.Color(0x00ff00) });
+        this.HPsprite = new THREE.Sprite(mat);
+        this.HPsprite.scale.set(64 * (this.HP / this.HPMax), 5, 1);
+        this.HPsprite.position.set(this.x + 32, this.y + 80, 1);
+        mat.dispose();
+        this.AddSprite(this.HPsprite);
+        this.sprite = this.core.MakeSpriteFromTexture("dragon");
+        this.sprite.scale.set(128, 128, 1);
+        this.sprite.position.set(this.x + 32, this.y, 1);
+        this.AddSprite(this.sprite);
+    }
+    public Update() {
+        if ((this.HP / this.HPMax) > 1 / 2) {
+            this.HPsprite.material.color = new THREE.Color(0x00ff00);
+        } else if ((this.HP / this.HPMax) > 1 / 4) {
+            this.HPsprite.material.color = new THREE.Color(0xffff00);
+        } else {
+            this.HPsprite.material.color = new THREE.Color(0xff0000);
+        }
+        this.HPsprite.scale.set(64 * (this.HP / this.HPMax), 5, 1);
+        this.HPsprite.position.set(this.x + 32, this.y + 80, 1);
+        if ((this.frame % 100 === 0 || this.frame % 100 === 5 || this.frame % 100 === 10) && this.frame > 100) {
+            const r = Random(Math.PI / 3) + Math.PI;
+            this.scene.AddUnit(new Fire(this.x - 15, this.y + 25, 3 * Math.cos(r), Math.sin(r)));
+        }
+        if (this.HP <= 0) {
+            this.core.AddAndChangeScene("gameOver", new GameOverScene(this.scene as GameScene, true));
+        }
+        this.sprite.position.set(this.x + 32, this.y, 1);
+        this.collide.x = this.x + 32;
+        this.collide.y = this.y;
+    }
+}
+
 class Fire extends Unit {
+    public collide: Figure;
     private tts: TiledTexturedSprite;
-    constructor(private x, private y) { super(); }
+    constructor(private x: number, private y: number, private vx = 0, private vy = 0) { super(); }
     public Init(): void {
         this.tts = new TiledTexturedSprite(this.core.GetTexture("fires"));
         this.tts.SetTileNumber(4, 1);
         this.tts.sprite.scale.set(32, 32, 1);
         this.tts.sprite.position.set(this.x, this.y, 1);
+        // this.collide = new Rectangle(this.x, this.y, 32, 32);
+        this.collide = new Circle(this.x, this.y, 12);
+        // this.collide = new Point(this.x, this.y);
+        this.collide.name = "fire";
+        this.AddCollider(this.collide);
+        this.AddSprite(this.collide);
         this.AddSprite(this.tts);
     }
     public Update(): void {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.collide.x = this.x;
+        this.collide.y = this.y;
+        this.tts.sprite.position.set(this.x, this.y, 1);
         this.tts.SetTile(Math.floor(this.frame / 5), 0);
         if (this.frame > 100) {
             this.isAlive = false;
@@ -129,6 +383,28 @@ class Fire extends Unit {
 }
 
 // ゲームの開始
-Start("init", new LoadScene(), {
-    antialias: true,
+const core = Start("init", new LoadScene(), {
+    parent: document.getElementById("screen"),
+    screenSizeX: 640,
+    screenSizeY: 480,
 });
+
+const pauseButton = document.getElementById("pause");
+pauseButton.onclick = () => {
+    if (core.GetActiveSceneName() === "game") {
+        if (core.GetScene("pause")) {
+            core.ChangeScene("pause");
+        }
+    }
+};
+
+const titleButton = document.getElementById("title");
+titleButton.onclick = () => {
+    if (core.GetActiveSceneName() === "pause" ||
+        core.GetActiveSceneName() === "game" ||
+        core.GetActiveSceneName() === "gameOver") {
+        if (core.GetScene("title")) {
+            core.ChangeScene("title");
+        }
+    }
+};

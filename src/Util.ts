@@ -1,6 +1,16 @@
 import * as THREE from "three";
 
 /**
+ * 入力された値inputを[min, max]の範囲に丸める
+ * @param input 丸める入力
+ * @param min 最小値
+ * @param max 最大値
+ */
+export function Clamp(input: number, min: number, max: number): number {
+    return Math.min(max, Math.max(min, input));
+}
+
+/**
  * 与えられたObject3Dが子孫として持つ全てのMeshに対して処理を行う
  * @param obj Object3D
  * @param func Meshに対して行う処理
@@ -17,7 +27,7 @@ export function EachMesh(obj: THREE.Object3D, func: (mesh: THREE.Mesh) => void):
  * 連想配列の全ての要素がNullでもUndefinedでもなければtrueを返す
  * @param arr 調べる連想配列
  */
-export function AllIsNotNullOrUndefined<T>(arr: {[key: string]: T}): boolean {
+export function AllIsNotNullOrUndefined<T>(arr: { [key: string]: T }): boolean {
     for (const key in arr) {
         if (arr[key] === null || arr[key] === undefined) {
             return false;
@@ -30,9 +40,9 @@ export function AllIsNotNullOrUndefined<T>(arr: {[key: string]: T}): boolean {
  * 連想配列を配列にする
  * @param arr 連想配列
  */
-export function AssociativeArrayToArray<T>(arr: {[key: string]: T}): T[] {
+export function AssociativeArrayToArray<T>(arr: { [key: string]: T }): T[] {
     const a: T[] = [];
-    for (const key in arr ) {
+    for (const key in arr) {
         a.push(arr[key]);
     }
     return a;

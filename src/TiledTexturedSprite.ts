@@ -11,7 +11,7 @@ export class TiledTexturedSprite {
         this.tex = t.clone();
         this.tex.needsUpdate = true;
         this.tex.wrapS = this.tex.wrapT = THREE.RepeatWrapping;
-        this.mat = new THREE.SpriteMaterial({map: this.tex});
+        this.mat = new THREE.SpriteMaterial({ map: this.tex });
         this.sprite = new THREE.Sprite(this.mat);
     }
     public SetTileNumber(x: number, y: number) {
