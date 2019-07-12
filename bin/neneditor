@@ -1,0 +1,3 @@
+#!/usr/bin/env npx ts-node
+
+require("../lib/dist/cli.js")
