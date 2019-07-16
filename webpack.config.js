@@ -26,15 +26,15 @@ module.exports = [
       fs: 'empty'
     }
   },
-  // editorのビルド
+  // editorのサーバ側のビルド
   {
     mode: 'development',
     entry: {
-      'cli': './src/Neneditor.ts',
+      'cli': './src/editor/server/Neneditor.ts',
     },
     target: 'node',
     output: {
-      path: `${__dirname}/lib/dist`,
+      path: `${__dirname}/lib/dist/server`,
       filename: '[name].js'
     },
     module: {
@@ -48,6 +48,25 @@ module.exports = [
     node: {
       __dirname: false,
       __filename: false,
+    }
+  },
+  // editorのクライアント側のビルド
+  {
+    mode: 'development',
+    entry: {
+      'hoge': './src/editor/client/hoge.ts',
+    },
+    output: {
+      path: `${__dirname}/lib/dist/client`,
+      filename: '[name].js'
+    },
+    module: {
+      rules: [
+        { test: /\.ts$/, use: 'ts-loader' }
+      ]
+    },
+    resolve: {
+      extensions: ['.ts', '.js'],
     }
   }
 ];
