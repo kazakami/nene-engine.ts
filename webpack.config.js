@@ -46,7 +46,8 @@ module.exports = [
       extensions: ['.ts', '.js'],
     },
     node: {
-      fs: 'empty'
+      __dirname: false,
+      __filename: false,
     }
   }
 ];
