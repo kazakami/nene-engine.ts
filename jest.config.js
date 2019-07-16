@@ -1,6 +1,6 @@
 module.exports = {
     "roots": [
-      "<rootDir>/src"
+      "<rootDir>/src/main"
     ],
     "transform": {
       "^.+\\.ts$": "ts-jest"
@@ -13,11 +13,11 @@ module.exports = {
       "node"
     ],
     "moduleNameMapper": {
-      "imports-loader?.*": "<rootDir>/src/test/importsLoader.js",
-      "GLTFLoader": "<rootDir>/src/test/emptyMock.js",
-      "MTLLoader": "<rootDir>/src/test/emptyMock.js",
-      "OBJLoader": "<rootDir>/src/test/emptyMock.js",
-      "EffectComposer": "<rootDir>/src/test/emptyMock.js"
+      "imports-loader?.*": "<rootDir>/src/main/test/importsLoader.js",
+      "GLTFLoader": "<rootDir>/src/main/test/emptyMock.js",
+      "MTLLoader": "<rootDir>/src/main/test/emptyMock.js",
+      "OBJLoader": "<rootDir>/src/main/test/emptyMock.js",
+      "EffectComposer": "<rootDir>/src/main/test/emptyMock.js"
     },
     "setupFiles": ["jest-canvas-mock"]
   }

@@ -2,7 +2,7 @@ import * as THREE from "three";
 import {
     EachMesh, Particles, PhysicObjects, PhysicSphere
     , Random, RandomColor, Scene, Start, Unit,
-} from "../src/nene-engine";
+} from "../src/main/nene-engine";
 
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass";

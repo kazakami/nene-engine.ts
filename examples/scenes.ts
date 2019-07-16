@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { collideTest, Point, Rectangle, Scene, Start } from "../src/nene-engine";
+import { collideTest, Point, Rectangle, Scene, Start } from "../src/main/nene-engine";
 
 class LoadScene extends Scene {
     public async Init() {

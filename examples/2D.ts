@@ -1,5 +1,8 @@
 import * as THREE from "three";
-import { Circle, Clamp, Figure, Random, Rectangle, Scene, Start, TiledTexturedSprite, Unit } from "../src/nene-engine";
+import {
+    Circle, Clamp, Figure, Random, Rectangle,
+    Scene, Start, TiledTexturedSprite, Unit,
+} from "../src/main/nene-engine";
 
 const attack = "KeyZ";
 const jump = "KeyX";

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Scene, Start, Unit } from "../src/nene-engine";
+import { Scene, Start, Unit } from "../src/main/nene-engine";
 
 class LoadScene extends Scene {
     public Init(): Promise<void> {
