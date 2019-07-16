@@ -4,14 +4,18 @@ const app = Express();
 // tslint:disable-next-line: no-var-requires
 app.engine("ejs", require("ejs").__express);
 app.set("view engine", "ejs");
+
+const libDir = __dirname + "/../../";
+
 app.get("/", (req, res) => {
-    res.render(__dirname + "/../../lib/hoge.ejs", {
+    res.render(libDir + "hoge.ejs", {
         content: "ほげ<br/>ふが",
         title: "タイトル",
     });
 });
+app.use(Express.static(libDir + "dist/client"));
 
 app.listen(3000, () => {
     console.log("Example app listening on port 3000!");
-    console.log(__dirname);
+    console.log(libDir + "dist/client");
 });
