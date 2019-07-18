@@ -13,9 +13,8 @@ app.get("/", (req, res) => {
         title: "タイトル",
     });
 });
-app.use(Express.static(libDir + "dist/client"));
+app.use(Express.static(libDir));
 
 app.listen(3000, () => {
     console.log("Example app listening on port 3000!");
-    console.log(libDir + "dist/client");
 });
