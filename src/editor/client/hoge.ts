@@ -100,11 +100,22 @@ worldDiv.addEventListener("click", (e) => {
         // localシーンを空にする
         localScene.children.filter((o) => o.name !== "helper").forEach((o) => localScene.remove(o));
         // クリックしたオブジェクトの複製を生成
-        const obj = intersects[0].object.clone(true);
+        const obj = intersects[0].object.clone(true) as THREE.Mesh;
         // 位置と回転を初期化
         obj.position.set(0, 0, 0);
         obj.quaternion.set(0, 0, 0, 1);
         localScene.add(obj);
+        // console.log(obj);
+        const type = obj.geometry.type;
+        document.getElementById("type").innerHTML = type;
+        switch (type) {
+            case "BoxGeometry":
+                document.getElementById("size").innerHTML = "わからん";
+                break;
+            case "SphereGeometry":
+                document.getElementById("size").innerHTML = "しらん";
+                break;
+        }
     }
 });
 
