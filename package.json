@@ -8,11 +8,13 @@
   "description": "Game Engine for web written by TypeScript ",
   "main": "src/main/nene-engine.ts",
   "scripts": {
-    "build": "webpack --verbose",
+    "build-examples": "webpack --verbose --config examples.webpack.config.js",
+    "build-server": "webpack --verbose --config server.webpack.config.js",
     "docs": "rm -rf docs && typedoc",
     "test": "jest",
     "coverage": "jest --coverage",
-    "watch": "webpack --watch --watch-poll",
+    "watch-examples": "webpack --watch --watch-poll --config examples.webpack.config.js",
+    "watch-server": "webpack --watch --watch-poll --config server.webpack.config.js",
     "lint": "tslint -p tsconfig.json"
   },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
@@ -29,6 +31,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.15",
+    "@types/webpack": "^4.32.1",
     "coveralls": "^3.0.5",
     "jest": "^24.8.0",
     "jest-canvas-mock": "^2.1.0",
