@@ -22,25 +22,25 @@
   "dependencies": {
     "@types/cannon": "^0.1.4",
     "cannon": "^0.6.2",
-    "three": "^0.106.2",
+    "three": "^0.107.0",
     "typescript": "^3.5.3"
   },
   "devDependencies": {
     "@types/ejs": "^2.6.3",
     "@types/express": "^4.17.0",
-    "@types/jest": "^24.0.15",
-    "@types/webpack": "^4.32.1",
-    "coveralls": "^3.0.5",
+    "@types/jest": "^24.0.17",
+    "@types/webpack": "^4.32.2",
+    "coveralls": "^3.0.6",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
-    "jest": "^24.8.0",
+    "jest": "^24.9.0",
     "jest-canvas-mock": "^2.1.0",
     "ts-jest": "^24.0.2",
     "ts-loader": "^6.0.4",
     "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
-    "typedoc": "^0.14.2",
-    "webpack": "^4.36.1",
-    "webpack-cli": "^3.3.6"
+    "typedoc": "^0.15.0",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.7"
   }
 }
