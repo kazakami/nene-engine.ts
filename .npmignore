@@ -11,4 +11,6 @@ package-lock.json
 style.css
 tsconfig.json
 tslint.json
-webpack.config.js
+example.webpack.config.js
+server.webpack.config.js
+CNAME
