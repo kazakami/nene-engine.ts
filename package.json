@@ -1,24 +1,21 @@
 {
   "name": "nene-engine.ts",
   "version": "0.5.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kazakami/nene-engine.ts"
-  },
   "description": "Game Engine for web written by TypeScript ",
-  "main": "src/main/nene-engine.ts",
+  "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
   "scripts": {
+    "test": "jest",
+    "lint": "tslint -p tsconfig.json",
     "build-examples": "webpack --verbose --config examples.webpack.config.js",
     "build-server": "webpack --verbose --config server.webpack.config.js",
-    "docs": "rm -rf docs && typedoc",
-    "test": "jest",
     "coverage": "jest --coverage",
+    "docs": "rm -rf docs && typedoc",
+    "express": "vue-cli-service express:watch",
+    "express:run": "vue-cli-service express:run",
     "watch-examples": "webpack --watch --watch-poll --config examples.webpack.config.js",
-    "watch-server": "webpack --watch --watch-poll --config server.webpack.config.js",
-    "lint": "tslint -p tsconfig.json"
+    "watch-server": "webpack --watch --watch-poll --config server.webpack.config.js"
   },
-  "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
-  "license": "MIT",
+  "main": "src/main/nene-engine.ts",
   "dependencies": {
     "@types/cannon": "^0.1.4",
     "cannon": "^0.6.2",
@@ -30,6 +27,7 @@
     "@types/express": "^4.17.1",
     "@types/jest": "^24.0.18",
     "@types/webpack": "^4.39.1",
+    "@vue/cli": "^3.11.0",
     "coveralls": "^3.0.6",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
@@ -40,7 +38,13 @@
     "ts-node": "^8.3.0",
     "tslint": "^5.19.0",
     "typedoc": "^0.15.0",
+    "vue-cli-plugin-express": "^1.0.2",
     "webpack": "^4.39.3",
     "webpack-cli": "^3.3.7"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kazakami/nene-engine.ts"
   }
 }
