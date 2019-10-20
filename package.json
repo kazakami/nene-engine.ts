@@ -6,12 +6,14 @@
   "scripts": {
     "test": "jest",
     "lint": "tslint -p tsconfig.json",
+    "build-client": "webpack --verbose --config client.webpack.config.js",
     "build-examples": "webpack --verbose --config examples.webpack.config.js",
     "build-server": "webpack --verbose --config server.webpack.config.js",
     "coverage": "jest --coverage",
     "docs": "rm -rf docs && typedoc",
     "express": "vue-cli-service express:watch",
     "express:run": "vue-cli-service express:run",
+    "watch-client": "webpack --watch --watch-poll --config client.webpack.config.js",
     "watch-examples": "webpack --watch --watch-poll --config examples.webpack.config.js",
     "watch-server": "webpack --watch --watch-poll --config server.webpack.config.js"
   },
@@ -20,7 +22,8 @@
     "@types/cannon": "^0.1.4",
     "cannon": "^0.6.2",
     "three": "^0.108.0",
-    "typescript": "^3.6.2"
+    "typescript": "^3.6.2",
+    "vue": "^2.6.10"
   },
   "devDependencies": {
     "@types/ejs": "^2.6.3",
