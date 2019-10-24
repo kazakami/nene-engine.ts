@@ -1,8 +1,15 @@
+import * as io from "socket.io-client";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import Vue from "vue";
+const socket = io();
+
+document.getElementById("fuga").onclick = () => {
+    console.log("pushed");
+    socket.emit("poyo", "p");
+};
 
 const app = new Vue({
     data: {
@@ -10,8 +17,11 @@ const app = new Vue({
     },
     el: "#app",
 });
-console.log(app);
-console.log(1114514);
+
+socket.on("poyo", (msg: string) => {
+    console.log("aaa");
+    app.message = msg;
+});
 
 const worldDiv = document.getElementById("world");
 const localDiv = document.getElementById("local");

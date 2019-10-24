@@ -1,6 +1,12 @@
 
 import * as Express from "express";
+import * as http from "http";
+import * as socketio from "socket.io";
+
 const app = Express();
+const server = http.createServer(app);
+const io = socketio(server);
+
 // tslint:disable-next-line: no-var-requires
 app.engine("ejs", require("ejs").__express);
 app.set("view engine", "ejs");
@@ -15,6 +21,13 @@ app.get("/", (req, res) => {
 });
 app.use(Express.static(libDir));
 
-app.listen(3000, () => {
+io.on("connection", (socket) => {
+    socket.on("poyo", (msg: string) => {
+        console.log("rev");
+        io.emit("poyo", msg);
+    });
+});
+
+server.listen(3000, () => {
     console.log("Example app listening on port 3000!");
 });

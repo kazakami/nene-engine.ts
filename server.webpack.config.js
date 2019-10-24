@@ -5,6 +5,7 @@ module.exports = {
   entry: {
     'cli': './src/editor/server/Neneditor.ts',
   },
+  externals: require("webpack-node-externals")(),
   target: 'node',
   output: {
     path: `${__dirname}/lib/dist/server`,
