@@ -21,7 +21,8 @@
     "cannon": "^0.6.2",
     "three": "^0.109.0",
     "typescript": "^3.6.4",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-class-component": "^7.1.0"
   },
   "devDependencies": {
     "@types/ejs": "^2.6.3",
