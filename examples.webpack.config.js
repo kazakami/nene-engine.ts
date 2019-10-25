@@ -24,5 +24,8 @@ module.exports = {
   },
   node: {
     fs: 'empty'
+  },
+  watchOptions: {
+    poll: 1000
   }
 };

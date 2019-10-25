@@ -6,16 +6,14 @@
   "scripts": {
     "test": "jest",
     "lint": "tslint -p tsconfig.json",
-    "build-client": "webpack --verbose --config client.webpack.config.js",
+    "build-editoe": "webpack --verbose --config editor.webpack.config.js",
     "build-examples": "webpack --verbose --config examples.webpack.config.js",
-    "build-server": "webpack --verbose --config server.webpack.config.js",
     "coverage": "jest --coverage",
     "docs": "rm -rf docs && typedoc",
     "express": "vue-cli-service express:watch",
     "express:run": "vue-cli-service express:run",
-    "watch-client": "webpack --watch --watch-poll --config client.webpack.config.js",
-    "watch-examples": "webpack --watch --watch-poll --config examples.webpack.config.js",
-    "watch-server": "webpack --watch --watch-poll --config server.webpack.config.js"
+    "watch-editor": "webpack --watch --config editor.webpack.config.js",
+    "watch-examples": "webpack --watch --config examples.webpack.config.js"
   },
   "main": "src/main/nene-engine.ts",
   "dependencies": {
