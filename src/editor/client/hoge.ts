@@ -4,6 +4,7 @@ import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import Vue from "vue";
+import Component from "vue-class-component";
 const socket = io();
 
 document.getElementById("fuga").onclick = () => {
@@ -16,6 +17,24 @@ const app = new Vue({
         message: "vueeee",
     },
     el: "#app",
+});
+
+// @Component({
+//     template: '<input type="range" v-model="val" min="1" max="10" step="1">',
+// })
+// export default class color extends Vue {
+//     // 初期データはインスタンスプロパティとして宣言できます
+//     public val: number = 0;
+// }
+Vue.component("color", {
+    props: ["val"],
+    template: '<div><input type="range" v-model="val" min="0" max="255" step="1"><input v-model="val"><br/></div>',
+});
+const app2 = new Vue({
+    data: {
+        rgb: [100, 50, 255],
+    },
+    el: "#app2",
 });
 
 socket.on("poyo", (msg: string) => {
