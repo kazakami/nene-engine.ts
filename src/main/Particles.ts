@@ -12,8 +12,8 @@ export class Particles {
         this.particlesNum = num;
         const points = new Array<number>(this.particlesNum * 3);
         const colors = new Array<number>(this.particlesNum * 3);
-        this.geo.addAttribute("position", new THREE.Float32BufferAttribute(points, 3));
-        this.geo.addAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
+        this.geo.setAttribute("position", new THREE.Float32BufferAttribute(points, 3));
+        this.geo.setAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
         // this.geo.computeBoundingSphere();
         this.mat = new THREE.PointsMaterial({
             depthWrite: false,
