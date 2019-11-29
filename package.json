@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "lint": "tslint -p tsconfig.json",
-    "build-editoe": "webpack --verbose --config editor.webpack.config.js",
+    "build-editor": "webpack --verbose --config editor.webpack.config.js",
     "build-examples": "webpack --verbose --config examples.webpack.config.js",
     "coverage": "jest --coverage",
     "docs": "rm -rf docs && typedoc",
