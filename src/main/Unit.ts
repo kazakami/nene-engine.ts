@@ -28,7 +28,7 @@ export abstract class Unit {
     /** このUnitに紐づけられているすべてのParticles */
     public allParticles: Particles[] = [];
     /** このUnitに紐づけられているすべてのスプライト。 */
-    public sprites: Array<THREE.Object3D | TiledTexturedSprite | Figure> = [];
+    public sprites: (THREE.Object3D | TiledTexturedSprite | Figure)[] = [];
     /** このUnitに紐づけられているすべての物理オブジェクト。 */
     public physicObjects: PhysicObject[] = [];
     /** このUnitに紐づけられているすべての2次元当たり判定用の図形。 */
