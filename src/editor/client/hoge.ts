@@ -27,18 +27,19 @@ const app = new Vue({
 //     public val: number = 0;
 // }
 Vue.component("color", {
-    props: ["val"],
-    template: '<div><input type="range" v-model="val" min="0" max="255" step="1"><input v-model="val"><br/></div>',
+    props: ["value"],
+    template: '<div><input type="range" :value="value" min="0" max="255" step="1" @input="$emit(\'input\', $event.target.value)"><input :value="value"><br/></div>',
 });
 const app2 = new Vue({
     data: {
-        rgb: [100, 50, 255],
+        rgb: {r: 100, g: 50, b:255},
     },
     el: "#app2",
 });
 
 socket.on("poyo", (msg: string) => {
-    console.log("aaa");
+    console.log("200");
+    app2.$data.rgb.r = 200;
     app.message = msg;
 });
 
