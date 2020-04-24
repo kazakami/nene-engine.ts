@@ -6,34 +6,59 @@
     "url": "https://github.com/kazakami/nene-engine.ts"
   },
   "description": "Game Engine for web written by TypeScript ",
-  "main": "src/nene-engine.ts",
-  "scripts": {
-    "build": "webpack --verbose",
-    "docs": "rm -rf docs && typedoc",
-    "test": "jest",
-    "coverage": "jest --coverage",
-    "watch": "webpack --watch --watch-poll",
-    "lint": "tslint -p tsconfig.json"
-  },
   "author": "kazakami <kazakami@kmc.gr.jp> (https://xn--48j7e.jp)",
-  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "lint": "tslint -p tsconfig.json",
+    "build-editor": "webpack --verbose --config editor.webpack.config.js",
+    "build-examples": "webpack --verbose --config examples.webpack.config.js",
+    "coverage": "jest --coverage",
+    "docs": "rm -rf docs && typedoc",
+    "express": "vue-cli-service express:watch",
+    "express:run": "vue-cli-service express:run",
+    "watch-editor": "webpack --watch --config editor.webpack.config.js",
+    "watch-examples": "webpack --watch --config examples.webpack.config.js"
+  },
+  "main": "src/main/nene-engine.ts",
   "dependencies": {
     "@types/cannon": "^0.1.4",
     "cannon": "^0.6.2",
-    "three": "^0.106.2",
-    "typescript": "^3.5.3"
+    "three": "^0.113.2",
+    "typescript": "^3.8.3",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.15",
-    "coveralls": "^3.0.4",
-    "jest": "^24.8.0",
-    "jest-canvas-mock": "^2.1.0",
-    "ts-jest": "^24.0.2",
-    "ts-loader": "^6.0.4",
-    "ts-node": "^8.3.0",
-    "tslint": "^5.18.0",
-    "typedoc": "^0.14.2",
-    "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.5"
+    "@types/ejs": "^3.0.2",
+    "@types/express": "^4.17.6",
+    "@types/jest": "^25.2.1",
+    "@types/socket.io": "^2.1.4",
+    "@types/socket.io-client": "^1.4.32",
+    "@types/webpack": "^4.41.12",
+    "@vue/cli": "^4.3.1",
+    "@vue/cli-plugin-typescript": "^4.3.1",
+    "@vue/cli-service": "^4.3.1",
+    "@vue/cli-shared-utils": "^4.3.1",
+    "coveralls": "^3.0.14",
+    "ejs": "^3.1.2",
+    "express": "^4.17.1",
+    "jest": "^25.4.0",
+    "jest-canvas-mock": "^2.2.0",
+    "socket.io": "^2.3.0",
+    "ts-jest": "^25.4.0",
+    "ts-loader": "^7.0.1",
+    "ts-node": "^8.9.0",
+    "tslint": "^6.1.1",
+    "typedoc": "^0.17.4",
+    "uws": "100.0.1",
+    "vue-cli-plugin-express": "^1.0.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kazakami/nene-engine.ts"
   }
 }

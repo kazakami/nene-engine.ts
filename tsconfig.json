@@ -3,6 +3,7 @@
     "src/test"
   ],
   "compilerOptions": {
+    "experimentalDecorators": true,
     "sourceMap": true,
     "target": "es2018",
     "module": "commonjs",

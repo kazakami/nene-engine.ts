@@ -1,7 +1,7 @@
-uniform sampler2D grass; 
-uniform sampler2D snow; 
-varying vec3 worldPos; 
-varying vec2 vUv; 
+uniform sampler2D grass;
+uniform sampler2D snow;
+varying vec3 worldPos;
+varying vec2 vUv;
 void main() {
     vec4 colorSnow = texture2D(snow, vUv);
     vec4 colorGrass = texture2D(grass, vUv);

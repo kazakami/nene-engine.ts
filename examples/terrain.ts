@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { Mesh } from "three";
-import { ImprovedNoise, Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/nene-engine";
+import { ImprovedNoise, Random, RandomColor, Scene, Start, Terrain, Unit } from "../src/main/nene-engine";
 
 const MapWidth = 100;
 const MapDepth = 100;

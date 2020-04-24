@@ -10,7 +10,7 @@ export class Terrain {
     private heights: number[];
     private normals: THREE.Vector3[];
     // タイルのジオメトリとそれから生成したMeshのタプルの配列
-    private tiles: Array<[THREE.PlaneBufferGeometry, THREE.Mesh]>;
+    private tiles: [THREE.PlaneBufferGeometry, THREE.Mesh][];
     private width: number;
     private depth: number;
     private widthSegments: number;
@@ -160,7 +160,7 @@ export class Terrain {
      * @param width 幅方向の座標
      * @param depth 奥行方向の座標
      */
-    public GetIndex(width: number, depth: number): Array<[number, number]> {
+    public GetIndex(width: number, depth: number): [number, number][] {
         // 幅方向がタイル同士の境界線上でない
         const w = width === 0 || width % (this.widthSegments - 0) !== 0 || width === this.widthAllSegments - 1;
         // 奥行方向がタイル同士の境界線上でない
