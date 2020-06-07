@@ -422,20 +422,21 @@ export class Core {
             this.objects[name] = null;
             // ディレクトリ内を指していたらディレクトリパスとファイル名に分ける
             if (mtlFilename.indexOf("/") !== -1) {
-                this.mtlLoader.setPath(mtlFilename.substr(0, mtlFilename.lastIndexOf("/")) + "/");
-                mtlFilename = mtlFilename.slice(mtlFilename.lastIndexOf("/") + 1);
+                // this.mtlLoader.setPath(mtlFilename.substr(0, mtlFilename.lastIndexOf("/")) + "/");
+                // mtlFilename = mtlFilename.slice(mtlFilename.lastIndexOf("/") + 1);
             }
             this.mtlLoader.load(mtlFilename,
                 (mtl) => {
                     mtl.preload();
                     // 上と同様にディレクトリ内を指していたらディレクトリパスとファイル名に分ける
                     if (objFilename.indexOf("/") !== -1) {
-                        this.objLoader.setPath(objFilename.substr(0, objFilename.lastIndexOf("/")) + "/");
-                        objFilename = objFilename.slice(objFilename.lastIndexOf("/") + 1);
+                        // this.objLoader.setPath(objFilename.substr(0, objFilename.lastIndexOf("/")) + "/");
+                        // objFilename = objFilename.slice(objFilename.lastIndexOf("/") + 1);
                     }
-                    this.objLoader.setMaterials(mtl as any);
+                    this.objLoader.setMaterials(mtl);
                     this.objLoader.load(objFilename,
                         (grp) => {
+                            console.log(grp);
                             this.objects[name] = grp;
                             resolve();
                         },
