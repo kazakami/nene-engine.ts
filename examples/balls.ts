@@ -23,7 +23,7 @@ class LoadScene extends Scene {
         await Promise.all([
             this.core.LoadObjMtl("resources/models/ente progress_export.obj",
                 "resources/models/ente progress_export.mtl", "ente"),
-            this.core.LoadObjMtl("resources/models/ball.obj", "resources/models/ball.mtl", "ball"),
+            this.core.LoadGLTF("resources/models/ball.gltf", "ball"),
             this.core.LoadTexture("resources/images/png_alphablend_test.png", "circle"),
             this.core.LoadTexture("resources/images/star.png", "star"),
             this.core.LoadTexture("resources/images/floor.jpg", "floor"),

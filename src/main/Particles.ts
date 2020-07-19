@@ -18,7 +18,7 @@ export class Particles {
         this.mat = new THREE.PointsMaterial({
             depthWrite: false,
             transparent: true,
-            vertexColors: THREE.VertexColors,
+            vertexColors: true,
         });
         this.points = new THREE.Points(this.geo, this.mat);
     }
