@@ -122,7 +122,7 @@ test("Sync() of PhysicObjects", () => {
 
 test("PhysicSphere constructor", () => {
     const p = new PhysicSphere(1, 1);
-    expect((p.viewBody as THREE.Mesh).geometry.type).toEqual("SphereBufferGeometry");
+    expect((p.viewBody as THREE.Mesh).geometry.type).toEqual("SphereGeometry");
 });
 
 test("Custom viewBody in PhysicSphere", () => {
