@@ -19,7 +19,7 @@
   "dependencies": {
     "@types/cannon": "^0.1.4",
     "cannon": "^0.6.2",
-    "three": "^0.118.3",
+    "three": "^0.125.0",
     "typescript": "^3.9.7",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3"
