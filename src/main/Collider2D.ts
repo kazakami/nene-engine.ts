@@ -42,8 +42,11 @@ export class Point extends Figure {
     public GenerateHelper(color: THREE.Color = new THREE.Color(0xffffff)): void {
         super.GenerateHelper();
         const mat = new THREE.PointsMaterial({ color: color });
-        const geo = new THREE.Geometry();
-        geo.vertices.push(new THREE.Vector3(0, 0, 0));
+        const geo = new THREE.BufferGeometry();
+        const vertices = new Float32Array([
+            0, 0, 0,
+        ])
+        geo.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
         this.helper = new THREE.Points(geo, mat);
         geo.dispose();
         mat.dispose();
@@ -80,14 +83,14 @@ export class Circle extends Figure {
     public GenerateHelper(color: THREE.Color = new THREE.Color(0xffffff)): void {
         super.GenerateHelper();
         const mat = new THREE.LineBasicMaterial({ color: color });
-        const geo = new THREE.Geometry();
+        const geo = new THREE.BufferGeometry();
+        var vertices = new Float32Array((this.mSegments + 1) * 3);
         for (let i = 0; i < this.mSegments + 1; i++) {
-            geo.vertices.push(
-                new THREE.Vector3(
-                    this.mRadius * Math.cos(2 * Math.PI * (i / this.mSegments)),
-                    this.mRadius * Math.sin(2 * Math.PI * (i / this.mSegments)),
-                    0));
+            vertices[3 * i + 0] = this.mRadius * Math.cos(2 * Math.PI * (i / this.mSegments));
+            vertices[3 * i + 1] = this.mRadius * Math.sin(2 * Math.PI * (i / this.mSegments));
+            vertices[3 * i + 2] = 0;
         }
+        geo.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
         this.helper = new THREE.Line(geo, mat);
         geo.dispose();
         mat.dispose();
@@ -125,14 +128,15 @@ export class Rectangle extends Figure {
     public GenerateHelper(color: THREE.Color = new THREE.Color(0xffffff)): void {
         super.GenerateHelper();
         const mat = new THREE.LineBasicMaterial({ color: color });
-        const geo = new THREE.Geometry();
-        geo.vertices.push(
-            new THREE.Vector3(this.width / 2, this.height / 2, 0),
-            new THREE.Vector3(-this.width / 2, this.height / 2, 0),
-            new THREE.Vector3(-this.width / 2, -this.height / 2, 0),
-            new THREE.Vector3(this.width / 2, -this.height / 2, 0),
-            new THREE.Vector3(this.width / 2, this.height / 2, 0),
-        );
+        const geo = new THREE.BufferGeometry();
+        const vertices = new Float32Array([
+            this.width / 2, this.height / 2, 0,
+            -this.width / 2, this.height / 2, 0,
+            -this.width / 2, -this.height / 2, 0,
+            this.width / 2, -this.height / 2, 0,
+            this.width / 2, this.height / 2, 0,
+        ])
+        geo.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
         this.helper = new THREE.Line(geo, mat);
         geo.dispose();
         mat.dispose();
