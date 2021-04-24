@@ -778,10 +778,10 @@ export class Core {
     public async SaveImage(filename: string = "screenshot.png"): Promise<void> {
         const glImage = new Image();
         const textsImage = new Image();
-        const glImagePromise = new Promise((resolve) => {
+        const glImagePromise = new Promise<void>((resolve) => {
             glImage.onload = () => resolve();
         });
-        const textsImagePromise = new Promise((resolve) => {
+        const textsImagePromise = new Promise<void>((resolve) => {
             textsImage.onload = () => resolve();
         });
         textsImage.src = this.textCanvas.toDataURL("image/png");

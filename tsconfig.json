@@ -3,12 +3,13 @@
     "src/test"
   ],
   "compilerOptions": {
+    "strict": false,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "target": "es2018",
+    "target": "es2019",
     "module": "commonjs",
     "lib": [
-      "es2018",
+      "es2019",
       "dom",
       "webworker"
     ]
